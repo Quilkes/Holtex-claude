@@ -1,0 +1,110 @@
+import Anthropic from "@anthropic-ai/sdk";
+import { getSystemPrompt } from "@/data/Prompt";
+import { CHAT_PROMPT } from "@/data/Prompt";
+
+const apiKey = process.env.ANTHROPIC_API_KEY;
+const anthropic = new Anthropic({ apiKey });
+
+// Default configuration for chat and code generation
+const defaultConfig = {
+  temperature: 1,
+  top_p: 0.95,
+  top_k: 40,
+  max_tokens: 8192,
+};
+
+class ChatSession {
+  constructor() {
+    this.history = [
+      {
+        role: "system",
+        content: [{ type: "text", text: CHAT_PROMPT.PROMPT }],
+      },
+    ];
+  }
+
+  async sendMessage(messages) {
+    if (!Array.isArray(messages)) {
+      throw new Error("sendMessage expects an array of messages.");
+    }
+
+    // Append new messages to history
+    this.history.push(...messages);
+
+    try {
+      const response = await anthropic.messages.create({
+        model: "claude-3-7-sonnet-20250219",
+        system: CHAT_PROMPT.PROMPT,
+        messages: this.history.filter((msg) => msg.role !== "system"),
+        max_tokens: 1000,
+      });
+
+      const responseText = response?.content?.[0]?.text || "No response.";
+
+      this.history.push({ role: "assistant", content: responseText });
+
+      return responseText;
+    } catch (error) {
+      console.error("Error in chat session:", error);
+      throw error;
+    }
+  }
+
+  clearHistory() {
+    this.history = [];
+  }
+}
+
+class CodeSession {
+  constructor(config = {}) {
+    this.history = [
+      {
+        role: "system",
+        content: [{ type: "text", text: getSystemPrompt() }],
+      },
+    ];
+    this.config = { ...defaultConfig, ...config };
+  }
+
+  async sendMessage(messages) {
+    if (!Array.isArray(messages)) {
+      throw new Error("sendMessage expects an array of messages.");
+    }
+
+    this.history.push(...messages);
+
+    try {
+      const response = await anthropic.messages.create({
+        model: "claude-3-7-sonnet-20250219",
+        system: getSystemPrompt(),
+        messages: this.history.filter((msg) => msg.role !== "system"),
+        ...this.config,
+      });
+
+      const responseText =
+        response?.content?.[0]?.text || "Error: No response text.";
+
+      this.history.push({
+        role: "assistant",
+        content: [{ type: "text", text: responseText }],
+      });
+
+      return { response: { text: () => responseText } };
+    } catch (error) {
+      console.error("Error in chat session:", error);
+      throw error;
+    }
+  }
+
+  clearHistory() {
+    this.history = [
+      {
+        role: "system",
+        content: [{ type: "text", text: getSystemPrompt() }],
+      },
+    ];
+  }
+}
+
+export const chatSession = new ChatSession();
+export const GenCode = new CodeSession();
