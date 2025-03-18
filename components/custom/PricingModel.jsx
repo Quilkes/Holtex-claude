@@ -49,18 +49,46 @@ function PricingModel() {
 
             <div className="p-6">
               <ul className="mb-8 space-y-4">
-                <li className="flex items-center">
-                  <CheckCircle className="text-green-500" />
-                  <span className="ml-3 text-gray-700">{pricing.support1}</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="text-green-500" />
-                  <span className="ml-3 text-gray-700">{pricing.support2}</span>
-                </li>
-                <li className="flex items-center">
-                  <CheckCircle className="text-green-500" />
-                  <span className="ml-3 text-gray-700">{pricing.support3}</span>
-                </li>
+                {pricing.support1 && (
+                  <li className="flex items-center">
+                    <CheckCircle className="text-green-500" />
+                    <span className="ml-3 text-gray-700">
+                      {pricing.support1}
+                    </span>
+                  </li>
+                )}
+                {pricing.support2 && (
+                  <li className="flex items-center">
+                    <CheckCircle className="text-green-500" />
+                    <span className="ml-3 text-gray-700">
+                      {pricing.support2}
+                    </span>
+                  </li>
+                )}
+                {pricing.support3 && (
+                  <li className="flex items-center">
+                    <CheckCircle className="text-green-500" />
+                    <span className="ml-3 text-gray-700">
+                      {pricing.support3}
+                    </span>
+                  </li>
+                )}
+                {pricing.support4 && (
+                  <li className="flex items-center">
+                    <CheckCircle className="text-green-500" />
+                    <span className="ml-3 text-gray-700">
+                      {pricing.support4}
+                    </span>
+                  </li>
+                )}
+                {pricing.support5 && (
+                  <li className="flex items-center">
+                    <CheckCircle className="text-green-500" />
+                    <span className="ml-3 text-gray-700">
+                      {pricing.support5}
+                    </span>
+                  </li>
+                )}
               </ul>
 
               <div className="mt-6">
