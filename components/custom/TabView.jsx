@@ -113,9 +113,10 @@ export function TabView({ handleDownload, isDownloading, showLoading }) {
           className="flex items-center md:hidden px-2 py-1 ml-2 text-gray-600 hover:text-purple-400 rounded-md"
         >
           {isDownloading ? (
-            <Download size={16} className="" />
-          ) : (
             <Loader className="animate-spin" />
+          ) : (
+            
+            <Download size={16} className="" />
           )}
         </button>
         <button
