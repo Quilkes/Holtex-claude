@@ -3,7 +3,7 @@ import { getSystemPrompt } from "@/data/Prompt";
 import { CHAT_PROMPT } from "@/data/Prompt";
 
 const apiKey = process.env.ANTHROPIC_API_KEY;
-const anthropic = new Anthropic({ apiKey });
+const anthropic = new Anthropic({ apiKey, requestTimeout: 120000 });
 
 // Default configuration for chat and code generation
 const defaultConfig = {
