@@ -20,14 +20,18 @@ export default function StripeCheckoutButton({ priceId, onSuccess }) {
         body: JSON.stringify({ priceId }),
       });
 
-      const { sessionId } = await res.json();
-      const stripe = await stripePromise;
+      const data = await res.json();
+
+      if (data.error) {
+        console.error("Checkout error:", data.error);
+        return;
+      }
+
+      // Store any needed data before redirecting
       sessionStorage.setItem("selectedPlan", priceId);
 
-      const { error } = await stripe.redirectToCheckout({ sessionId });
-      if (error) {
-        console.error("Stripe redirect error:", error);
-      }
+      // Redirect directly to the URL provided by Stripe
+      window.location.href = data.sessionUrl;
     } catch (err) {
       console.error("Checkout error:", err.message);
     } finally {

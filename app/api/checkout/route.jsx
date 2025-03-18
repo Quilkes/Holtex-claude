@@ -22,7 +22,14 @@ export async function POST(req) {
       cancel_url: `${req.headers.get("origin")}/cancel`,
     });
 
-    return Response.json({ sessionId: session.id }, { status: 200 });
+    // Return both the session ID and the complete URL
+    return Response.json(
+      {
+        sessionId: session.id,
+        sessionUrl: session.url,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Stripe Error:", error);
     return Response.json({ error: error.message }, { status: 500 });

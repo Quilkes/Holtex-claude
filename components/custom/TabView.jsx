@@ -7,6 +7,7 @@ import {
   Eye,
   MenuIcon,
   Rocket,
+  Loader,
 } from "lucide-react";
 import useCodeView from "@/store/useCodeView";
 import useSidebar from "@/store/sidebar";
@@ -103,7 +104,6 @@ export function TabView({ handleDownload, isDownloading, showLoading }) {
           className="flex items-center md:hidden px-2 py-1 ml-2 text-gray-600 hover:text-purple-400 rounded-md"
         >
           <Rocket size={16} className="" />
-          <span className="hidden sm:inline">Deploy</span>
         </button>
         <button
           onClick={handleDownload}
@@ -112,10 +112,11 @@ export function TabView({ handleDownload, isDownloading, showLoading }) {
           disabled={isDownloading || showLoading}
           className="flex items-center md:hidden px-2 py-1 ml-2 text-gray-600 hover:text-purple-400 rounded-md"
         >
-          <Download size={16} className="" />
-          <span className="hidden sm:inline">
-            {isDownloading ? "Downloading..." : "Download"}
-          </span>
+          {isDownloading ? (
+            <Download size={16} className="" />
+          ) : (
+            <Loader className="animate-spin" />
+          )}
         </button>
         <button
           onClick={handleToggle}
