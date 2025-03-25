@@ -187,10 +187,13 @@ function CodeView() {
 
       if (!isMounted.current) return;
 
-      setFiles(parsedFiles);
-
       if (webContainerRef.current) {
-        await loadFilesToWebContainer(parsedFiles, webContainerRef);
+        const defaultFiles = await loadFilesToWebContainer(
+          parsedFiles,
+          webContainerRef
+        );
+
+        setFiles(defaultFiles);
       } else {
         console.error("WebContainer not initialized for default files");
       }

@@ -3,7 +3,6 @@ import { UserDetailContext } from "@/app/context/UserDetailContext";
 import Lookup from "@/data/Lookup";
 import { MessageCircle, Send, Bot, DiscIcon, Stars } from "lucide-react";
 import React, { useContext, useState } from "react";
-import SignInDialog from "@/components/custom/SignInDialog";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
@@ -17,7 +16,6 @@ const page = () => {
   const [userInput, setUserInput] = useState("");
   const { setMessages } = useMessage();
   const { userDetail } = useContext(UserDetailContext);
-  const [openDialog, setOpenDialog] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [enhancedInput, setEnhancedInput] = useState("");
   const [isEnhancing, setIsEnhancing] = useState(false);
@@ -42,7 +40,7 @@ const page = () => {
     setSideBar(false);
 
     if (!userDetail || !userDetail._id) {
-      setOpenDialog(true);
+      router.push("/auth/sign-in");
       setIsGenerating(false);
       setIsProcessing(false);
       console.log("No user details or user ID missing");
@@ -283,11 +281,6 @@ const page = () => {
             </p>
           </div>
         </footer>
-
-        <SignInDialog
-          openDialog={openDialog}
-          closeDialog={(v) => setOpenDialog(v)}
-        />
       </div>
     </>
   );

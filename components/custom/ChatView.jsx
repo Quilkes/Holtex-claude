@@ -34,6 +34,7 @@ function ChatView() {
   const chatContainerRef = useRef();
   const messagesEndRef = useRef();
   const { requestCodeGeneration } = useSharedState();
+  const hasGeneratedInitialResponse = useRef(false);
 
   // Get messages directly from Convex
   const workspaceData = useQuery(api.workspace.GetWorkspace, {
@@ -87,26 +88,20 @@ function ChatView() {
     // 5. We're not already processing a request
     if (
       !initialLoading &&
-      !initialResponseSent &&
+      !hasGeneratedInitialResponse.current &&
       workspaceData &&
       messages.length === 1 &&
       messages[0].role === "user" &&
       !processingRequest
     ) {
       // Mark that we've sent the initial response
-      setInitialResponseSent(true);
+      hasGeneratedInitialResponse.current = true;
 
       // Now trigger the AI response
       setProcessingRequest(true);
       GetAiResponse(messages).finally(() => setProcessingRequest(false));
     }
-  }, [
-    initialLoading,
-    initialResponseSent,
-    workspaceData,
-    messages,
-    processingRequest,
-  ]);
+  }, [initialLoading, workspaceData, messages, processingRequest]);
 
   const GetAiResponse = async (updatedMessages) => {
     try {

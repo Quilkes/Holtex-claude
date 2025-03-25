@@ -64,6 +64,8 @@ class CodeSession {
       },
     ];
     this.config = { ...defaultConfig, ...config };
+    this.retryCount = 0;
+    this.MAX_RETRIES = 2;
   }
 
   async sendMessage(messages) {
@@ -81,6 +83,9 @@ class CodeSession {
         ...this.config,
       });
 
+      // Reset retry count on successful response
+      this.retryCount = 0;
+
       const responseText =
         response?.content?.[0]?.text || "Error: No response text.";
 
@@ -92,6 +97,27 @@ class CodeSession {
       return { response: { text: () => responseText } };
     } catch (error) {
       console.error("Error in chat session:", error);
+
+      // Check if it's a credit balance error and we haven't exceeded max retries
+      if (
+        error.status === 400 &&
+        error.error?.type === "invalid_request_error" &&
+        error.error?.message?.includes("credit balance is too low") &&
+        this.retryCount < this.MAX_RETRIES
+      ) {
+        this.retryCount++;
+        console.log(`Retry attempt ${this.retryCount}`);
+
+        // Wait a bit before retrying (optional)
+        await new Promise((resolve) =>
+          setTimeout(resolve, 1000 * this.retryCount)
+        );
+
+        // Recursive retry
+        return this.sendMessage(messages);
+      }
+
+      // If max retries reached or different error, throw the error
       throw error;
     }
   }
@@ -103,6 +129,7 @@ class CodeSession {
         content: [{ type: "text", text: getSystemPrompt() }],
       },
     ];
+    this.retryCount = 0;
   }
 }
 
