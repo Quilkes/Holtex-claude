@@ -45,7 +45,7 @@ const Header = () => {
     <div className="px-4 py-2 flex relative justify-between bg-white items-center z-30">
       <div className="flex items-center">
         {!sideBar && (
-          <Link href="/home">
+          <Link href="/">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
