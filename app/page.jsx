@@ -1,4 +1,4 @@
-use client";
+"use client";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -12,9 +12,16 @@ import {
   ChevronRight,
   ArrowRight,
   Layers,
-  Eye, 
-  Play, Rocket, Store, University , ChevronDown, 
-  Menu, X, Lock, Mail , 
+  Eye,
+  Play,
+  Rocket,
+  Store,
+  University,
+  ChevronDown,
+  Menu,
+  X,
+  Lock,
+  Mail,
   MessageSquarePlus,
   Github,
   Twitter,
@@ -35,54 +42,75 @@ export default function page() {
   const [activeSection, setActiveSection] = useState(null);
 
   const suggestionChips = [
-    'GPT', 'Grok', 'Deep Seek', 'Meta', 
-    'Gemini', 'Claude'
+    "GPT",
+    "Grok",
+    "Deep Seek",
+    "Meta",
+    "Gemini",
+    "Claude",
   ];
 
   const storeTemplates = [
-    'Website', 'Floating Co-pilot', 'eCommerce Storefront', 
-    'Vendor Marketplaces', 'SaaS', 'AiaaS', 'BaaS', 
-    'SPA', 'Chatbot', 'Landing Page', 
-    'Android Mobile App', 'IOS Mobile App'
+    "Website",
+    "Floating Co-pilot",
+    "eCommerce Storefront",
+    "Vendor Marketplaces",
+    "SaaS",
+    "AiaaS",
+    "BaaS",
+    "SPA",
+    "Chatbot",
+    "Landing Page",
+    "Android Mobile App",
+    "IOS Mobile App",
   ];
 
   const aiChannels = [
-    'AI Everywhere', 'AI on Website', 'AI on Social Media',
-    'AI on Instagram', 'AI on TikTok', 'AI on Facebook', 
-    'AI on Google', 'AI on Marketplaces', 'AI on WhatsApp',
-    'AI on Pinterest', 'AI on Snapchat', 'AI on YouTube', 'AI on Mobile'
+    "AI Everywhere",
+    "AI on Website",
+    "AI on Social Media",
+    "AI on Instagram",
+    "AI on TikTok",
+    "AI on Facebook",
+    "AI on Google",
+    "AI on Marketplaces",
+    "AI on WhatsApp",
+    "AI on Pinterest",
+    "AI on Snapchat",
+    "AI on YouTube",
+    "AI on Mobile",
   ];
 
   const supportChats = [
-    { name: 'Facebook', icon: 'facebook' },
-    { name: 'WhatsApp', icon: 'whatsapp' },
-    { name: 'Telegram', icon: 'telegram' },
-    { name: 'TikTok', icon: 'tiktok' },
-    { name: 'X', icon: 'x' }
+    { name: "Facebook", icon: "facebook" },
+    { name: "WhatsApp", icon: "whatsapp" },
+    { name: "Telegram", icon: "telegram" },
+    { name: "TikTok", icon: "tiktok" },
+    { name: "X", icon: "x" },
   ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
       transition: {
         delayChildren: 0.3,
-        staggerChildren: 0.2
-      }
-    }
+        staggerChildren: 0.2,
+      },
+    },
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { 
-      y: 0, 
+    visible: {
+      y: 0,
       opacity: 1,
       transition: {
-        duration: 0.5
-      }
-    }
+        duration: 0.5,
+      },
+    },
   };
-  
+
   return (
     <div className="min-h-screen w-full bg-white">
       {/* Header */}
@@ -153,33 +181,34 @@ export default function page() {
           )}
         </div>
       </header>
-      <motion.div 
+      <motion.div
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-        className="container mx-auto px-4 py-16 text-center"
+        className="container mx-auto mt-20 px-4 py-16 text-center"
       >
-        <motion.h1 
+        <motion.h1
           variants={itemVariants}
           className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-6"
         >
-          Holtex Platform 3.0
+          Holtex Platform
         </motion.h1>
-        
-        <motion.p 
+
+        <motion.p
           variants={itemVariants}
           className="text-xl text-gray-600 max-w-2xl mx-auto mb-10"
         >
-          Automatically updated every 5 minutes. Powering AI innovation across platforms.
+          Automatically updated every 5 minutes. Powering AI innovation across
+          platforms.
         </motion.p>
 
         {/* Video Placeholder */}
-        <motion.div 
+        <motion.div
           variants={itemVariants}
           className="max-w-4xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden relative aspect-video flex items-center justify-center"
         >
           <div className="absolute inset-0 bg-gray-200 opacity-30"></div>
-          <motion.button 
+          <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             className="z-10 bg-white p-4 rounded-full shadow-lg"
@@ -189,12 +218,12 @@ export default function page() {
         </motion.div>
 
         {/* Suggestion Chips */}
-        <motion.div 
+        <motion.div
           variants={itemVariants}
           className="flex flex-wrap justify-center gap-2 mt-8"
         >
           {suggestionChips.map((chip) => (
-            <motion.span 
+            <motion.span
               key={chip}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -207,27 +236,24 @@ export default function page() {
       </motion.div>
 
       {/* Store Section */}
-      <motion.section 
+      <motion.section
         initial="hidden"
         whileInView="visible"
         variants={containerVariants}
         className="py-16 bg-white"
       >
         <div className="container mx-auto px-4">
-          <motion.div 
-            variants={itemVariants}
-            className="text-center mb-10"
-          >
+          <motion.div variants={itemVariants} className="text-center mb-10">
             <Store className="mx-auto mb-4 text-blue-600" size={48} />
             <h2 className="text-3xl font-bold text-gray-900">Holtex Store</h2>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             variants={containerVariants}
             className="grid grid-cols-2 md:grid-cols-4 gap-4"
           >
             {storeTemplates.map((template) => (
-              <motion.div 
+              <motion.div
                 key={template}
                 variants={itemVariants}
                 whileHover={{ scale: 1.05 }}
@@ -241,27 +267,24 @@ export default function page() {
       </motion.section>
 
       {/* AI Channels Section */}
-      <motion.section 
+      <motion.section
         initial="hidden"
         whileInView="visible"
         variants={containerVariants}
         className="py-16 bg-gray-50"
       >
         <div className="container mx-auto px-4">
-          <motion.div 
-            variants={itemVariants}
-            className="text-center mb-10"
-          >
+          <motion.div variants={itemVariants} className="text-center mb-10">
             <Rocket className="mx-auto mb-4 text-blue-600" size={48} />
             <h2 className="text-3xl font-bold text-gray-900">AI Everywhere</h2>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             variants={containerVariants}
             className="grid grid-cols-2 md:grid-cols-4 gap-4"
           >
             {aiChannels.map((channel) => (
-              <motion.div 
+              <motion.div
                 key={channel}
                 variants={itemVariants}
                 whileHover={{ scale: 1.05 }}
@@ -275,27 +298,26 @@ export default function page() {
       </motion.section>
 
       {/* University Section */}
-      <motion.section 
+      <motion.section
         initial="hidden"
         whileInView="visible"
         variants={containerVariants}
         className="py-16 bg-white"
       >
         <div className="container mx-auto px-4">
-          <motion.div 
-            variants={itemVariants}
-            className="text-center mb-10"
-          >
+          <motion.div variants={itemVariants} className="text-center mb-10">
             <University className="mx-auto mb-4 text-blue-600" size={48} />
-            <h2 className="text-3xl font-bold text-gray-900">Holtex University</h2>
+            <h2 className="text-3xl font-bold text-gray-900">
+              Holtex University
+            </h2>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             variants={containerVariants}
             className="flex flex-wrap justify-center gap-4"
           >
             {supportChats.map((chat) => (
-              <motion.button 
+              <motion.button
                 key={chat.name}
                 variants={itemVariants}
                 whileHover={{ scale: 1.1 }}
@@ -308,4 +330,6 @@ export default function page() {
           </motion.div>
         </div>
       </motion.section>
-      </div>
+    </div>
+  );
+}
