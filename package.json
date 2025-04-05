@@ -1,0 +1,37 @@
+{
+  "name": "holtex",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@monaco-editor/react": "^4.7.0",
+    "@react-oauth/google": "^0.12.1",
+    "@stripe/stripe-js": "^7.0.0",
+    "@webcontainer/api": "^1.5.3",
+    "axios": "^1.8.4",
+    "convex": "^1.21.0",
+    "dedent": "^1.5.3",
+    "file-saver": "^2.0.5",
+    "framer-motion": "^12.6.2",
+    "jszip": "^3.10.1",
+    "lucide-react": "^0.486.0",
+    "next": "15.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sonner": "^2.0.3",
+    "stripe": "^18.0.0",
+    "tailwind-scrollbar-hide": "^2.0.0",
+    "uuid4": "^2.0.3",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4"
+  }
+}
