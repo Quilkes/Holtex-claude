@@ -18,7 +18,12 @@ export default defineSchema({
         createdAt: v.optional(v.number()),
       })
     ),
-    fileData: v.optional(v.any()),
+    fileData: v.object({
+      files: v.optional(v.any()),
+      steps: v.optional(v.any()),
+      llmMessages: v.optional(v.array(v.any())),
+      createdAt: v.optional(v.string()),
+    }),
     user: v.id("users"),
   }),
 });

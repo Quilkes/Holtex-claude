@@ -8,7 +8,7 @@ import { handleDownload } from "../utils/downloadZIPFile";
 import useCodeView from "../store/useCodeView";
 import useFiles from "../store/useFiles";
 
-function CodeView({ showLoading, webContainerRef }) {
+function CodeView({ isWebContainerLoading, webContainerRef }) {
   const { activeTab } = useCodeView();
   const { files } = useFiles();
 
@@ -16,7 +16,10 @@ function CodeView({ showLoading, webContainerRef }) {
     <div className="grid h-full bg-white border rounded-md grid-rows-12 border-slate-200">
       {/* Tab View */}
       <div className="flex justify-between w-full row-span-1 border-b border-slate-200">
-        <TabView handleDownload={handleDownload} showLoading={showLoading} />
+        <TabView
+          handleDownload={handleDownload}
+          isWebContainerLoading={isWebContainerLoading}
+        />
       </div>
       {/* Code editor and preview */}
       <div className="w-full h-full row-span-11">

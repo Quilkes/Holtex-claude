@@ -15,10 +15,15 @@ import { Loader } from "../utils/loader";
 function ChatView() {
   const { id } = useParams();
   const { userDetail } = useContext(UserDetailContext);
-  const { steps, setSteps, templateSet, llmMessages, setLlmMessages } =
-    useFiles();
+  const {
+    steps,
+    setSteps,
+    templateSet,
+    llmMessages,
+    setLlmMessages,
+    newFileFromApiLoading,
+  } = useFiles();
   const [userInput, setUserInput] = useState("");
-  const [loading, setLoading] = useState(false);
   const chatContainerRef = useRef();
   const messagesEndRef = useRef();
 
@@ -30,7 +35,7 @@ function ChatView() {
 
   useEffect(() => {
     messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading, steps]);
+  }, [messages, newFileFromApiLoading, steps]);
 
   // Chat container height adjustment
   useEffect(() => {
@@ -54,7 +59,11 @@ function ChatView() {
       className="relative flex flex-col w-full h-full bg-white border rounded-md border-slate-200"
     >
       <div className="flex-1 overflow-y-auto rounded-lg scrollbar-hide">
-        {steps.length === 0 ? (
+        {newFileFromApiLoading ? (
+          <div className="flex items-center justify-center w-full h-full">
+            <span>Loading...</span>
+          </div>
+        ) : steps.length === 0 ? (
           <div className="flex items-center justify-center w-full h-full">
             <p>No steps available</p>
           </div>
@@ -68,8 +77,8 @@ function ChatView() {
 
       <div className="flex gap-2 items-end sticky bottom-0 bg-slate-50 pb-1.5">
         <div className="w-full p-3 border shadow-sm border-slate-200 rounded-xl">
-          {(loading || !templateSet) && <Loader />}
-          {!(loading || !templateSet) && (
+          {(newFileFromApiLoading || !templateSet) && <Loader />}
+          {!(newFileFromApiLoading || !templateSet) && (
             <>
               <div className="flex items-end gap-2">
                 <textarea
@@ -78,7 +87,7 @@ function ChatView() {
                   placeholder={Lookup.INPUT_PLACEHOLDER}
                   className="w-full bg-transparent outline-none resize-none max-h-32 min-h-20"
                   rows={Math.min(3, userInput.split("\n").length || 1)}
-                  disabled={loading}
+                  disabled={newFileFromApiLoading}
                 />
                 <button
                   disabled={!userInput.trim()}

@@ -33,6 +33,8 @@ export default function page() {
     setLlmMessages,
     updateStepsStatus,
     setTemplateSet,
+    setNewFileFromApiLoading,
+    setFileFromDbLoading,
   } = useFiles();
 
   // Query with caching strategy
@@ -43,117 +45,14 @@ export default function page() {
 
   const [workspaceLoaded, setWorkspaceLoaded] = useState(false);
   const [isWebContainerLoading, setIsWebContainerLoading] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   // Track initialization and debounce database updates
-  const isInitializing = useRef(false);
-  const saveTimeoutRef = useRef(null);
+  const hasInitialized = useRef(false);
   const isMounted = useRef(true);
 
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
-  };
-
-  // Main initialization flow with improved reliability
-  useEffect(() => {
-    const initializeWorkspace = async () => {
-      // Guard conditions
-      if (isInitializing.current || !id || !webContainer || workspaceLoaded)
-        return;
-      isInitializing.current = true;
-
-      try {
-        setIsWebContainerLoading(true);
-
-        // First try to fetch from database
-        const hasData = await fetchWorkspaceData();
-
-        // If no data in database, initialize with default files
-        if (!hasData) {
-          await fetchInitialSteps(
-            messages,
-            setSteps,
-            setLlmMessages,
-            setTemplateSet,
-            setLoading
-          );
-
-          // Save initial state to database after small delay
-          // to allow steps and files to be populated
-          setTimeout(async () => {
-            if (steps.length > 0 || files.length > 0) {
-              await saveToDatabase();
-            }
-          }, 2000);
-        } else {
-          hasGeneratedCode.current = true;
-        }
-
-        if (isMounted.current) {
-          setWorkspaceLoaded(true);
-        }
-      } catch (error) {
-        console.error("Workspace initialization error:", error);
-        toast("Error initializing workspace");
-      } finally {
-        isInitializing.current = false;
-        setIsLoading(false);
-      }
-    };
-
-    initializeWorkspace();
-  }, [id, webContainer, workspaceLoaded]);
-
-  // Improved database fetch with error handling
-  const fetchWorkspaceData = async () => {
-    if (!isMounted.current || !id) return false;
-
-    try {
-      //  Fetch from database
-      const result = await convex.query(api.workspace.GetWorkspace, {
-        workspaceId: id,
-      });
-
-      if (!isMounted.current) return false;
-
-      if (result && result.fileData && result.fileData.length > 0) {
-        // Process and load the files into WebContainer
-        if (webContainerRef.current) {
-          updateStepsAndFiles(
-            result.steps,
-            result.files,
-            result.setFiles,
-            setSteps,
-            webContainerRef
-          );
-
-          if (isMounted.current) {
-            setFiles(processedFiles);
-
-            // Also update state
-            if (result.steps) setSteps(result.steps);
-            if (result.llmMessages) setLlmMessages(result.llmMessages);
-            if (result.templateSet) setTemplateSet(result.templateSet);
-
-            setIsLoading(false);
-            setIsWebContainerLoading(false);
-          }
-        }
-        return true;
-      }
-
-      setIsLoading(false);
-      return false;
-    } catch (error) {
-      console.error("Error fetching workspace data:", error);
-      if (isMounted.current) {
-        toast("Failed to load project files");
-        setIsLoading(false);
-      }
-      return false;
-    }
   };
 
   // Update web container reference
@@ -163,8 +62,123 @@ export default function page() {
     }
   }, [webContainer]);
 
+  // Main initialization flow with improved reliability
   useEffect(() => {
-    if (webContainerRef.current) {
+    const initializeWorkspace = async () => {
+      // Skip if already initializing or missing required data
+      if (hasInitialized.current || !id || !webContainer) return;
+      hasInitialized.current = true;
+
+      try {
+        setIsWebContainerLoading(true);
+
+        // 1: First try to fetch from database
+        const hasData = await fetchWorkspaceData();
+
+        // 2: If no data in database, generate new files
+        if (!hasData) {
+          console.log("No data in database, generating new files");
+          await fetchInitialSteps(
+            messages,
+            setSteps,
+            setLlmMessages,
+            setTemplateSet,
+            setNewFileFromApiLoading
+          );
+        }
+
+        if (isMounted.current) {
+          setWorkspaceLoaded(true);
+          setIsWebContainerLoading(false);
+        }
+      } catch (error) {
+        console.error("Workspace initialization error:", error);
+        toast.error("Error initializing workspace");
+      } finally {
+        hasInitialized.current = true;
+        setIsWebContainerLoading(false);
+      }
+    };
+    initializeWorkspace();
+
+    // Clean up function
+    return () => {
+      isMounted.current = false;
+    };
+  }, [id, webContainer, workspaceLoaded, messages, files.length]);
+
+  useEffect(() => {
+    // Check if we have files and steps generated but not yet saved
+    if (steps.length > 0 && files.length > 0 && !workspaceLoaded) {
+      saveToDatabase();
+    }
+  }, [steps, files]);
+
+  // Improved database fetch with error handling
+  const fetchWorkspaceData = async () => {
+    if (!id) return;
+
+    setFileFromDbLoading(true);
+    console.log("Processing existing workspace data");
+
+    try {
+      //  Fetch from database
+      const result = await convex.query(api.workspace.GetWorkspace, {
+        workspaceId: id,
+      });
+
+      if (
+        result &&
+        result.fileData &&
+        result.fileData.files &&
+        result.fileData.files.length > 0
+      ) {
+        // Process and load the files into WebContainer if webContainer is ready
+        if (webContainerRef.current) {
+          await updateStepsAndFiles(
+            result.fileData.steps || [],
+            result.fileData.files,
+            setFiles,
+            updateStepsStatus,
+            webContainerRef
+          );
+
+          // Update state with fetched data
+          setFiles(result.fileData.files);
+          if (result.fileData.steps) setSteps(result.fileData.steps);
+          if (result.fileData.llmMessages)
+            setLlmMessages(result.fileData.llmMessages);
+          if (result.fileData.templateSet)
+            setTemplateSet(result.fileData.templateSet);
+          setIsWebContainerLoading(false);
+        } else {
+          console.warn("WebContainer not ready yet, will retry");
+          // Still update the state so it's ready when container is available
+          setFiles(result.fileData.files);
+          if (result.fileData.steps) setSteps(result.fileData.steps);
+          if (result.fileData.llmMessages)
+            setLlmMessages(result.fileData.llmMessages);
+          if (result.fileData.templateSet)
+            setTemplateSet(result.fileData.templateSet);
+        }
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error("Error fetching workspace data:", error);
+      if (isMounted.current) {
+        toast.error("Failed to load project files");
+      }
+      return false;
+    } finally {
+      setFileFromDbLoading(false);
+    }
+  };
+
+  // Update WebContainer when files or steps change (only after initialization)
+  useEffect(() => {
+    if (hasInitialized.current && webContainerRef.current) {
       updateStepsAndFiles(
         steps,
         files,
@@ -173,20 +187,31 @@ export default function page() {
         webContainerRef
       );
     }
-  }, [steps, files, webContainerRef.current]);
+  }, [steps, files]);
+
+  const saveToDatabase = async () => {
+    if (!id) return;
+
+    try {
+      await UpdateFiles({
+        workspaceId: id,
+        steps,
+        files,
+        llmMessages: workspaceData?.llmMessages || [],
+        createdAt: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error("Failed to save workspace:", error);
+      toast.error("Failed to save your changes");
+    }
+  };
 
   // Clean up on unmount
   useEffect(() => {
     return () => {
       isMounted.current = false;
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
     };
   }, []);
-
-  // Loading state handling
-  const showLoading = isLoading;
 
   return (
     <div className="p-1 h-[100vh] relative overflow-hidden">
@@ -197,7 +222,6 @@ export default function page() {
         </div>
         <div className="md:col-span-9 h-[98vh] flex flex-col justify-center">
           <CodeView
-            showLoading={showLoading}
             isWebContainerLoading={isWebContainerLoading}
             webContainerRef={webContainerRef}
           />

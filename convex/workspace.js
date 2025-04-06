@@ -17,6 +17,12 @@ export const CreateWorkspace = mutation({
     const workspaceId = await ctx.db.insert("workspace", {
       messages: args.messages,
       user: args.user,
+      fileData: {
+        files: [],
+        steps: [],
+        llmMessages: [],
+        createdAt: new Date().toISOString(),
+      },
     });
     return workspaceId;
   },
@@ -79,10 +85,12 @@ export const UpdateFiles = mutation({
   },
   handler: async (ctx, args) => {
     const result = await ctx.db.patch(args.workspaceId, {
-      fileData: args.files,
-      steps: args.steps,
-      llmMessages: args.llmMessages || [],
-      createdAt: args.createdAt || new Date().toISOString(),
+      fileData: {
+        files: args.files,
+        steps: args.steps,
+        llmMessages: args.llmMessages || [],
+        createdAt: args.createdAt || new Date().toISOString(),
+      },
     });
     return result;
   },

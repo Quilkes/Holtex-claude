@@ -11,7 +11,11 @@ import {
 import useCodeView from "../store/useCodeView";
 import useSidebar from "../store/sidebar";
 
-export function TabView({ handleDownload, isDownloading, showLoading }) {
+export function TabView({
+  handleDownload,
+  isDownloading,
+  isWebContainerLoading,
+}) {
   const { activeTab, setActiveTab } = useCodeView();
   const { setSmSidebar, smSideBar, setSmFileBar, smFileBar } = useSidebar();
   const [tooltipText, setTooltipText] = useState("");
@@ -108,7 +112,7 @@ export function TabView({ handleDownload, isDownloading, showLoading }) {
           onClick={handleDownload}
           onMouseEnter={(e) => showTooltip("Download", e)}
           onMouseLeave={hideTooltip}
-          disabled={isDownloading || showLoading}
+          disabled={isDownloading || isWebContainerLoading}
           className="flex items-center px-2 py-1 ml-2 text-gray-600 rounded-md md:hidden hover:text-purple-400"
         >
           {isDownloading ? (

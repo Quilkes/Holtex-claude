@@ -69,7 +69,7 @@ function FileNode({ item, depth, onFileClick, activeFilePath }) {
 
 export function FileExplorer() {
   const { selectedFile, setSelectedFile } = useCodeView();
-  const { files } = useFiles();
+  const { files, fileFromDbLoading } = useFiles();
   const activeFilePath = selectedFile?.path;
 
   const handleFileClick = (file) => {
@@ -78,7 +78,11 @@ export function FileExplorer() {
 
   return (
     <div className="space-y-1">
-      {files.length > 0 ? (
+      {fileFromDbLoading ? (
+        <div className="flex items-center justify-center w-full h-full">
+          <span>Loading...</span>
+        </div>
+      ) : files.length > 0 ? (
         files.map((file, index) => (
           <FileNode
             key={`${file.path}-${index}`}

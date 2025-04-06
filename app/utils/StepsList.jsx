@@ -6,12 +6,13 @@ export function StepsList() {
 
   return (
     <div className="rounded-lg h-fit">
-      <div className="sticky top-0 left-0 flex items-center justify-center h-16 shadow-sm  bg-white/95 backdrop-blur-sm">
+      <div className="sticky top-0 left-0 z-10 flex items-center justify-center h-16 shadow-sm bg-white/95 backdrop-blur-sm">
         <h2 className="text-lg font-semibold text-gray-800 ">Build Steps</h2>
       </div>
       <div className="h-full p-4 overflow-auto scrollbar-hide">
         <div className="space-y-4">
-          {Array.isArray(steps) && steps.length > 0 ? (
+          {Array.isArray(steps) &&
+            steps.length > 0 &&
             steps.map((step) => (
               <div
                 key={step.id}
@@ -40,12 +41,7 @@ export function StepsList() {
                   {step.description}
                 </p>
               </div>
-            ))
-          ) : (
-            <div className="flex items-center justify-center w-full h-full">
-              <p className="text-center text-slate-100">No steps available.</p>
-            </div>
-          )}
+            ))}
         </div>
       </div>
     </div>

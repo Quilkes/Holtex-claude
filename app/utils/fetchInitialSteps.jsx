@@ -10,15 +10,15 @@ export async function fetchInitialSteps(
   setSteps,
   setLlmMessages,
   setTemplateSet,
-  setLoading
+  setNewFileFromApiLoading
 ) {
   try {
-    setLoading(true);
+    setNewFileFromApiLoading(true);
 
     // Validate inputs
     if (!setSteps || typeof setSteps !== "function") {
       console.error("setSteps is not a function:", setSteps);
-      setLoading(false);
+      setNewFileFromApiLoading(false);
       return;
     }
 
@@ -55,7 +55,7 @@ export async function fetchInitialSteps(
         // Now make API call to generate code
         console.log("Generating code...");
         try {
-          const stepsResponse = await axios.post("/api/gen-ai-codesss", {
+          const stepsResponse = await axios.post("/api/gen-ai-code", {
             messages: [
               {
                 role: "user",
@@ -122,6 +122,6 @@ export async function fetchInitialSteps(
     console.error("Error in fetching initial steps:", error);
   } finally {
     console.log("fetchInitialSteps completed");
-    setLoading(false);
+    setNewFileFromApiLoading(false);
   }
 }
