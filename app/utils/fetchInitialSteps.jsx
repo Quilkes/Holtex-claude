@@ -55,7 +55,7 @@ export async function fetchInitialSteps(
         // Now make API call to generate code
         console.log("Generating code...");
         try {
-          const stepsResponse = await axios.post("/api/gen-ai-code", {
+          const stepsResponse = await axios.post("/api/gen-ai-codess", {
             messages: [
               {
                 role: "user",
