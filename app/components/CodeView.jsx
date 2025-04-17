@@ -6,11 +6,9 @@ import { FileExplorer } from "./FileExplorer";
 import { TabView } from "./TabView";
 import { handleDownload } from "../utils/downloadZIPFile";
 import useCodeView from "../store/useCodeView";
-import useFiles from "../store/useFiles";
 
-function CodeView({ isWebContainerLoading, webContainerRef }) {
+function CodeView({ isWebContainerLoading, webContainerRef, files }) {
   const { activeTab } = useCodeView();
-  const { files } = useFiles();
 
   return (
     <div className="grid h-full bg-white border rounded-md grid-rows-12 border-slate-200">
@@ -26,7 +24,7 @@ function CodeView({ isWebContainerLoading, webContainerRef }) {
         <div className="grid w-full h-full grid-cols-9">
           {/* Left panel - File explorer */}
           <div className="w-full col-span-2 overflow-y-auto border-r border-gray-200">
-            <FileExplorer />
+            <FileExplorer files={files} />
           </div>
           <div className="w-full col-span-7">
             <div className="grid w-full h-full overflow-auto border-b border-gray-200 md:border-b-0 md:border-r">

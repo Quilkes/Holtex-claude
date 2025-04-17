@@ -12,17 +12,11 @@ import useFiles from "../store/useFiles";
 import { parseXml } from "../lib/parseXml";
 import { Loader } from "../utils/loader";
 
-function ChatView() {
+function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
   const { id } = useParams();
   const { userDetail } = useContext(UserDetailContext);
-  const {
-    steps,
-    setSteps,
-    templateSet,
-    llmMessages,
-    setLlmMessages,
-    newFileFromApiLoading,
-  } = useFiles();
+  const { templateSet, newFileFromApiLoading } = useFiles();
+  const [loading, setLoading] = useState(false);
   const [userInput, setUserInput] = useState("");
   const chatContainerRef = useRef();
   const messagesEndRef = useRef();
@@ -69,7 +63,7 @@ function ChatView() {
           </div>
         ) : (
           <>
-            <StepsList />
+            <StepsList steps={steps} />
             <div ref={messagesEndRef} />
           </>
         )}

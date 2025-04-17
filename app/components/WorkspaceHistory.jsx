@@ -102,7 +102,7 @@ function WorkspaceHistory() {
           <div
             onClick={isMobile ? handleToggleSmSidebar : handleToggleSidebar}
             key={index}
-            className="relative flex items-center justify-between px-1 py-1 rounded-md hover:bg-slate-100 group"
+            className="relative flex items-center justify-between px-1 py-1 rounded-md hover:bg-gray-200 group"
           >
             <Link
               href={"/workspace/" + workspace?._id}
@@ -134,9 +134,7 @@ function WorkspaceHistory() {
   };
 
   return (
-    <div className="pt-2">
-      <h2 className="mb-4 text-lg font-medium">Your Recents Chat</h2>
-
+    <div className="">
       {renderWorkspaceGroup(groupedWorkspaces.today, "Today")}
       {renderWorkspaceGroup(groupedWorkspaces.yesterday, "Yesterday")}
       {renderWorkspaceGroup(groupedWorkspaces.lastWeek, "Last 7 Days")}

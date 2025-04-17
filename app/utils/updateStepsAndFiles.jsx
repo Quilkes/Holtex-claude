@@ -2,7 +2,6 @@ export const updateStepsAndFiles = async (
   steps,
   files,
   setFiles,
-  updateStepsStatus,
   webContainerRef
 ) => {
   // Ensure steps is an array before filtering
@@ -114,5 +113,10 @@ export const updateStepsAndFiles = async (
 
     setFiles([...originalFiles]);
     updateStepsStatus("completed", (step) => step && step.status === "pending");
+    setSteps((prevSteps) =>
+      prevSteps.map((step) =>
+        step.status === "pending" ? { ...step, status: "completed" } : step
+      )
+    );
   }
 };

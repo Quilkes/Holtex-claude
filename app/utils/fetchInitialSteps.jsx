@@ -32,96 +32,67 @@ export async function fetchInitialSteps(
         throw new Error("Failed to fetch template type");
       });
 
-    if (templateResponse.data && templateResponse.data.result) {
-      setTemplateSet(true);
-      const answer = templateResponse.data.result;
+    setTemplateSet(true);
+    const answer = templateResponse.data.result;
+    const templatePrompts = answer === "react" ? reactPrompt : nodePrompt;
 
-      const templatePrompts = answer === "react" ? reactPrompt : nodePrompt;
+    // Parse and set initial steps
+    setSteps(
+      parseXml(templatePrompts).map((x) => ({
+        ...x,
+        id: uuid4(),
+        status: "pending",
+      }))
+    );
 
-      // Parse and set initial steps
-      const parsedInitialSteps = parseXml(templatePrompts);
-      console.log("Parsed initial steps:", parsedInitialSteps);
+    // Now make API call to generate code
+    console.log("Generating code...");
 
-      if (Array.isArray(parsedInitialSteps) && parsedInitialSteps.length > 0) {
-        const initialSteps = parsedInitialSteps.map((x) => ({
-          ...x,
-          id: uuid4(),
-          status: "pending",
-        }));
-
-        console.log("Setting initial steps:", initialSteps);
-        setSteps(initialSteps);
-
-        // Now make API call to generate code
-        console.log("Generating code...");
-        try {
-          const stepsResponse = await axios.post("/api/gen-ai-codess", {
-            messages: [
-              {
-                role: "user",
-                content: BASE_PROMPT,
-              },
-              {
-                role: "user",
-                content: `Here is an artifact that contains all files of the project visible to you.
+    const stepsResponse = await axios.post("/api/gen-ai-codess", {
+      messages: [
+        {
+          role: "user",
+          content: BASE_PROMPT,
+        },
+        {
+          role: "user",
+          content: `Here is an artifact that contains all files of the project visible to you.
                        Consider the contents of ALL files in the project.
                        ${templatePrompts}
                        Here is a list of files that exist on the file system but are not being shown to you:
                          - .gitignore
                          - package-lock.json`,
-              },
-              {
-                role: "user",
-                content: messages,
-              },
-            ],
-          });
+        },
+        {
+          role: "user",
+          content: messages,
+        },
+      ],
+    });
 
-          console.log("Code generation response:", stepsResponse.data);
+    console.log("Code generation response:", stepsResponse.data);
 
-          if (stepsResponse.data && stepsResponse.data.result) {
-            const parsedGeneratedSteps = parseXml(stepsResponse.data.result);
-            console.log("Parsed generated steps:", parsedGeneratedSteps);
+    if (stepsResponse.data && stepsResponse.data.result) {
+      // Add the new steps to the existing ones
+      setSteps((prevSteps) => [
+        ...prevSteps,
+        ...parseXml(stepsResponse.data.result).map((x) => ({
+          ...x,
+          id: uuid4(),
+          status: "pending",
+        })),
+      ]);
 
-            if (
-              Array.isArray(parsedGeneratedSteps) &&
-              parsedGeneratedSteps.length > 0
-            ) {
-              const generatedSteps = parsedGeneratedSteps.map((x) => ({
-                ...x,
-                id: uuid4(),
-                status: "pending",
-              }));
-
-              // Add the new steps to the existing ones
-              console.log("Adding generated steps:", generatedSteps);
-              setSteps([...initialSteps, ...generatedSteps]);
-
-              setLlmMessages((prevMessages) => [
-                ...prevMessages,
-                { role: "assistant", content: stepsResponse.data.result },
-              ]);
-
-              console.log("Steps and messages set successfully");
-            } else {
-              console.warn("No valid generated steps found in response");
-            }
-          } else {
-            console.error("Invalid steps response format:", stepsResponse.data);
-          }
-        } catch (codeGenError) {
-          console.error("Code generation error:", codeGenError);
-        }
-      } else {
-        console.error("No valid initial steps found in template");
-      }
+      setLlmMessages((prevMessages) => [
+        ...prevMessages,
+        { role: "assistant", content: stepsResponse.data.result },
+      ]);
     } else {
-      console.error("Invalid template response format:", templateResponse.data);
+      console.error("Invalid steps response format:", stepsResponse.data);
     }
   } catch (error) {
     console.error("Error in fetching initial steps:", error);
   } finally {
-    console.log("fetchInitialSteps completed");
     setNewFileFromApiLoading(false);
   }
 }

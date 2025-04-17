@@ -1,6 +1,9 @@
 import { create } from "zustand";
 
 const useSidebar = create((set) => ({
+  isOpen: false,
+  setIsOpen: (bool) => set({ isOpen: bool }),
+  sideBar: false,
   smFileBar: false,
   setSmFileBar: (bool) => set({ smFileBar: bool }),
   sideBar: false,
@@ -9,6 +12,8 @@ const useSidebar = create((set) => ({
   setSmSidebar: (bool) => set({ smSideBar: bool }),
   showLogoutModal: false,
   setShowLogoutModal: (bool) => set({ showLogoutModal: bool }),
+  openUserDropDown: false,
+  setOpenUserDropDown: (bool) => set({ openUserDropDown: bool }),
 }));
 
 export default useSidebar;

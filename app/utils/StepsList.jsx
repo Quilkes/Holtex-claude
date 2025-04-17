@@ -1,8 +1,9 @@
 import { CheckCircle, Circle, Loader2 } from "lucide-react";
 import useFiles from "../store/useFiles";
 
-export function StepsList() {
-  const { currentStep, setCurrentStep, steps } = useFiles();
+export function StepsList({ steps }) {
+  const { currentStep, setCurrentStep } = useFiles();
+  console.log("StepsList steps:", steps);
 
   return (
     <div className="rounded-lg h-fit">

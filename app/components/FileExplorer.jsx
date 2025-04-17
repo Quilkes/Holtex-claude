@@ -67,9 +67,9 @@ function FileNode({ item, depth, onFileClick, activeFilePath }) {
   );
 }
 
-export function FileExplorer() {
+export function FileExplorer({ files }) {
   const { selectedFile, setSelectedFile } = useCodeView();
-  const { files, fileFromDbLoading } = useFiles();
+  const { fileFromDbLoading } = useFiles();
   const activeFilePath = selectedFile?.path;
 
   const handleFileClick = (file) => {

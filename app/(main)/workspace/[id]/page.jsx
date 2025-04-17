@@ -25,17 +25,12 @@ export default function page() {
   const UpdateTokens = useMutation(api.users.UpdateToken);
   const webContainer = useWebContainer();
   const { activeTab } = useCodeView();
-  const {
-    files,
-    setFiles,
-    steps,
-    setSteps,
-    setLlmMessages,
-    updateStepsStatus,
-    setTemplateSet,
-    setNewFileFromApiLoading,
-    setFileFromDbLoading,
-  } = useFiles();
+  const { setTemplateSet, setNewFileFromApiLoading, setFileFromDbLoading } =
+    useFiles();
+
+  const [steps, setSteps] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [llmMessages, setLlmMessages] = useState([]);
 
   // Query with caching strategy
   const workspaceData = useQuery(api.workspace.GetWorkspace, {
@@ -139,7 +134,6 @@ export default function page() {
             result.fileData.steps || [],
             result.fileData.files,
             setFiles,
-            updateStepsStatus,
             webContainerRef
           );
 
@@ -179,13 +173,7 @@ export default function page() {
   // Update WebContainer when files or steps change (only after initialization)
   useEffect(() => {
     if (hasInitialized.current && webContainerRef.current) {
-      updateStepsAndFiles(
-        steps,
-        files,
-        setFiles,
-        updateStepsStatus,
-        webContainerRef
-      );
+      updateStepsAndFiles(steps, files, setFiles, webContainerRef);
     }
   }, [steps, files]);
 
@@ -212,16 +200,23 @@ export default function page() {
       isMounted.current = false;
     };
   }, []);
+  console.log("Steps:", steps);
 
   return (
     <div className="p-1 h-[100vh] relative overflow-hidden">
       {/* Desktop Layout */}
       <div className="hidden h-full gap-2 md:grid place-content-center md:grid-cols-12">
         <div className="col-span-3 h-[98vh] p-0.5 flex flex-col justify-center">
-          <ChatView />
+          <ChatView
+            steps={steps}
+            setSteps={setSteps}
+            llmMessages={llmMessages}
+            setLlmMessages={setLlmMessages}
+          />
         </div>
         <div className="md:col-span-9 h-[98vh] flex flex-col justify-center">
           <CodeView
+            files={files}
             isWebContainerLoading={isWebContainerLoading}
             webContainerRef={webContainerRef}
           />

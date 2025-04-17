@@ -125,7 +125,7 @@ export function TabView({
           onClick={handleToggle}
           onMouseEnter={(e) => showTooltip("Menu", e)}
           onMouseLeave={hideTooltip}
-          className="p-2 rounded-sm cursor-pointer hover:text-green-500"
+          className="p-2 rounded-sm cursor-pointer hover:text-[#800080]"
         >
           <MenuIcon />
         </button>
