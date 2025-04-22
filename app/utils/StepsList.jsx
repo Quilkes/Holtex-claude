@@ -3,7 +3,6 @@ import useFiles from "../store/useFiles";
 
 export function StepsList({ steps }) {
   const { currentStep, setCurrentStep } = useFiles();
-  console.log("StepsList steps:", steps);
 
   return (
     <div className="rounded-lg h-fit">

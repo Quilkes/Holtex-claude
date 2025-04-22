@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import useSidebar from "@/app/store/sidebar";
 import useMessage from "@/app/store/useMessage";
 import Lookup from "@/app/constants/Lookup";
+import { BACKEND_URL } from "@/app/utils/config";
 
 export default function page() {
   const [userInput, setUserInput] = useState("");
@@ -85,7 +86,7 @@ export default function page() {
     }
   };
 
-  const enhancePrompt = async () => {
+  const handleEnhance = async () => {
     if (!userInput.trim()) return;
 
     if (!userDetail?.token || userDetail.token < 10) {
@@ -98,7 +99,7 @@ export default function page() {
     setEnhancedInput("");
 
     try {
-      const response = await fetch("/api/enhance-prompt", {
+      const response = await fetch(`${BACKEND_URL}/enhance-prompt`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: userInput }),
@@ -107,6 +108,8 @@ export default function page() {
       if (!response.ok) {
         throw new Error("Failed to enhance prompt");
       }
+
+      console.log(response);
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -121,8 +124,13 @@ export default function page() {
 
         for (const line of lines) {
           if (line.startsWith("data:")) {
+            const content = line.replace("data: ", "");
+
             try {
-              const parsedData = JSON.parse(line.replace("data: ", ""));
+              const parsedData = JSON.parse(content);
+
+              if (parsedData.done) continue;
+
               if (parsedData.text) {
                 const cleanedText = parsedData.text.replace(/^"|"$/g, "");
                 accumulatedText += cleanedText;
@@ -203,7 +211,7 @@ export default function page() {
 
         {userInput && (
           <button
-            onClick={enhancePrompt}
+            onClick={handleEnhance}
             disabled={isEnhancing || isGenerating}
             className="cursor-pointer w-fit relative flex items-center justify-center "
           >

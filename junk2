@@ -101,6 +101,13 @@ export default function page() {
     };
   }, [id, webContainer, workspaceLoaded, messages, files.length]);
 
+  useEffect(() => {
+    // Check if we have files and steps generated but not yet saved
+    if (steps.length > 0 && files.length > 0 && !workspaceLoaded) {
+      saveToDatabase();
+    }
+  }, [steps, files]);
+
   // Improved database fetch with error handling
   const fetchWorkspaceData = async () => {
     if (!id) return;
@@ -165,11 +172,6 @@ export default function page() {
 
   // Update WebContainer when files or steps change (only after initialization)
   useEffect(() => {
-    // Check if we have files and steps generated but not yet saved
-    if (steps.length > 0 && files.length > 0 && !workspaceLoaded) {
-      saveToDatabase();
-    }
-    // Update WebContainer only if it's initialized and ready
     if (hasInitialized.current && webContainerRef.current) {
       updateStepsAndFiles(steps, files, setSteps, setFiles, webContainerRef);
     }
@@ -198,119 +200,6 @@ export default function page() {
       isMounted.current = false;
     };
   }, []);
-
-  useEffect(() => {
-    let originalFiles = Array.isArray(files) ? [...files] : [];
-    let updateHappened = false;
-
-    // Now filter steps safely
-    const pendingSteps = steps.filter(
-      (step) => step && step.status === "pending"
-    );
-
-    for (const step of pendingSteps) {
-      updateHappened = true;
-      if (step?.type === "CreateFile") {
-        let parsedPath = step.path?.split("/") ?? [];
-        let currentFileStructure = originalFiles;
-        let currentFolder = "";
-
-        while (parsedPath.length) {
-          currentFolder = `${currentFolder}/${parsedPath[0]}`.replace(
-            "//",
-            "/"
-          );
-          let currentFolderName = parsedPath[0];
-          parsedPath = parsedPath.slice(1);
-
-          if (!parsedPath.length) {
-            let file = currentFileStructure.find(
-              (x) => x.path === currentFolder
-            );
-            if (!file) {
-              currentFileStructure.push({
-                name: currentFolderName,
-                type: "file",
-                path: currentFolder,
-                content: step.code,
-              });
-            } else {
-              file.content = step.code;
-            }
-
-            // Ensure WebContainer is ready before writing files
-            if (webContainerRef?.current) {
-              try {
-                const parentDir = currentFolder.substring(
-                  0,
-                  currentFolder.lastIndexOf("/")
-                );
-                if (parentDir) {
-                  webContainerRef.current.fs.mkdir(parentDir, {
-                    recursive: true,
-                  });
-                }
-                webContainerRef.current.fs.writeFile(currentFolder, step.code);
-              } catch (error) {
-                console.error(`Error writing file ${currentFolder}:`, error);
-              }
-            }
-          } else {
-            let folder = currentFileStructure.find(
-              (x) => x.path === currentFolder
-            );
-            if (!folder) {
-              folder = {
-                name: currentFolderName,
-                type: "folder",
-                path: currentFolder,
-                children: [],
-              };
-              currentFileStructure.push(folder);
-
-              if (webContainerRef?.current) {
-                try {
-                  webContainerRef.current.fs.mkdir(currentFolder, {
-                    recursive: true,
-                  });
-                } catch (error) {
-                  console.error(
-                    `Error creating directory ${currentFolder}:`,
-                    error
-                  );
-                }
-              }
-            }
-            currentFileStructure = folder.children || [];
-          }
-        }
-      }
-    }
-
-    if (updateHappened) {
-      const sortFiles = (items) => {
-        items.sort((a, b) => {
-          if (a.type === "folder" && b.type === "file") return -1;
-          if (a.type === "file" && b.type === "folder") return 1;
-          return a.name.localeCompare(b.name);
-        });
-        items.forEach((item) => {
-          if (item.type === "folder" && item.children) {
-            sortFiles(item.children);
-          }
-        });
-      };
-
-      sortFiles(originalFiles);
-
-      setFiles([...originalFiles]);
-      setSteps((prevSteps) =>
-        prevSteps.map((step) =>
-          step.status === "pending" ? { ...step, status: "completed" } : step
-        )
-      );
-    }
-  }, [steps, files]);
 
   return (
     <div className="p-1 h-[100vh] relative overflow-hidden">

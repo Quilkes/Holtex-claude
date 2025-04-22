@@ -1,452 +1,248 @@
-    "result": "I'll help you create a beautiful, production-ready web application. Let's start by setting up a modern React application with Tailwind CSS and Lucide React.\n\n<boltArtifact id=\"modern-react-app\" title=\"Modern React App with Tailwind CSS\">\n<boltAction type=\"file\" filePath=\"package.json\">\n{\n  \"name\": \"modern-react-app\",\n  \"private\": true,\n  \"version\": \"0.1.0\",\n  \"type\": \"module\",\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"vite build\",\n    \"preview\": \"vite preview\"\n  },\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"react-dom\": \"^18.2.0\",\n    \"lucide-react\": \"^0.269.0\",\n    \"react-router-dom\": \"^6.15.0\"\n  },\n  \"devDependencies\": {\n    \"@vitejs/plugin-react\": \"^4.0.4\",\n    \"autoprefixer\": \"^10.4.15\",\n    \"postcss\": \"^8.4.29\",\n    \"tailwindcss\": \"^3.3.3\",\n    \"vite\": \"^4.4.9\"\n  }\n}\n</boltAction>\n\n<boltAction type=\"shell\">\nnpm install && npx --yes vite init . --template react\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"postcss.config.js\">\nexport default {\n  plugins: {\n    tailwindcss: {},\n    autoprefixer: {},\n  },\n}\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"tailwind.config.js\">\n/** @type {import('tailwindcss').Config} */\nexport default {\n  content: [\n    \"./index.html\",\n    \"./src/**/*.{js,ts,jsx,tsx}\",\n  ],\n  theme: {\n    extend: {\n      colors: {\n        primary: {\n          50: '#f0f9ff',\n          100: '#e0f2fe',\n          200: '#bae6fd',\n          300: '#7dd3fc',\n          400: '#38bdf8',\n          500: '#0ea5e9',\n          600: '#0284c7',\n          700: '#0369a1',\n          800: '#075985',\n          900: '#0c4a6e',\n        },\n        secondary: {\n          50: '#f8fafc',\n          100: '#f1f5f9',\n          200: '#e2e8f0',\n          300: '#cbd5e1',\n          400: '#94a3b8',\n          500: '#64748b',\n          600: '#475569',\n          700: '#334155',\n          800: '#1e293b',\n          900: '#0f172a',\n        },\n      },\n      fontFamily: {\n        sans: ['Inter var', 'sans-serif'],\n      },\n    },\n  },\n  plugins: [],\n}\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"vite.config.js\">\nimport { defineConfig } from 'vite'\nimport react from '@vitejs/plugin-react'\n\n// https://vitejs.dev/config/\nexport default defineConfig({\n  plugins: [react()],\n})\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"index.html\">\n<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <link rel=\"icon\" type=\"image/svg+xml\" href=\"/vite.svg\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>Modern React App</title>\n    <link rel=\"stylesheet\" href=\"https://rsms.me/inter/inter.css\">\n  </head>\n  <body>\n    <div id=\"root\"></div>\n    <script type=\"module\" src=\"/src/main.jsx\"></script>\n  </body>\n</html>\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/index.css\">\n@tailwind base;\n@tailwind components;\n@tailwind utilities;\n\n@layer base {\n  html {\n    @apply antialiased;\n  }\n\n  body {\n    @apply bg-secondary-50 text-secondary-900;\n  }\n}\n\n@layer components {\n  .btn {\n    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2;\n  }\n\n  .btn-primary {\n    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;\n  }\n\n  .btn-secondary {\n    @apply bg-white text-secondary-700 border border-secondary-300 hover:bg-secondary-50 focus:ring-primary-500;\n  }\n\n  .card {\n    @apply bg-white shadow rounded-lg overflow-hidden;\n  }\n\n  .input {\n    @apply block w-full rounded-md border-secondary-300 shadow-sm focus:border-primary-500 focus:ring-primary-500;\n  }\n}\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/main.jsx\">\nimport React from 'react'\nimport ReactDOM from 'react-dom/client'\nimport { BrowserRouter } from 'react-router-dom'\nimport App from './App.jsx'\nimport './index.css'\n\nReactDOM.createRoot(document.getElementById('root')).render(\n  <React.StrictMode>\n    <BrowserRouter>\n      <App />\n    </BrowserRouter>\n  </React.StrictMode>,\n)\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/App.jsx\">\nimport { Routes, Route } from 'react-router-dom'\nimport Layout from './components/Layout'\nimport HomePage from './pages/HomePage'\nimport AboutPage from './pages/AboutPage'\nimport ServicesPage from './pages/ServicesPage'\nimport ContactPage from './pages/ContactPage'\n\nfunction App() {\n  return (\n    <Routes>\n      <Route path=\"/\" element={<Layout />}>\n        <Route index element={<HomePage />} />\n        <Route path=\"about\" element={<AboutPage />} />\n        <Route path=\"services\" element={<ServicesPage />} />\n        <Route path=\"contact\" element={<ContactPage />} />\n      </Route>\n    </Routes>\n  )\n}\n\nexport default App\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/components/Layout.jsx\">\nimport { useState, useEffect } from 'react'\nimport { Outlet, Link, useLocation } from 'react-router-dom'\nimport { Menu, X, ChevronDown, Layers, Github } from 'lucide-react'\nimport Footer from './Footer'\n\nexport default function Layout() {\n  const [isMenuOpen, setIsMenuOpen] = useState(false)\n  const location = useLocation()\n  \n  // Close mobile menu when changing routes\n  useEffect(() => {\n    setIsMenuOpen(false)\n  }, [location.pathname])\n\n  return (\n    <div className=\"flex flex-col min-h-screen\">\n      {/* Navigation */}\n      <header className=\"bg-white shadow-sm sticky top-0 z-10\">\n        <div className=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8\">\n          <div className=\"flex justify-between h-16\">\n            <div className=\"flex\">\n              <div className=\"flex-shrink-0 flex items-center\">\n                <Link to=\"/\" className=\"flex items-center\">\n                  <Layers className=\"h-8 w-8 text-primary-600\" />\n                  <span className=\"ml-2 text-xl font-bold text-secondary-900\">Modern App</span>\n                </Link>\n              </div>\n              <nav className=\"hidden sm:ml-6 sm:flex sm:space-x-8\">\n                <NavLink to=\"/\">Home</NavLink>\n                <NavLink to=\"/about\">About</NavLink>\n                <NavLink to=\"/services\">Services</NavLink>\n                <NavLink to=\"/contact\">Contact</NavLink>\n              </nav>\n            </div>\n            \n            <div className=\"hidden sm:ml-6 sm:flex sm:items-center\">\n              <a\n                href=\"https://github.com\"\n                className=\"p-1 rounded-full text-secondary-400 hover:text-secondary-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500\"\n              >\n                <span className=\"sr-only\">View on GitHub</span>\n                <Github className=\"h-6 w-6\" />\n              </a>\n              <a \n                href=\"#\" \n                className=\"ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500\"\n              >\n                Get Started\n              </a>\n            </div>\n            \n            <div className=\"-mr-2 flex items-center sm:hidden\">\n              <button\n                onClick={() => setIsMenuOpen(!isMenuOpen)}\n                className=\"inline-flex items-center justify-center p-2 rounded-md text-secondary-400 hover:text-secondary-500 hover:bg-secondary-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500\"\n              >\n                <span className=\"sr-only\">Open main menu</span>\n                {isMenuOpen ? (\n                  <X className=\"block h-6 w-6\" aria-hidden=\"true\" />\n                ) : (\n                  <Menu className=\"block h-6 w-6\" aria-hidden=\"true\" />\n                )}\n              </button>\n            </div>\n          </div>\n        </div>\n\n        {/* Mobile menu */}\n        <div className={`${isMenuOpen ? 'block' : 'hidden'} sm:hidden`}>\n          <div className=\"pt-2 pb-3 space-y-1\">\n            <MobileNavLink to=\"/\">Home</MobileNavLink>\n            <MobileNavLink to=\"/about\">About</MobileNavLink>\n            <MobileNavLink to=\"/services\">Services</MobileNavLink>\n            <MobileNavLink to=\"/contact\">Contact</MobileNavLink>\n          </div>\n          <div className=\"pt-4 pb-3 border-t border-secondary-200\">\n            <div className=\"flex items-center px-4\">\n              <div className=\"flex-shrink-0\">\n                <a\n                  href=\"https://github.com\"\n                  className=\"p-1 rounded-full text-secondary-400 hover:text-secondary-500\"\n                >\n                  <Github className=\"h-6 w-6\" />\n                </a>\n              </div>\n              <div className=\"ml-auto\">\n                <a\n                  href=\"#\"\n                  className=\"flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700\"\n                >\n                  Get Started\n                </a>\n              </div>\n            </div>\n          </div>\n        </div>\n      </header>\n\n      {/* Main content */}\n      <main className=\"flex-grow\">\n        <Outlet />\n      </main>\n\n      {/* Footer */}\n      <Footer />\n    </div>\n  )\n}\n\nfunction NavLink({ to, children }) {\n  const location = useLocation()\n  const isActive = location.pathname === to\n  \n  return (\n    <Link\n      to={to}\n      className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${\n        isActive\n          ? 'border-primary-500 text-secondary-900'\n          : 'border-transparent text-secondary-500 hover:border-secondary-300 hover:text-secondary-700'\n      }`}\n    >\n      {children}\n    </Link>\n  )\n}\n\nfunction MobileNavLink({ to, children }) {\n  const location = useLocation()\n  const isActive = location.pathname === to\n  \n  return (\n    <Link\n      to={to}\n      className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${\n        isActive\n          ? 'bg-primary-50 border-primary-500 text-primary-700'\n          : 'border-transparent text-secondary-500 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-700'\n      }`}\n    >\n      {children}\n    </Link>\n  )\n}\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/components/Footer.jsx\">\nimport { Layers, Twitter, Facebook, Instagram, Linkedin } from 'lucide-react'\nimport { Link } from 'react-router-dom'\n\nexport default function Footer() {\n  return (\n    <footer className=\"bg-white border-t border-secondary-200\">\n      <div className=\"max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8\">\n        <div className=\"grid grid-cols-1 md:grid-cols-4 gap-8\">\n          {/* Brand column */}\n          <div className=\"space-y-8\">\n            <div className=\"flex items-center\">\n              <Layers className=\"h-8 w-8 text-primary-600\" />\n              <span className=\"ml-2 text-xl font-bold text-secondary-900\">Modern App</span>\n            </div>\n            <p className=\"text-secondary-500 text-sm\">\n              Creating beautiful, functional web experiences that delight users and drive results.\n            </p>\n            <div className=\"flex space-x-6\">\n              <a href=\"#\" className=\"text-secondary-400 hover:text-secondary-500\">\n                <span className=\"sr-only\">Twitter</span>\n                <Twitter className=\"h-5 w-5\" />\n              </a>\n              <a href=\"#\" className=\"text-secondary-400 hover:text-secondary-500\">\n                <span className=\"sr-only\">Facebook</span>\n                <Facebook className=\"h-5 w-5\" />\n              </a>\n              <a href=\"#\" className=\"text-secondary-400 hover:text-secondary-500\">\n                <span className=\"sr-only\">Instagram</span>\n                <Instagram className=\"h-5 w-5\" />\n              </a>\n              <a href=\"#\" className=\"text-secondary-400 hover:text-secondary-500\">\n                <span className=\"sr-only\">LinkedIn</span>\n                <Linkedin className=\"h-5 w-5\" />\n              </a>\n            </div>\n          </div>\n\n          {/* Navigation columns */}\n          <div>\n            <h3 className=\"text-sm font-semibold text-secondary-400 tracking-wider uppercase\">\n              Products\n            </h3>\n            <ul className=\"mt-4 space-y-4\">\n              <li>\n                <a href=\"#\" className=\"text-base text-secondary-500 hover:text-secondary-900\">\n                  Features\n                </a>\n              </li>\n              <li>\n                <a href=\"#\" className=\"text-base text-secondary-500 hover:text-secondary-900\">\n                  Pricing\n                </a>\n              </li>\n              <li>\n                <a href=\"#\" className=\"text-base text-secondary-500 hover:text-secondary-900\">\n                  Marketplace\n                </a>\n              </li>\n              <li>\n                <a href=\"#\" className=\"text-base text-secondary-500 hover:text-secondary-900\">\n                  API\n                </a>\n              </li>\n            </ul>\n          </div>\n\n          <div>\n            <h3 className=\"text-sm font-semibold text-secondary-400 tracking-wider uppercase\">\n              Company\n            </h3>\n            <ul className=\"mt-4 space-y-4\">\n              <li>\n                <Link to=\"/about\" className=\"text-base text-secondary-500 hover:text-secondary-900\">\n                  About\n                </Link>\n              </li>\n              <li>\n                <a href=\"#\" className=\"text-base text-secondary-500 hover:text-secondary-900\">\n                  Careers\n                </a>\n              </li>\n              <li>\n                <a href=\"#\" className=\"text-base text-secondary-500 hover:text-secondary-900\">\n                  Partners\n                </a>\n              </li>\n              <li>\n                <a href=\"#\" className=\"text-base text-secondary-500 hover:text-secondary-900\">\n                  Blog\n                </a>\n              </li>\n            </ul>\n          </div>\n\n          <div>\n            <h3 className=\"text-sm font-semibold text-secondary-400 tracking-wider uppercase\">\n              Support\n            </h3>\n            <ul className=\"mt-4 space-y-4\">\n              <li>\n                <Link to=\"/contact\" className=\"text-base text-secondary-500 hover:text-secondary-900\">\n                  Contact\n                </Link>\n              </li>\n              <li>\n                <a href=\"#\" className=\"text-base text-secondary-500 hover:text-secondary-900\">\n                  Documentation\n                </a>\n              </li>\n              <li>\n                <a href=\"#\" className=\"text-base text-secondary-500 hover:text-secondary-900\">\n                  FAQs\n                </a>\n              </li>\n              <li>\n                <a href=\"#\" className=\"text-base text-secondary-500 hover:text-secondary-900\">\n                  Privacy\n                </a>\n              </li>\n            </ul>\n          </div>\n        </div>\n        \n        <div className=\"mt-12 border-t border-secondary-200 pt-8\">\n          <p className=\"text-base text-secondary-400 text-center\">\n            &copy; {new Date().getFullYear()} Modern App. All rights reserved.\n          </p>\n        </div>\n      </div>\n    </footer>\n  )\n}\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/components/Hero.jsx\">\nimport { ArrowRight } from 'lucide-react'\n\nexport default function Hero() {\n  return (\n    <div className=\"relative bg-white overflow-hidden\">\n      <div className=\"max-w-7xl mx-auto\">\n        <div className=\"relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32\">\n          <svg\n            className=\"hidden lg:block absolute right-0 inset-y-0 h-full w-48 text-white transform translate-x-1/2\"\n            fill=\"currentColor\"\n            viewBox=\"0 0 100 100\"\n            preserveAspectRatio=\"none\"\n            aria-hidden=\"true\"\n          >\n            <polygon points=\"50,0 100,0 50,100 0,100\" />\n          </svg>\n\n          <main className=\"pt-10 mx-auto max-w-7xl px-4 sm:pt-12 sm:px-6 md:pt-16 lg:pt-20 lg:px-8 xl:pt-28\">\n            <div className=\"sm:text-center lg:text-left\">\n              <h1 className=\"text-4xl tracking-tight font-extrabold text-secondary-900 sm:text-5xl md:text-6xl\">\n                <span className=\"block xl:inline\">Beautiful websites</span>{' '}\n                <span className=\"block text-primary-600 xl:inline\">for modern businesses</span>\n              </h1>\n              <p className=\"mt-3 text-base text-secondary-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0\">\n                Create stunning, responsive websites that engage your audience and drive results. \n                Our modern web application framework helps you build faster and scale easier.\n              </p>\n              <div className=\"mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start\">\n                <div className=\"rounded-md shadow\">\n                  <a\n                    href=\"#\"\n                    className=\"w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 md:py-4 md:text-lg md:px-10\"\n                  >\n                    Get started\n                  </a>\n                </div>\n                <div className=\"mt-3 sm:mt-0 sm:ml-3\">\n                  <a\n                    href=\"#\"\n                    className=\"w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200 md:py-4 md:text-lg md:px-10\"\n                  >\n                    Live demo\n                    <ArrowRight className=\"ml-2 h-5 w-5\" />\n                  </a>\n                </div>\n              </div>\n            </div>\n          </main>\n        </div>\n      </div>\n      <div className=\"lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2\">\n        <img\n          className=\"h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full\"\n          src=\"https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80\"\n          alt=\"Team working on web development\"\n        />\n      </div>\n    </div>\n  )\n}\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/components/FeatureSection.jsx\">\nimport { Shield, Zap, Users, LineChart, Server, Smile } from 'lucide-react'\n\nconst features = [\n  {\n    name: 'Fast Performance',\n    description:\n      'Optimized for speed with the latest web technologies. Your users will enjoy a seamless experience no matter the device.',\n    icon: Zap,\n  },\n  {\n    name: 'Secure by Default',\n    description:\n      'Built with security best practices in mind. Keep your data and your users safe from threats.',\n    icon: Shield,\n  },\n  {\n    name: 'Team Collaboration',\n    description:\n      'Designed for teams to work together efficiently. Share, edit, and deploy with confidence.',\n    icon: Users,\n  },\n  {\n    name: 'Detailed Analytics',\n    description:\n      'Understand your users with comprehensive analytics. Make data-driven decisions to improve your product.',\n    icon: LineChart,\n  },\n  {\n    name: 'Scalable Infrastructure',\n    description:\n      'Built to grow with your business. From startup to enterprise, our platform scales with you.',\n    icon: Server,\n  },\n  {\n    name: 'Customer Satisfaction',\n    description:\n      'Put your customers first with a delightful user experience that keeps them coming back.',\n    icon: Smile,\n  },\n]\n\nexport default function FeatureSection() {\n  return (\n    <div className=\"py-12 bg-white\">\n      <div className=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8\">\n        <div className=\"lg:text-center\">\n          <h2 className=\"text-base text-primary-600 font-semibold tracking-wide uppercase\">Features</h2>\n          <p className=\"mt-2 text-3xl leading-8 font-extrabold tracking-tight text-secondary-900 sm:text-4xl\">\n            Everything you need to succeed\n          </p>\n          <p className=\"mt-4 max-w-2xl text-xl text-secondary-500 lg:mx-auto\">\n            Our platform provides all the tools you need to build beautiful, functional websites that deliver results.\n          </p>\n        </div>\n\n        <div className=\"mt-10\">\n          <div className=\"space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10\">\n            {features.map((feature) => (\n              <div key={feature.name} className=\"relative\">\n                <div className=\"absolute flex items-center justify-center h-12 w-12 rounded-md bg-primary-500 text-white\">\n                  <feature.icon className=\"h-6 w-6\" aria-hidden=\"true\" />\n                </div>\n                <div className=\"ml-16\">\n                  <h3 className=\"text-lg leading-6 font-medium text-secondary-900\">{feature.name}</h3>\n                  <p className=\"mt-2 text-base text-secondary-500\">{feature.description}</p>\n                </div>\n              </div>\n            ))}\n          </div>\n        </div>\n      </div>\n    </div>\n  )\n}\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/components/TestimonialSection.jsx\">\nexport default function TestimonialSection() {\n  return (\n    <section className=\"py-12 bg-primary-700 overflow-hidden md:py-20 lg:py-24\">\n      <div className=\"relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8\">\n        <div className=\"relative\">\n          <blockquote className=\"mt-10\">\n            <div className=\"max-w-3xl mx-auto text-center text-2xl leading-9 font-medium text-white\">\n              <p>\n                &ldquo;This platform has transformed our web development process. We've cut development time in half and our clients are thrilled with the results. The modern design elements and performance optimizations have made a real difference in our projects.&rdquo;\n              </p>\n            </div>\n            <footer className=\"mt-8\">\n              <div className=\"md:flex md:items-center md:justify-center\">\n                <div className=\"md:flex-shrink-0\">\n                  <img\n                    className=\"mx-auto h-10 w-10 rounded-full\"\n                    src=\"https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80\"\n                    alt=\"\"\n                  />\n                </div>\n                <div className=\"mt-3 text-center md:mt-0 md:ml-4 md:flex md:items-center\">\n                  <div className=\"text-base font-medium text-white\">Sarah Johnson</div>\n\n                  <svg className=\"hidden md:block mx-1 h-5 w-5 text-primary-400\" fill=\"currentColor\" viewBox=\"0 0 20 20\">\n                    <path d=\"M11 0h3L9 20H6l5-20z\" />\n                  </svg>\n\n                  <div className=\"text-base font-medium text-primary-300\">CEO, TechFusion</div>\n                </div>\n              </div>\n            </footer>\n          </blockquote>\n        </div>\n      </div>\n    </section>\n  )\n}\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/components/CTASection.jsx\">\nexport default function CTASection() {\n  return (\n    <div className=\"bg-primary-50\">\n      <div className=\"max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between\">\n        <h2 className=\"text-3xl font-extrabold tracking-tight text-secondary-900 sm:text-4xl\">\n          <span className=\"block\">Ready to dive in?</span>\n          <span className=\"block text-primary-600\">Start your free trial today.</span>\n        </h2>\n        <div className=\"mt-8 flex lg:mt-0 lg:flex-shrink-0\">\n          <div className=\"inline-flex rounded-md shadow\">\n            <a\n              href=\"#\"\n              className=\"inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700\"\n            >\n              Get started\n            </a>\n          </div>\n          <div className=\"ml-3 inline-flex rounded-md shadow\">\n            <a\n              href=\"#\"\n              className=\"inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-600 bg-white hover:bg-primary-50\"\n            >\n              Learn more\n            </a>\n          </div>\n        </div>\n      </div>\n    </div>\n  )\n}\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/pages/HomePage.jsx\">\nimport Hero from '../components/Hero'\nimport FeatureSection from '../components/FeatureSection'\nimport TestimonialSection from '../components/TestimonialSection'\nimport CTASection from '../components/CTASection'\n\nexport default function HomePage() {\n  return (\n    <>\n      <Hero />\n      <FeatureSection />\n      <TestimonialSection />\n      <CTASection />\n    </>\n  )\n}\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/pages/AboutPage.jsx\">\nimport { Users, Award, Calendar, MapPin } from 'lucide-react'\n\nconst stats = [\n  { name: 'Founded', value: '2018', icon: Calendar },\n  { name: 'Employees', value: '37', icon: Users },\n  { name: 'Countries', value: '12', icon: MapPin },\n  { name: 'Awards', value: '7', icon: Award },\n]\n\nconst team = [\n  {\n    name: 'Michael Foster',\n    role: 'Co-Founder / CEO',\n    imageUrl: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80',\n  },\n  {\n    name: 'Lindsay Walton',\n    role: 'Front-end Developer',\n    imageUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80',\n  },\n  {\n    name: 'Courtney Henry',\n    role: 'Designer',\n    imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80',\n  },\n  {\n    name: 'Tom Cook',\n    role: 'Back-end Developer',\n    imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-=eyJhcHBfaWQiO"
-
-
-            "result": "I'll create a beautiful, production-ready web application for you using React, Tailwind CSS, and Lucide React for icons.\n\n<boltArtifact id=\"modern-react-app\" title=\"Modern React Web Application\">\n<boltAction type=\"file\" filePath=\"package.json\">\n{\n  \"name\": \"modern-react-app\",\n  \"private\": true,\n  \"version\": \"0.1.0\",\n  \"type\": \"module\",\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"vite build\",\n    \"preview\": \"vite preview\"\n  },\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"react-dom\": \"^18.2.0\",\n    \"react-router-dom\": \"^6.14.2\",\n    \"lucide-react\": \"^0.263.1\",\n    \"framer-motion\": \"^10.15.0\"\n  },\n  \"devDependencies\": {\n    \"@vitejs/plugin-react\": \"^4.0.3\",\n    \"autoprefixer\": \"^10.4.14\",\n    \"postcss\": \"^8.4.27\",\n    \"tailwindcss\": \"^3.3.3\",\n    \"vite\": \"^4.4.7\"\n  }\n}\n</boltAction>\n\n<boltAction type=\"shell\">\nnpm install\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"index.html\">\n<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>Lumina | Digital Experience Agency</title>\n    <meta name=\"description\" content=\"Transforming ideas into extraordinary digital experiences. Lumina is a digital agency specializing in brand strategy, web design, and digital marketing.\">\n    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n    <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap\" rel=\"stylesheet\">\n  </head>\n  <body>\n    <div id=\"root\"></div>\n    <script type=\"module\" src=\"/src/main.jsx\"></script>\n  </body>\n</html>\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"public/favicon.svg\">\n<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sparkles\"><path d=\"M12 3v4\"></path><path d=\"m19 7-3 2\"></path><path d=\"m5 7 3 2\"></path><path d=\"m7 19 3-2\"></path><path d=\"m17 19-3-2\"></path><path d=\"M12 15v4\"></path><path d=\"M12 11a2 2 0 0 0 0-4 2 2 0 0 0 0 4Z\"></path><path d=\"M12 11a2 2 0 0 1 0 4 2 2 0 0 1 0-4Z\"></path></svg>\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"vite.config.js\">\nimport { defineConfig } from 'vite'\nimport react from '@vitejs/plugin-react'\n\n// https://vitejs.dev/config/\nexport default defineConfig({\n  plugins: [react()],\n})\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"postcss.config.js\">\nexport default {\n  plugins: {\n    tailwindcss: {},\n    autoprefixer: {},\n  },\n}\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"tailwind.config.js\">\n/** @type {import('tailwindcss').Config} */\nexport default {\n  content: [\n    \"./index.html\",\n    \"./src/**/*.{js,ts,jsx,tsx}\",\n  ],\n  theme: {\n    extend: {\n      fontFamily: {\n        sans: ['Inter', 'sans-serif'],\n        display: ['\"Playfair Display\"', 'serif'],\n      },\n      colors: {\n        primary: {\n          50: '#f0f9ff',\n          100: '#e0f2fe',\n          200: '#bae6fd',\n          300: '#7dd3fc',\n          400: '#38bdf8',\n          500: '#0ea5e9',\n          600: '#0284c7',\n          700: '#0369a1',\n          800: '#075985',\n          900: '#0c4a6e',\n        },\n        accent: {\n          50: '#fdf4ff',\n          100: '#fae8ff',\n          200: '#f5d0fe',\n          300: '#f0abfc',\n          400: '#e879f9',\n          500: '#d946ef',\n          600: '#c026d3',\n          700: '#a21caf',\n          800: '#86198f',\n          900: '#701a75',\n        },\n      },\n      backgroundImage: {\n        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',\n      }\n    },\n  },\n  plugins: [],\n}\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/main.jsx\">\nimport React from 'react'\nimport ReactDOM from 'react-dom/client'\nimport { BrowserRouter as Router } from 'react-router-dom'\nimport App from './App.jsx'\nimport './index.css'\n\nReactDOM.createRoot(document.getElementById('root')).render(\n  <React.StrictMode>\n    <Router>\n      <App />\n    </Router>\n  </React.StrictMode>,\n)\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/index.css\">\n@tailwind base;\n@tailwind components;\n@tailwind utilities;\n\n@layer base {\n  body {\n    @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100;\n  }\n  \n  ::selection {\n    @apply bg-primary-500 text-white;\n  }\n}\n\n@layer components {\n  .container {\n    @apply px-4 mx-auto max-w-7xl sm:px-6 lg:px-8;\n  }\n  \n  .btn {\n    @apply inline-flex items-center justify-center px-6 py-3 text-base font-medium transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2;\n  }\n  \n  .btn-primary {\n    @apply text-white bg-primary-600 hover:bg-primary-700 focus:ring-primary-500;\n  }\n  \n  .btn-secondary {\n    @apply text-primary-700 bg-primary-100 hover:bg-primary-200 focus:ring-primary-500;\n  }\n  \n  .heading-xl {\n    @apply text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl;\n  }\n  \n  .heading-lg {\n    @apply text-3xl font-bold tracking-tight sm:text-4xl;\n  }\n  \n  .heading-md {\n    @apply text-2xl font-bold tracking-tight sm:text-3xl;\n  }\n}\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/App.jsx\">\nimport { Routes, Route } from 'react-router-dom';\nimport Navbar from './components/Navbar';\nimport Footer from './components/Footer';\nimport HomePage from './pages/HomePage';\nimport AboutPage from './pages/AboutPage';\nimport ServicesPage from './pages/ServicesPage';\nimport WorkPage from './pages/WorkPage';\nimport ContactPage from './pages/ContactPage';\n\nfunction App() {\n  return (\n    <div className=\"flex flex-col min-h-screen\">\n      <Navbar />\n      <main className=\"flex-grow\">\n        <Routes>\n          <Route path=\"/\" element={<HomePage />} />\n          <Route path=\"/about\" element={<AboutPage />} />\n          <Route path=\"/services\" element={<ServicesPage />} />\n          <Route path=\"/work\" element={<WorkPage />} />\n          <Route path=\"/contact\" element={<ContactPage />} />\n        </Routes>\n      </main>\n      <Footer />\n    </div>\n  );\n}\n\nexport default App;\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/components/Navbar.jsx\">\nimport { useState, useEffect } from 'react';\nimport { Link, useLocation } from 'react-router-dom';\nimport { Sparkles, Menu, X } from 'lucide-react';\nimport { motion } from 'framer-motion';\n\nconst Navbar = () => {\n  const [isMenuOpen, setIsMenuOpen] = useState(false);\n  const [scrolled, setScrolled] = useState(false);\n  const location = useLocation();\n  \n  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);\n  \n  useEffect(() => {\n    const handleScroll = () => {\n      setScrolled(window.scrollY > 20);\n    };\n    \n    window.addEventListener('scroll', handleScroll);\n    return () => window.removeEventListener('scroll', handleScroll);\n  }, []);\n  \n  // Close mobile menu when route changes\n  useEffect(() => {\n    setIsMenuOpen(false);\n  }, [location]);\n  \n  const navLinks = [\n    { name: 'Home', path: '/' },\n    { name: 'About', path: '/about' },\n    { name: 'Services', path: '/services' },\n    { name: 'Work', path: '/work' },\n    { name: 'Contact', path: '/contact' },\n  ];\n  \n  return (\n    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-sm' : 'bg-transparent'}`}>\n      <nav className=\"container py-4\">\n        <div className=\"flex items-center justify-between\">\n          <Link to=\"/\" className=\"flex items-center gap-2\">\n            <Sparkles className=\"w-8 h-8 text-primary-600\" />\n            <span className=\"text-xl font-bold font-display\">Lumina</span>\n          </Link>\n          \n          {/* Desktop Navigation */}\n          <div className=\"hidden md:flex items-center space-x-8\">\n            {navLinks.map(link => (\n              <Link \n                key={link.name} \n                to={link.path}\n                className={`text-sm font-medium transition-colors hover:text-primary-600 ${location.pathname === link.path ? 'text-primary-600' : 'text-gray-700 dark:text-gray-300'}`}\n              >\n                {link.name}\n              </Link>\n            ))}\n            <Link to=\"/contact\" className=\"btn btn-primary\">\n              Get Started\n            </Link>\n          </div>\n          \n          {/* Mobile menu button */}\n          <button \n            onClick={toggleMenu}\n            className=\"inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-primary-600 md:hidden\"\n          >\n            <span className=\"sr-only\">Open main menu</span>\n            {isMenuOpen ? <X className=\"w-6 h-6\" /> : <Menu className=\"w-6 h-6\" />}\n          </button>\n        </div>\n        \n        {/* Mobile Navigation */}\n        {isMenuOpen && (\n          <motion.div \n            initial={{ opacity: 0, y: -20 }}\n            animate={{ opacity: 1, y: 0 }}\n            exit={{ opacity: 0, y: -20 }}\n            className=\"md:hidden mt-4 pb-4\"\n          >\n            <div className=\"flex flex-col space-y-4\">\n              {navLinks.map(link => (\n                <Link \n                  key={link.name} \n                  to={link.path}\n                  className={`text-base font-medium px-3 py-2 rounded-md transition-colors ${location.pathname === link.path ? 'bg-primary-50 text-primary-600 dark:bg-gray-800' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}`}\n                >\n                  {link.name}\n                </Link>\n              ))}\n              <Link to=\"/contact\" className=\"btn btn-primary w-full justify-center\">\n                Get Started\n              </Link>\n            </div>\n          </motion.div>\n        )}\n      </nav>\n    </header>\n  );\n};\n\nexport default Navbar;\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/components/Footer.jsx\">\nimport { Link } from 'react-router-dom';\nimport { Sparkles, Instagram, Twitter, Linkedin, Facebook, ArrowRight, Mail, MapPin, Phone } from 'lucide-react';\n\nconst Footer = () => {\n  return (\n    <footer className=\"bg-gray-950 text-gray-300 pt-16 pb-6\">\n      <div className=\"container\">\n        <div className=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8\">\n          <div>\n            <Link to=\"/\" className=\"flex items-center gap-2 mb-4\">\n              <Sparkles className=\"w-6 h-6 text-primary-400\" />\n              <span className=\"text-lg font-bold text-white font-display\">Lumina</span>\n            </Link>\n            <p className=\"text-sm mb-6\">\n              Transforming ideas into extraordinary digital experiences. We create memorable brand identities and immersive digital solutions.\n            </p>\n            <div className=\"flex space-x-4\">\n              <a href=\"#\" className=\"text-gray-400 hover:text-primary-400 transition-colors\">\n                <Instagram size={20} />\n                <span className=\"sr-only\">Instagram</span>\n              </a>\n              <a href=\"#\" className=\"text-gray-400 hover:text-primary-400 transition-colors\">\n                <Twitter size={20} />\n                <span className=\"sr-only\">Twitter</span>\n              </a>\n              <a href=\"#\" className=\"text-gray-400 hover:text-primary-400 transition-colors\">\n                <Linkedin size={20} />\n                <span className=\"sr-only\">LinkedIn</span>\n              </a>\n              <a href=\"#\" className=\"text-gray-400 hover:text-primary-400 transition-colors\">\n                <Facebook size={20} />\n                <span className=\"sr-only\">Facebook</span>\n              </a>\n            </div>\n          </div>\n          \n          <div>\n            <h3 className=\"text-white font-semibold mb-4\">Quick Links</h3>\n            <ul className=\"space-y-3\">\n              {['Home', 'About', 'Services', 'Work', 'Contact'].map(item => (\n                <li key={item}>\n                  <Link \n                    to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}\n                    className=\"text-sm hover:text-primary-400 transition-colors flex items-center\"\n                  >\n                    <ArrowRight size={14} className=\"mr-2\" />\n                    {item}\n                  </Link>\n                </li>\n              ))}\n            </ul>\n          </div>\n          \n          <div>\n            <h3 className=\"text-white font-semibold mb-4\">Services</h3>\n            <ul className=\"space-y-3\">\n              {['Brand Strategy', 'UI/UX Design', 'Web Development', 'Digital Marketing', 'Content Creation'].map(item => (\n                <li key={item}>\n                  <Link \n                    to=\"/services\"\n                    className=\"text-sm hover:text-primary-400 transition-colors flex items-center\"\n                  >\n                    <ArrowRight size={14} className=\"mr-2\" />\n                    {item}\n                  </Link>\n                </li>\n              ))}\n            </ul>\n          </div>\n          \n          <div>\n            <h3 className=\"text-white font-semibold mb-4\">Contact</h3>\n            <ul className=\"space-y-4\">\n              <li className=\"flex\">\n                <MapPin size={18} className=\"mt-1 mr-3 text-primary-400 flex-shrink-0\" />\n                <span className=\"text-sm\">123 Design Avenue, Creative District, CA 94103</span>\n              </li>\n              <li className=\"flex\">\n                <Phone size={18} className=\"mt-1 mr-3 text-primary-400 flex-shrink-0\" />\n                <span className=\"text-sm\">+1 (555) 123-4567</span>\n              </li>\n              <li className=\"flex\">\n                <Mail size={18} className=\"mt-1 mr-3 text-primary-400 flex-shrink-0\" />\n                <span className=\"text-sm\">hello@luminaagency.com</span>\n              </li>\n            </ul>\n          </div>\n        </div>\n        \n        <div className=\"border-t border-gray-800 mt-12 pt-6\">\n          <div className=\"flex flex-col md:flex-row justify-between items-center\">\n            <p className=\"text-sm text-gray-500\">\n              &copy; {new Date().getFullYear()} Lumina. All rights reserved.\n            </p>\n            <div className=\"flex space-x-6 mt-4 md:mt-0\">\n              <a href=\"#\" className=\"text-sm text-gray-500 hover:text-primary-400 transition-colors\">\n                Privacy Policy\n              </a>\n              <a href=\"#\" className=\"text-sm text-gray-500 hover:text-primary-400 transition-colors\">\n                Terms of Service\n              </a>\n              <a href=\"#\" className=\"text-sm text-gray-500 hover:text-primary-400 transition-colors\">\n                Cookies\n              </a>\n            </div>\n          </div>\n        </div>\n      </div>\n    </footer>\n  );\n};\n\nexport default Footer;\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/components/Hero.jsx\">\nimport { motion } from 'framer-motion';\nimport { ChevronRight, Sparkles } from 'lucide-react';\nimport { Link } from 'react-router-dom';\n\nconst Hero = () => {\n  return (\n    <section className=\"relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden\">\n      {/* Background gradient */}\n      <div className=\"absolute inset-0 bg-gradient-radial from-primary-50 to-transparent dark:from-gray-900 dark:to-gray-950 -z-10\" />\n      \n      {/* Decorative elements */}\n      <div className=\"absolute top-1/4 right-0 w-64 h-64 bg-accent-400/10 rounded-full blur-3xl -z-10\" />\n      <div className=\"absolute bottom-0 left-1/4 w-96 h-96 bg-primary-400/10 rounded-full blur-3xl -z-10\" />\n      \n      <div className=\"container\">\n        <div className=\"max-w-4xl mx-auto text-center\">\n          <motion.div\n            initial={{ opacity: 0, y: 20 }}\n            animate={{ opacity: 1, y: 0 }}\n            transition={{ duration: 0.5 }}\n          >\n            <span className=\"inline-flex items-center px-3 py-1 text-sm font-medium text-primary-700 bg-primary-100 rounded-full dark:bg-primary-900/30 dark:text-primary-300 mb-6\">\n              <Sparkles size={16} className=\"mr-1\" /> Transforming Ideas into Reality\n            </span>\n          </motion.div>\n          \n          <motion.h1 \n            className=\"heading-xl mb-6 font-display\"\n            initial={{ opacity: 0, y: 20 }}\n            animate={{ opacity: 1, y: 0 }}\n            transition={{ duration: 0.5, delay: 0.1 }}\n          >\n            <span className=\"block\">Crafting Digital Experiences</span>\n            <span className=\"text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-600\">That Inspire & Engage</span>\n          </motion.h1>\n          \n          <motion.p \n            className=\"text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto\"\n            initial={{ opacity: 0, y: 20 }}\n            animate={{ opacity: 1, y: 0 }}\n            transition={{ duration: 0.5, delay: 0.2 }}\n          >\n            We're a creative digital agency that combines design, technology, and strategy to build remarkable brands and digital products that connect with people.\n          </motion.p>\n          \n          <motion.div \n            className=\"flex flex-col sm:flex-row items-center justify-center gap-4\"\n            initial={{ opacity: 0, y: 20 }}\n            animate={{ opacity: 1, y: 0 }}\n            transition={{ duration: 0.5, delay: 0.3 }}\n          >\n            <Link to=\"/contact\" className=\"btn btn-primary\">\n              Get Started\n              <ChevronRight size={16} className=\"ml-1\" />\n            </Link>\n            <Link to=\"/work\" className=\"btn btn-secondary\">\n              View Our Work\n            </Link>\n          </motion.div>\n        </div>\n      </div>\n    </section>\n  );\n};\n\nexport default Hero;\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/components/ServiceCard.jsx\">\nimport { motion } from 'framer-motion';\n\nconst ServiceCard = ({ icon: Icon, title, description, delay = 0 }) => {\n  return (\n    <motion.div \n      className=\"bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-shadow group\"\n      initial={{ opacity: 0, y: 20 }}\n      whileInView={{ opacity: 1, y: 0 }}\n      transition={{ duration: 0.5, delay }}\n      viewport={{ once: true, margin: \"-100px\" }}\n    >\n      <div className=\"w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center mb-5 text-primary-600 dark:text-primary-400 group-hover:bg-primary-600 group-hover:text-white transition-colors\">\n        <Icon size={24} />\n      </div>\n      <h3 className=\"text-xl font-bold mb-3\">{title}</h3>\n      <p className=\"text-gray-600 dark:text-gray-400\">{description}</p>\n    </motion.div>\n  );\n};\n\nexport default ServiceCard;\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/components/ProjectCard.jsx\">\nimport { Link } from 'react-router-dom';\nimport { motion } from 'framer-motion';\nimport { ArrowUpRight } from 'lucide-react';\n\nconst ProjectCard = ({ project, index }) => {\n  const { title, category, description, image, link } = project;\n  \n  return (\n    <motion.div \n      className=\"group\"\n      initial={{ opacity: 0, y: 20 }}\n      whileInView={{ opacity: 1, y: 0 }}\n      transition={{ duration: 0.5, delay: index * 0.1 }}\n      viewport={{ once: true, margin: \"-100px\" }}\n    >\n      <div className=\"relative overflow-hidden rounded-lg mb-4\">\n        <img \n          src={image} \n          alt={title} \n          className=\"w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105\"\n        />\n        <div className=\"absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end\">\n          <div className=\"p-6 w-full\">\n            <Link \n              to={link} \n              className=\"inline-flex items-center text-white font-medium\"\n            >\n              View Project <ArrowUpRight size={16} className=\"ml-1\" />\n            </Link>\n          </div>\n        </div>\n      </div>\n      <div>\n        <span className=\"text-sm text-primary-600 dark:text-primary-400 font-medium\">{category}</span>\n        <h3 className=\"text-xl font-bold mt-1\">{title}</h3>\n        <p className=\"text-gray-600 dark:text-gray-400 mt-2\">{description}</p>\n      </div>\n    </motion.div>\n  );\n};\n\nexport default ProjectCard;\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/components/Testimonials.jsx\">\nimport { motion } from 'framer-motion';\nimport { Quote } from 'lucide-react';\n\nconst testimonials = [\n  {\n    content: \"Working with Lumina transformed our digital presence completely. Their strategic approach and attention to detail resulted in a website that perfectly captures our brand essence.\",\n    author: \"Sarah Johnson\",\n    position: \"Marketing Director, TechVision\",\n    avatar: \"https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80\"\n  },\n  {\n    content: \"The team at Lumina doesn't just deliver beautiful designs—they create strategic solutions that drive real business results. Our conversion rate increased by 45% after the redesign.\",\n    author: \"Michael Chen\",\n    position: \"CEO, Innovate Labs\",\n    avatar: \"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80\"\n  },\n  {\n    content: \"From concept to execution, Lumina exceeded our expectations at every turn. Their holistic approach to brand identity and digital design has been instrumental to our growth.\",\n    author: \"Emily Rodriguez\",\n    position: \"Founder, Bloom Botanicals\",\n    avatar: \"https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=256&q=80\"\n  }\n];\n\nconst Testimonials = () => {\n  return (\n    <section className=\"py-16 bg-gray-50 dark:bg-gray-900\">\n      <div className=\"container\">\n        <div className=\"text-center max-w-2xl mx-auto mb-12\">\n          <span className=\"text-sm font-medium text-primary-600 dark:text-primary-400 mb-2 block\">Testimonials</span>\n          <h2 className=\"heading-lg mb-4\">What Our Clients Say</h2>\n          <p className=\"text-gray-600 dark:text-gray-400\">\n            Don't just take our word for it—hear from some of our satisfied clients about their experience working with our team.\n          </p>\n        </div>\n        \n        <div className=\"grid grid-cols-1 md:grid-cols-3 gap-8\">\n          {testimonials.map((testimonial, index) => (\n            <motion.div \n              key={index}\n              className=\"bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm relative\"\n              initial={{ opacity: 0, y: 20 }}\n              whileInView={{ opacity: 1, y: 0 }}\n              transition={{ duration: 0.5, delay: index * 0.1 }}\n              viewport={{ once: true, margin: \"-100px\" }}\n            >\n              <Quote className=\"absolute top-6 right-6 text-primary-100 dark:text-primary-900/30\" size={48} />\n              <p className=\"text-gray-700 dark:text-gray-300 mb-6 relative z-10\">\"{testimonial.content}\"</p>\n              <div className=\"flex items-center\">\n                <img \n                  src={testimonial.avatar} \n                  alt={testimonial.author}\n                  className=\"w-12 h-12 rounded-full object-cover mr-4\" \n                />\n                <div>\n                  <h4 className=\"font-bold\">{testimonial.author}</h4>\n                  <p className=\"text-sm text-gray-600 dark:text-gray-400\">{testimonial.position}</p>\n                </div>\n              </div>\n            </motion.div>\n          ))}\n        </div>\n      </div>\n    </section>\n  );\n};\n\nexport default Testimonials;\n</boltAction>\n\n<boltAction type=\"file\" filePath=\"src/components/ContactForm.jsx\">\nimport { useState } from 'react';\nimport { motion } from 'framer-motion';\nimport { Send } from 'lucide-react';\n\nconst ContactForm = () => {\n  const [formData, setFormData] = useState({\n    name: '',\n    email: '',\n    phone: '',\n    service: '',\n    message: ''\n  });\n  \n  const [isSubmitting, setIsSubmitting] = useState(false);\n  const [isSubmitted, setIsSubmitted] = useState(false);\n  \n  const handleChange = (e) => {\n    const { name, value } = e.target;\n    setFormData(prev => ({ ...prev, [name]: value }));\n  };\n  \n  const handleSubmit = (e) => {\n    e.preventDefault();\n    setIsSubmitting(true);\n    \n    // Simulate form submission\n    setTimeout(() => {\n      setIsSubmitting(false);\n      setIsSubmitted(true);\n      setFormData({\n        name: '',\n        email: '',\n        phone: '',\n        service: '',\n        message: ''\n      });\n      \n      // Reset success message after 5 seconds\n      setTimeout(() => {\n        setIsSubmitted(false);\n      }, 5000);\n    }, 1500);\n  };\n  \n  return (\n    <motion.div \n      className=\"bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-8\"\n      initial={{ opacity: 0, y: 20 }}\n      whileInView={{ opacity: 1, y: 0 }}\n      transition={{ duration: 0.5 }}\n      viewport={{ once: true, margin: \"-100px\" }}\n    >\n      {isSubmitted ?"
-
-
-
-
-
-
-
-                "use client";
-                
-                import React, { useEffect, useRef, useState } from "react";
-                import { TabView } from "@/app/components/TabView";
-                import { ChevronRight, MessageSquare } from "lucide-react";
-                import { CodeEditor } from "@/app/components/CodeEditor";
-                import CodeView from "@/app/components/CodeView";
-                import PreviewFrame from "@/app/components/PreviewFrame";
-                import useCodeView from "@/app/store/useCodeView";
-                import useFiles from "@/app/store/useFiles";
-                import ChatView from "@/app/components/ChatView";
-                import { useParams } from "next/navigation";
-                import { useConvex, useMutation, useQuery } from "convex/react";
-                import { useWebContainer } from "@/app/hooks/useWebContainer";
-                import { updateStepsAndFiles } from "@/app/utils/updateStepsAndFiles";
-                import { fetchInitialSteps } from "@/app/utils/fetchInitialSteps";
-                import { toast } from "sonner";
-                import { api } from "@/convex/_generated/api";
-                
-                // Caching utility
-                const CACHE_KEY_PREFIX = "workspace_cache_";
-                
-                export default function page() {
-                  const { id } = useParams();
-                  const convex = useConvex();
-                  const webContainerRef = useRef(null);
-                  const UpdateFiles = useMutation(api.workspace.UpdateFiles);
-                  const UpdateTokens = useMutation(api.users.UpdateToken);
-                  const webContainer = useWebContainer();
-                  const { activeTab } = useCodeView();
-                  const {
-                    files,
-                    setFiles,
-                    steps,
-                    setSteps,
-                    setLlmMessages,
-                    updateStepsStatus,
-                    setTemplateSet,
-                  } = useFiles();
-                
-                  // Query with caching strategy
-                  const workspaceData = useQuery(api.workspace.GetWorkspace, {
-                    workspaceId: id,
-                  });
-                  const messages = workspaceData?.messages || [];
-                
-                  const [workspaceLoaded, setWorkspaceLoaded] = useState(false);
-                  const [isWebContainerLoading, setIsWebContainerLoading] = useState(false);
-                  const [isLoading, setIsLoading] = useState(true);
-                  const [isChatOpen, setIsChatOpen] = useState(false);
-                  const [loading, setLoading] = useState(false);
-                
-                  // Track initialization and debounce database updates
-                  const isInitializing = useRef(false);
-                  const saveTimeoutRef = useRef(null);
-                  const isMounted = useRef(true);
-                
-                  const toggleChat = () => {
-                    setIsChatOpen(!isChatOpen);
-                  };
-                
-                  // Check local cache first
-                  useEffect(() => {
-                    const checkCache = async () => {
-                      try {
-                        const cacheKey = `${CACHE_KEY_PREFIX}${id}`;
-                        const cachedData = localStorage.getItem(cacheKey);
-                
-                        if (cachedData) {
-                          const parsedData = JSON.parse(cachedData);
-                          if (
-                            parsedData.timestamp &&
-                            Date.now() - parsedData.timestamp < 3600000
-                          ) {
-                            // 1 hour cache
-                            if (parsedData.files && parsedData.files.length > 0) {
-                              setFiles(parsedData.files);
-                              setSteps(parsedData.steps || []);
-                              if (parsedData.llmMessages)
-                                setLlmMessages(parsedData.llmMessages);
-                              if (parsedData.templateSet)
-                                setTemplateSet(parsedData.templateSet);
-                
-                              // Still need to load into WebContainer but can skip db fetch
-                              if (webContainerRef.current && parsedData.files) {
-                                await updateStepsAndFiles(
-                                  steps,
-                                  parsedData.files,
-                                  setFiles,
-                                  setSteps,
-                                  webContainerRef
-                                );
-                
-                                setIsWebContainerLoading(false);
-                              }
-                
-                              return true;
-                            }
-                          }
-                        }
-                        return false;
-                      } catch (error) {
-                        console.error("Cache retrieval error:", error);
-                        return false;
-                      }
-                    };
-                
-                    if (id && !workspaceLoaded) {
-                      checkCache().then((hasCache) => {
-                        if (hasCache) {
-                          setIsLoading(false);
-                          setWorkspaceLoaded(true);
-                          hasGeneratedCode.current = true;
-                        }
-                      });
-                    }
-                  }, [id]);
-                
-                  // Main initialization flow with improved reliability
-                  useEffect(() => {
-                    const initializeWorkspace = async () => {
-                      // Guard conditions
-                      if (isInitializing.current || !id || !webContainer || workspaceLoaded)
-                        return;
-                      isInitializing.current = true;
-                
-                      try {
-                        webContainerRef.current = webContainer;
-                        setIsWebContainerLoading(true);
-                
-                        // First try to fetch from database
-                        const hasData = await fetchWorkspaceData();
-                
-                        // If no data in database, initialize with default files
-                        if (!hasData) {
-                          await fetchInitialSteps(
-                            messages,
-                            setSteps,
-                            setLlmMessages,
-                            setTemplateSet,
-                            setLoading
-                          );
-                
-                          // Save initial state to database after small delay
-                          // to allow steps and files to be populated
-                          setTimeout(async () => {
-                            if (steps.length > 0 || files.length > 0) {
-                              await saveToDatabase();
-                            }
-                          }, 2000);
-                        } else {
-                          hasGeneratedCode.current = true;
-                        }
-                
-                        if (isMounted.current) {
-                          setWorkspaceLoaded(true);
-                        }
-                      } catch (error) {
-                        console.error("Workspace initialization error:", error);
-                        toast("Error initializing workspace");
-                      } finally {
-                        isInitializing.current = false;
-                        setIsLoading(false);
-                      }
-                    };
-                
-                    initializeWorkspace();
-                  }, [id, webContainer, workspaceLoaded]);
-                
-                  // Improved database fetch with error handling
-                  const fetchWorkspaceData = async () => {
-                    if (!isMounted.current || !id) return false;
-                
-                    try {
-                      // Try cache first
-                      const cacheKey = `${CACHE_KEY_PREFIX}${id}`;
-                      const cachedData = localStorage.getItem(cacheKey);
-                
-                      if (cachedData) {
-                        const parsedData = JSON.parse(cachedData);
-                        // Use cache if it's less than an hour old
-                        if (
-                          parsedData.timestamp &&
-                          Date.now() - parsedData.timestamp < 3600000
-                        ) {
-                          setFiles(parsedData.files || []);
-                          setSteps(parsedData.steps || []);
-                          if (parsedData.llmMessages) setLlmMessages(parsedData.llmMessages);
-                          if (parsedData.templateSet) setTemplateSet(parsedData.templateSet);
-                
-                          // Still load into web container
-                          if (webContainerRef.current && parsedData.files) {
-                            updateStepsAndFiles(
-                              parsedData.steps,
-                              parsedData.files,
-                              setFiles,
-                              setSteps,
-                              webContainerRef
-                            );
-                          }
-                
-                          setIsLoading(false);
-                          setIsWebContainerLoading(false);
-                          return true;
-                        }
-                      }
-                
-                      // If no valid cache, fetch from database
-                      const result = await convex.query(api.workspace.GetWorkspace, {
-                        workspaceId: id,
-                      });
-                
-                      if (!isMounted.current) return false;
-                
-                      if (result && result.fileData && result.fileData.length > 0) {
-                        // Process and load the files into WebContainer
-                        if (webContainerRef.current) {
-                          updateStepsAndFiles(
-                            result.steps,
-                            result.files,
-                            result.setFiles,
-                            setSteps,
-                            webContainerRef
-                          );
-                
-                          if (isMounted.current) {
-                            setFiles(processedFiles);
-                
-                            // Cache the results
-                            localStorage.setItem(
-                              cacheKey,
-                              JSON.stringify({
-                                files: processedFiles,
-                                steps: result.steps || [],
-                                llmMessages: result.llmMessages || [],
-                                templateSet: result.templateSet || false,
-                                timestamp: Date.now(),
-                              })
-                            );
-                
-                            // Also update state
-                            if (result.steps) setSteps(result.steps);
-                            if (result.llmMessages) setLlmMessages(result.llmMessages);
-                            if (result.templateSet) setTemplateSet(result.templateSet);
-                
-                            setIsLoading(false);
-                            setIsWebContainerLoading(false);
-                          }
-                        }
-                        return true;
-                      }
-                
-                      setIsLoading(false);
-                      return false;
-                    } catch (error) {
-                      console.error("Error fetching workspace data:", error);
-                      if (isMounted.current) {
-                        toast("Failed to load project files");
-                        setIsLoading(false);
-                      }
-                      return false;
-                    }
-                  };
-                
-                  // Update web container reference
-                  useEffect(() => {
-                    if (webContainer) {
-                      webContainerRef.current = webContainer;
-                    }
-                  }, [webContainer]);
-                
-                  // // Save to database with debouncing
-                  // const saveToDatabase = async () => {
-                  //   if (!id || !isMounted.current) return;
-                
-                  //   try {
-                  //     // Save to local cache first for fast retrieval
-                  //     const cacheKey = `${CACHE_KEY_PREFIX}${id}`;
-                  //     localStorage.setItem(
-                  //       cacheKey,
-                  //       JSON.stringify({
-                  //         files,
-                  //         steps,
-                  //         llmMessages: workspaceData?.llmMessages || [],
-                  //         templateSet: workspaceData?.templateSet || false,
-                  //         timestamp: Date.now(),
-                  //       })
-                  //     );
-                
-                  //     // Then save to database
-                  //     await UpdateFiles({
-                  //       workspaceId: id,
-                  //       steps,
-                  //       files,
-                  //       llmMessages: workspaceData?.llmMessages || [],
-                  //       createdAt: new Date(),
-                  //     });
-                  //   } catch (error) {
-                  //     console.error("Failed to save workspace:", error);
-                  //     toast.error("Failed to save your changes");
-                  //   }
-                  // };
-                
-                  // Debounced save on file/step changes
-                  // useEffect(() => {
-                  //   if (!workspaceLoaded || !id) return;
-                
-                  //   // Clear any existing timeout
-                  //   if (saveTimeoutRef.current) {
-                  //     clearTimeout(saveTimeoutRef.current);
-                  //   }
-                
-                  //   // Set new timeout for debounced saving
-                  //   saveTimeoutRef.current = setTimeout(() => {
-                  //     saveToDatabase();
-                  //   }, 2000); // 2 second debounce
-                
-                  //   return () => {
-                  //     if (saveTimeoutRef.current) {
-                  //       clearTimeout(saveTimeoutRef.current);
-                  //     }
-                  //   };
-                  // }, [files, steps, workspaceLoaded]);
-                
-                  useEffect(() => {
-                    if (webContainerRef.current) {
-                      updateStepsAndFiles(
-                        steps,
-                        files,
-                        setFiles,
-                        updateStepsStatus,
-                        webContainerRef
-                      );
-                    }
-                  }, [steps, files, webContainerRef.current]);
-                
-                  // Clean up on unmount
-                  useEffect(() => {
-                    return () => {
-                      isMounted.current = false;
-                      if (saveTimeoutRef.current) {
-                        clearTimeout(saveTimeoutRef.current);
-                      }
-                    };
-                  }, []);
-                
-                  // Loading state handling
-                  const showLoading = isLoading;
-                
-                  return (
-                    <div className="p-1 h-[100vh] relative overflow-hidden">
-                      {/* Desktop Layout */}
-                      <div className="hidden h-full gap-2 md:grid place-content-center md:grid-cols-12">
-                        <div className="col-span-3 h-[98vh] p-0.5 flex flex-col justify-center">
-                          <ChatView />
-                        </div>
-                        <div className="md:col-span-9 h-[98vh] flex flex-col justify-center">
-                          <CodeView
-                            showLoading={showLoading}
-                            isWebContainerLoading={isWebContainerLoading}
-                            webContainerRef={webContainerRef}
-                          />
-                        </div>
-                      </div>
-                
-                      {/* Mobile Layout */}
-                      <div className="block h-full md:hidden">
-                        {/* Mobile CodeView */}
-                        <div className="h-full">
-                          <div className="grid h-full border rounded-md grid-rows-12 bg-slate-100">
-                            {/* Tab View - Using updated TabView component */}
-                            <div className="flex justify-between w-full row-span-1 border bg-slate-100">
-                              <TabView />
-                            </div>
-                
-                            {/* Code editor and preview section */}
-                            <div className="w-full h-full row-span-11">
-                              <div className="grid w-full h-full grid-cols-12">
-                                {/* Code Editor or Preview  */}
-                                <div className="w-full col-span-12">
-                                  <div className="w-full h-full overflow-auto border-b border-gray-200 md:border-b-0 md:border-r">
-                                    {activeTab === "code" ? (
-                                      <CodeEditor files={files[0]} />
-                                    ) : (
-                                      <PreviewFrame
-                                        files={files}
-                                        webContainerRef={webContainerRef}
-                                      />
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                
-                              {/* {showLoading && (
-                                <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80">
-                                  <div className="flex flex-col items-center">
-                                    <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-                                    <p className="mt-2 text-sm text-gray-600">
-                                      {loadingMessage}
-                                    </p>
-                                  </div>
-                                </div>
-                              )} */}
-                            </div>
-                          </div>
-                        </div>
-                        Slide-in ChatView for Mobile
-                        <div
-                          className={`fixed top-0 left-0 h-full w-full bg-white z-20 transition-transform duration-300 ease-in-out ${
-                            isChatOpen ? "translate-x-0" : "translate-x-full"
-                          }`}
-                          style={{ maxWidth: "100vw", maxHeight: "100vh" }}
-                        >
-                          <div className="flex flex-col h-full">
-                            <div className="flex items-center justify-between p-2 bg-slate-100">
-                              <h2 className="text-lg font-semibold">Chat</h2>
-                              <button
-                                onClick={toggleChat}
-                                className="p-2 rounded-full hover:bg-slate-200"
-                              >
-                                <ChevronRight size={24} />
-                              </button>
-                            </div>
-                            <div className="flex-1 overflow-hidden">ChatView</div>
-                          </div>
-                        </div>
-                        {/* Chat Toggle Button (only shows when chat is closed) */}
-                        {!isChatOpen && (
-                          <button
-                            onClick={toggleChat}
-                            className="fixed z-10 flex items-center justify-center p-3 text-white bg-purple-600 rounded-full shadow-lg bottom-6 right-6"
-                          >
-                            <MessageSquare size={24} />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                }
-                
-
+content: [
+  {
+    type: "text",
+    text:
+      "I'll create a beautiful and functional Todo App with React. It will include features like categories, due dates, priority levels, and a clean UI.\n" +
+      "\n" +
+      '<boltArtifact id="todo-app" title="Modern Todo Application">\n' +
+      '<boltAction type="file" filePath="src/types/todo.ts">\n' +
+      "export interface Todo {\n" +
+      "  id: string;\n" +
+      "  title: string;\n" +
+      "  completed: boolean;\n" +
+      "  priority: 'low' | 'medium' | 'high';\n" +
+      "  dueDate?: Date;\n" +
+      "  category: string;\n" +
+      "  createdAt: Date;\n" +
+      "}\n" +
+      "\n" +
+      "export type TodoCategory = {\n" +
+      "  name: string;\n" +
+      "  color: string;\n" +
+      "};\n" +
+      "</boltAction>\n" +
+      "\n" +
+      '<boltAction type="file" filePath="src/components/TodoInput.tsx">\n' +
+      "import React, { useState } from 'react';\n" +
+      "import { Plus } from 'lucide-react';\n" +
+      "\n" +
+      "interface TodoInputProps {\n" +
+      "  onAdd: (title: string) => void;\n" +
+      "}\n" +
+      "\n" +
+      "export const TodoInput: React.FC<TodoInputProps> = ({ onAdd }) => {\n" +
+      "  const [title, setTitle] = useState('');\n" +
+      "\n" +
+      "  const handleSubmit = (e: React.FormEvent) => {\n" +
+      "    e.preventDefault();\n" +
+      "    if (title.trim()) {\n" +
+      "      onAdd(title);\n" +
+      "      setTitle('');\n" +
+      "    }\n" +
+      "  };\n" +
+      "\n" +
+      "  return (\n" +
+      '    <form onSubmit={handleSubmit} className="w-full">\n' +
+      '      <div className="relative">\n' +
+      "        <input\n" +
+      '          type="text"\n' +
+      "          value={title}\n" +
+      "          onChange={(e) => setTitle(e.target.value)}\n" +
+      '          placeholder="Add a new task..."\n' +
+      '          className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:outline-none focus:border-blue-500 shadow-sm"\n' +
+      "        />\n" +
+      "        <button\n" +
+      '          type="submit"\n' +
+      '          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"\n' +
+      "        >\n" +
+      "          <Plus size={20} />\n" +
+      "        </button>\n" +
+      "      </div>\n" +
+      "    </form>\n" +
+      "  );\n" +
+      "};\n" +
+      "</boltAction>\n" +
+      "\n" +
+      '<boltAction type="file" filePath="src/components/TodoList.tsx">\n' +
+      "import React from 'react';\n" +
+      "import { Check, Trash2, Clock, Flag } from 'lucide-react';\n" +
+      "import type { Todo } from '../types/todo';\n" +
+      "\n" +
+      "interface TodoListProps {\n" +
+      "  todos: Todo[];\n" +
+      "  onToggle: (id: string) => void;\n" +
+      "  onDelete: (id: string) => void;\n" +
+      "}\n" +
+      "\n" +
+      "export const TodoList: React.FC<TodoListProps> = ({ todos, onToggle, onDelete }) => {\n" +
+      "  const getPriorityColor = (priority: Todo['priority']) => {\n" +
+      "    switch (priority) {\n" +
+      "      case 'high': return 'text-red-500';\n" +
+      "      case 'medium': return 'text-yellow-500';\n" +
+      "      case 'low': return 'text-green-500';\n" +
+      "      default: return 'text-gray-500';\n" +
+      "    }\n" +
+      "  };\n" +
+      "\n" +
+      "  return (\n" +
+      '    <div className="space-y-2">\n' +
+      "      {todos.map((todo) => (\n" +
+      "        <div\n" +
+      "          key={todo.id}\n" +
+      "          className={`flex items-center justify-between p-4 bg-white rounded-lg shadow-sm border ${\n" +
+      "            todo.completed ? 'border-gray-200 bg-gray-50' : 'border-gray-200'\n" +
+      "          }`}\n" +
+      "        >\n" +
+      '          <div className="flex items-center space-x-4">\n' +
+      "            <button\n" +
+      "              onClick={() => onToggle(todo.id)}\n" +
+      "              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${\n" +
+      "                todo.completed\n" +
+      "                  ? 'bg-blue-500 border-blue-500'\n" +
+      "                  : 'border-gray-300 hover:border-blue-500'\n" +
+      "              }`}\n" +
+      "            >\n" +
+      '              {todo.completed && <Check size={14} className="text-white" />}\n' +
+      "            </button>\n" +
+      "            \n" +
+      '            <div className="flex flex-col">\n' +
+      "              <span className={`${todo.completed ? 'line-through text-gray-500' : ''}`}>\n" +
+      "                {todo.title}\n" +
+      "              </span>\n" +
+      '              <div className="flex items-center space-x-2 text-sm text-gray-500">\n' +
+      "                <span className={`flex items-center ${getPriorityColor(todo.priority)}`}>\n" +
+      '                  <Flag size={12} className="mr-1" />\n' +
+      "                  {todo.priority}\n" +
+      "                </span>\n" +
+      "                {todo.dueDate && (\n" +
+      '                  <span className="flex items-center">\n' +
+      '                    <Clock size={12} className="mr-1" />\n' +
+      "                    {new Date(todo.dueDate).toLocaleDateString()}\n" +
+      "                  </span>\n" +
+      "                )}\n" +
+      `                <span className="px-2 py-0.5 rounded-full text-xs" style={{ backgroundColor: todo.category === 'personal' ? '#fee2e2' : '#dbeafe' }}>\n` +
+      "                  {todo.category}\n" +
+      "                </span>\n" +
+      "              </div>\n" +
+      "            </div>\n" +
+      "          </div>\n" +
+      "\n" +
+      "          <button\n" +
+      "            onClick={() => onDelete(todo.id)}\n" +
+      '            className="text-gray-400 hover:text-red-500 transition-colors"\n' +
+      "          >\n" +
+      "            <Trash2 size={18} />\n" +
+      "          </button>\n" +
+      "        </div>\n" +
+      "      ))}\n" +
+      "    </div>\n" +
+      "  );\n" +
+      "};\n" +
+      "</boltAction>\n" +
+      "\n" +
+      '<boltAction type="file" filePath="src/App.tsx">\n' +
+      "import React, { useState } from 'react';\n" +
+      "import { CheckSquare } from 'lucide-react';\n" +
+      "import { TodoInput } from './components/TodoInput';\n" +
+      "import { TodoList } from './components/TodoList';\n" +
+      "import type { Todo } from './types/todo';\n" +
+      "\n" +
+      "const INITIAL_TODOS: Todo[] = [\n" +
+      "  {\n" +
+      "    id: '1',\n" +
+      "    title: 'Complete project presentation',\n" +
+      "    completed: false,\n" +
+      "    priority: 'high',\n" +
+      "    category: 'work',\n" +
+      "    dueDate: new Date('2024-03-20'),\n" +
+      "    createdAt: new Date()\n" +
+      "  },\n" +
+      "  {\n" +
+      "    id: '2',\n" +
+      "    title: 'Go grocery shopping',\n" +
+      "    completed: false,\n" +
+      "    priority: 'medium',\n" +
+      "    category: 'personal',\n" +
+      "    createdAt: new Date()\n" +
+      "  }\n" +
+      "];\n" +
+      "\n" +
+      "function App() {\n" +
+      "  const [todos, setTodos] = useState<Todo[]>(INITIAL_TODOS);\n" +
+      "\n" +
+      "  const addTodo = (title: string) => {\n" +
+      "    const newTodo: Todo = {\n" +
+      "      id: Date.now().toString(),\n" +
+      "      title,\n" +
+      "      completed: false,\n" +
+      "      priority: 'medium',\n" +
+      "      category: 'personal',\n" +
+      "      createdAt: new Date()\n" +
+      "    };\n" +
+      "    setTodos([newTodo, ...todos]);\n" +
+      "  };\n" +
+      "\n" +
+      "  const toggleTodo = (id: string) => {\n" +
+      "    setTodos(todos.map(todo =>\n" +
+      "      todo.id === id ? { ...todo, completed: !todo.completed } : todo\n" +
+      "    ));\n" +
+      "  };\n" +
+      "\n" +
+      "  const deleteTodo = (id: string) => {\n" +
+      "    setTodos(todos.filter(todo => todo.id !== id));\n" +
+      "  };\n" +
+      "\n" +
+      "  const completedTodos = todos.filter(todo => todo.completed).length;\n" +
+      "  const totalTodos = todos.length;\n" +
+      "\n" +
+      "  return (\n" +
+      '    <div className="min-h-screen bg-gray-50">\n' +
+      '      <div className="max-w-2xl mx-auto p-6">\n' +
+      '        <div className="flex items-center justify-between mb-8">\n' +
+      '          <div className="flex items-center space-x-3">\n' +
+      '            <CheckSquare className="w-8 h-8 text-blue-500" />\n' +
+      '            <h1 className="text-2xl font-bold text-gray-800">MyTodos</h1>\n' +
+      "          </div>\n" +
+      '          <div className="bg-white px-4 py-2 rounded-lg shadow-sm">\n' +
+      '            <span className="text-sm text-gray-600">\n' +
+      "              Completed: {completedTodos}/{totalTodos}\n" +
+      "            </span>\n" +
+      "          </div>\n" +
+      "        </div>\n" +
+      "\n" +
+      '        <div className="mb-6">\n' +
+      "          <TodoInput onAdd={addTodo} />\n" +
+      "        </div>\n" +
+      "\n" +
+      "        <TodoList\n" +
+      "          todos={todos}\n" +
+      "          onToggle={toggleTodo}\n" +
+      "          onDelete={deleteTodo}\n" +
+      "        />\n" +
+      "      </div>\n" +
+      "    </div>\n" +
+      "  );\n" +
+      "}\n" +
+      "\n" +
+      "export default App;\n" +
+      "</boltAction>\n" +
+      "\n" +
+      '<boltAction type="shell">\n' +
+      "npm run dev\n" +
+      "</boltAction>\n" +
+      "</boltArtifact>\n" +
+      "\n" +
+      "I've created a modern, production-ready Todo application with the following features:\n" +
+      "\n" +
+      "- Clean and minimalist design with smooth animations\n" +
+      "- Priority levels (high, medium, low) with color coding\n" +
+      "- Categories with visual indicators\n" +
+      "- Due dates for tasks\n" +
+      "- Completion tracking with statistics\n" +
+      "- Smooth animations and hover effects\n" +
+      "- Responsive layout\n" +
+      "- TypeScript for type safety\n" +
+      "\n" +
+      "The app is now running and ready to use. Try adding, completing, and deleting todos!",
+  },
+];

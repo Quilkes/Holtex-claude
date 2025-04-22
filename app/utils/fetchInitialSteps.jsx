@@ -1,9 +1,7 @@
 import { parseXml } from "../lib/parseXml";
 import axios from "axios";
+import { BACKEND_URL } from "./config";
 import uuid4 from "uuid4";
-import { reactPrompt } from "@/templates/react";
-import { nodePrompt } from "@/templates/node";
-import { BASE_PROMPT } from "../constants/Prompt";
 
 export async function fetchInitialSteps(
   messages,
@@ -23,8 +21,8 @@ export async function fetchInitialSteps(
     }
 
     // First, determine if we should use React or Node
-    const templateResponse = await axios
-      .post("/api/templates", {
+    const response = await axios
+      .post(`${BACKEND_URL}/template`, {
         prompt: messages,
       })
       .catch((error) => {
@@ -33,63 +31,51 @@ export async function fetchInitialSteps(
       });
 
     setTemplateSet(true);
-    const answer = templateResponse.data.result;
-    const templatePrompts = answer === "react" ? reactPrompt : nodePrompt;
+    const { prompts, uiPrompts } = response.data;
 
     // Parse and set initial steps
     setSteps(
-      parseXml(templatePrompts).map((x) => ({
+      parseXml(uiPrompts[0]).map((x) => ({
         ...x,
         id: uuid4(),
         status: "pending",
       }))
     );
 
-    // Now make API call to generate code
-    console.log("Generating code...");
+    setNewFileFromApiLoading(true);
 
-    const stepsResponse = await axios.post("/api/gen-ai-codess", {
-      messages: [
-        {
-          role: "user",
-          content: BASE_PROMPT,
-        },
-        {
-          role: "user",
-          content: `Here is an artifact that contains all files of the project visible to you.
-                       Consider the contents of ALL files in the project.
-                       ${templatePrompts}
-                       Here is a list of files that exist on the file system but are not being shown to you:
-                         - .gitignore
-                         - package-lock.json`,
-        },
-        {
-          role: "user",
-          content: messages,
-        },
-      ],
+    const stepsResponse = await axios.post(`${BACKEND_URL}/chat`, {
+      messages: [...prompts, messages].map((content) => ({
+        role: "user",
+        content,
+      })),
     });
 
-    console.log("Code generation response:", stepsResponse.data);
+    console.log(messages);
 
-    if (stepsResponse.data && stepsResponse.data.result) {
-      // Add the new steps to the existing ones
-      setSteps((prevSteps) => [
-        ...prevSteps,
-        ...parseXml(stepsResponse.data.result).map((x) => ({
-          ...x,
-          id: uuid4(),
-          status: "pending",
-        })),
-      ]);
+    setNewFileFromApiLoading(false);
+    console.log("Steps response:", stepsResponse);
 
-      setLlmMessages((prevMessages) => [
-        ...prevMessages,
-        { role: "assistant", content: stepsResponse.data.result },
-      ]);
-    } else {
-      console.error("Invalid steps response format:", stepsResponse.data);
-    }
+    setSteps((s) => [
+      ...s,
+      ...parseXml(stepsResponse.data.response).map((x) => ({
+        ...x,
+        id: uuid4(),
+        status: "pending",
+      })),
+    ]);
+
+    setLlmMessages(
+      [...prompts, prompt].map((content) => ({
+        role: "user",
+        content,
+      }))
+    );
+
+    setLlmMessages((x) => [
+      ...x,
+      { role: "assistant", content: stepsResponse.data.response },
+    ]);
   } catch (error) {
     console.error("Error in fetching initial steps:", error);
   } finally {

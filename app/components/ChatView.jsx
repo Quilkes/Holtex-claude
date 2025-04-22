@@ -53,11 +53,7 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
       className="relative flex flex-col w-full h-full bg-white border rounded-md border-slate-200"
     >
       <div className="flex-1 overflow-y-auto rounded-lg scrollbar-hide">
-        {newFileFromApiLoading ? (
-          <div className="flex items-center justify-center w-full h-full">
-            <span>Loading...</span>
-          </div>
-        ) : steps.length === 0 ? (
+        {steps.length === 0 ? (
           <div className="flex items-center justify-center w-full h-full">
             <p>No steps available</p>
           </div>

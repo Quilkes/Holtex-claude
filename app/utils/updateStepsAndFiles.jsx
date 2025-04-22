@@ -1,6 +1,7 @@
 export const updateStepsAndFiles = async (
   steps,
   files,
+  setSteps,
   setFiles,
   webContainerRef
 ) => {
@@ -112,7 +113,6 @@ export const updateStepsAndFiles = async (
     sortFiles(originalFiles);
 
     setFiles([...originalFiles]);
-    updateStepsStatus("completed", (step) => step && step.status === "pending");
     setSteps((prevSteps) =>
       prevSteps.map((step) =>
         step.status === "pending" ? { ...step, status: "completed" } : step
