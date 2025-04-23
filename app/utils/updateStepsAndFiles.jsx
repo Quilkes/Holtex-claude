@@ -15,11 +15,11 @@ export const updateStepsAndFiles = async (
   let updateHappened = false;
 
   // Now filter steps safely
-  const pendingSteps = steps.filter(
-    (step) => step && step.status === "pending"
+  const stepStatus = steps.filter(
+    (step) => step && step.status === "completed"
   );
 
-  for (const step of pendingSteps) {
+  for (const step of stepStatus) {
     updateHappened = true;
     if (step?.type === "CreateFile") {
       let parsedPath = step.path?.split("/") ?? [];

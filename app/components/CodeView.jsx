@@ -4,7 +4,6 @@ import { CodeEditor } from "./CodeEditor";
 import { PreviewFrame } from "./PreviewFrame";
 import { FileExplorer } from "./FileExplorer";
 import { TabView } from "./TabView";
-import { handleDownload } from "../utils/downloadZIPFile";
 import useCodeView from "../store/useCodeView";
 
 function CodeView({ isWebContainerLoading, webContainerRef, files }) {
@@ -15,7 +14,7 @@ function CodeView({ isWebContainerLoading, webContainerRef, files }) {
       {/* Tab View */}
       <div className="flex justify-between w-full row-span-1 border-b border-slate-200">
         <TabView
-          handleDownload={handleDownload}
+          webContainerRef={webContainerRef}
           isWebContainerLoading={isWebContainerLoading}
         />
       </div>

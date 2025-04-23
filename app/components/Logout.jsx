@@ -36,7 +36,7 @@ export default function Logout() {
   return (
     <>
       {showLogoutModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50">
           <div className="p-6 bg-white rounded-lg shadow-lg w-80">
             <h3 className="text-lg font-semibold">Confirm Logout</h3>
             <p className="text-sm text-gray-600">

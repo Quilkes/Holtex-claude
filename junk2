@@ -1,298 +1,975 @@
-"use client";
-import React, { useEffect, useRef, useState } from "react";
-import { TabView } from "@/app/components/TabView";
-import { ChevronRight, MessageSquare } from "lucide-react";
-import { CodeEditor } from "@/app/components/CodeEditor";
-import CodeView from "@/app/components/CodeView";
-import PreviewFrame from "@/app/components/PreviewFrame";
-import useCodeView from "@/app/store/useCodeView";
-import useFiles from "@/app/store/useFiles";
-import ChatView from "@/app/components/ChatView";
-import { useParams } from "next/navigation";
-import { useConvex, useMutation, useQuery } from "convex/react";
-import { useWebContainer } from "@/app/hooks/useWebContainer";
-import { updateStepsAndFiles } from "@/app/utils/updateStepsAndFiles";
-import { fetchInitialSteps } from "@/app/utils/fetchInitialSteps";
-import { toast } from "sonner";
-import { api } from "@/convex/_generated/api";
+{
+  createdAt: "2025-04-23T10:16:26.007Z",
+  files: [
+    {
+      children: [
+        {
+          children: [
+            {
+              content: `import React, { useState } from 'react';
+import { PlusCircle } from 'lucide-react';
 
-export default function page() {
-  const { id } = useParams();
-  const convex = useConvex();
-  const webContainerRef = useRef(null);
-  const UpdateFiles = useMutation(api.workspace.UpdateFiles);
-  const UpdateTokens = useMutation(api.users.UpdateToken);
-  const webContainer = useWebContainer();
-  const { activeTab } = useCodeView();
-  const { setTemplateSet, setNewFileFromApiLoading, setFileFromDbLoading } =
-    useFiles();
+interface TodoInputProps {
+  onAdd: (text: string) => void;
+}
 
-  const [steps, setSteps] = useState([]);
-  const [files, setFiles] = useState([]);
-  const [llmMessages, setLlmMessages] = useState([]);
+export function TodoInput({ onAdd }: TodoInputProps) {
+  const [text, setText] = useState('');
 
-  // Query with caching strategy
-  const workspaceData = useQuery(api.workspace.GetWorkspace, {
-    workspaceId: id,
-  });
-  const messages = workspaceData?.messages?.[0]?.content || "";
-
-  const [workspaceLoaded, setWorkspaceLoaded] = useState(false);
-  const [isWebContainerLoading, setIsWebContainerLoading] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
-
-  // Track initialization and debounce database updates
-  const hasInitialized = useRef(false);
-  const isMounted = useRef(true);
-
-  const toggleChat = () => {
-    setIsChatOpen(!isChatOpen);
-  };
-
-  // Update web container reference
-  useEffect(() => {
-    if (webContainer) {
-      webContainerRef.current = webContainer;
-    }
-  }, [webContainer]);
-
-  // Main initialization flow with improved reliability
-  useEffect(() => {
-    const initializeWorkspace = async () => {
-      // Skip if already initializing or missing required data
-      if (hasInitialized.current || !id || !webContainer) return;
-      hasInitialized.current = true;
-
-      try {
-        setIsWebContainerLoading(true);
-
-        // 1: First try to fetch from database
-        const hasData = await fetchWorkspaceData();
-
-        // 2: If no data in database, generate new files
-        if (!hasData) {
-          console.log("No data in database, generating new files");
-          await fetchInitialSteps(
-            messages,
-            setSteps,
-            setLlmMessages,
-            setTemplateSet,
-            setNewFileFromApiLoading
-          );
-        }
-
-        if (isMounted.current) {
-          setWorkspaceLoaded(true);
-          setIsWebContainerLoading(false);
-        }
-      } catch (error) {
-        console.error("Workspace initialization error:", error);
-        toast.error("Error initializing workspace");
-      } finally {
-        hasInitialized.current = true;
-        setIsWebContainerLoading(false);
-      }
-    };
-    initializeWorkspace();
-
-    // Clean up function
-    return () => {
-      isMounted.current = false;
-    };
-  }, [id, webContainer, workspaceLoaded, messages, files.length]);
-
-  useEffect(() => {
-    // Check if we have files and steps generated but not yet saved
-    if (steps.length > 0 && files.length > 0 && !workspaceLoaded) {
-      saveToDatabase();
-    }
-  }, [steps, files]);
-
-  // Improved database fetch with error handling
-  const fetchWorkspaceData = async () => {
-    if (!id) return;
-
-    setFileFromDbLoading(true);
-    console.log("Processing existing workspace data");
-
-    try {
-      //  Fetch from database
-      const result = await convex.query(api.workspace.GetWorkspace, {
-        workspaceId: id,
-      });
-
-      if (
-        result &&
-        result.fileData &&
-        result.fileData.files &&
-        result.fileData.files.length > 0
-      ) {
-        // Process and load the files into WebContainer if webContainer is ready
-        if (webContainerRef.current) {
-          await updateStepsAndFiles(
-            result.fileData.steps || [],
-            result.fileData.files,
-            setSteps,
-            setFiles,
-            webContainerRef
-          );
-
-          // Update state with fetched data
-          setFiles(result.fileData.files);
-          if (result.fileData.steps) setSteps(result.fileData.steps);
-          if (result.fileData.llmMessages)
-            setLlmMessages(result.fileData.llmMessages);
-          if (result.fileData.templateSet)
-            setTemplateSet(result.fileData.templateSet);
-          setIsWebContainerLoading(false);
-        } else {
-          console.warn("WebContainer not ready yet, will retry");
-          // Still update the state so it's ready when container is available
-          setFiles(result.fileData.files);
-          if (result.fileData.steps) setSteps(result.fileData.steps);
-          if (result.fileData.llmMessages)
-            setLlmMessages(result.fileData.llmMessages);
-          if (result.fileData.templateSet)
-            setTemplateSet(result.fileData.templateSet);
-        }
-        return true;
-      }
-
-      return false;
-    } catch (error) {
-      console.error("Error fetching workspace data:", error);
-      if (isMounted.current) {
-        toast.error("Failed to load project files");
-      }
-      return false;
-    } finally {
-      setFileFromDbLoading(false);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (text.trim()) {
+      onAdd(text);
+      setText('');
     }
   };
-
-  // Update WebContainer when files or steps change (only after initialization)
-  useEffect(() => {
-    if (hasInitialized.current && webContainerRef.current) {
-      updateStepsAndFiles(steps, files, setSteps, setFiles, webContainerRef);
-    }
-  }, [steps, files]);
-
-  const saveToDatabase = async () => {
-    if (!id) return;
-
-    try {
-      await UpdateFiles({
-        workspaceId: id,
-        steps,
-        files,
-        llmMessages: workspaceData?.llmMessages || [],
-        createdAt: new Date().toISOString(),
-      });
-    } catch (error) {
-      console.error("Failed to save workspace:", error);
-      toast.error("Failed to save your changes");
-    }
-  };
-
-  // Clean up on unmount
-  useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
 
   return (
-    <div className="p-1 h-[100vh] relative overflow-hidden">
-      {/* Desktop Layout */}
-      <div className="hidden h-full gap-2 md:grid place-content-center md:grid-cols-12">
-        <div className="col-span-3 h-[98vh] p-0.5 flex flex-col justify-center">
-          <ChatView
-            steps={steps}
-            setSteps={setSteps}
-            llmMessages={llmMessages}
-            setLlmMessages={setLlmMessages}
-          />
-        </div>
-        <div className="md:col-span-9 h-[98vh] flex flex-col justify-center">
-          <CodeView
-            files={files}
-            isWebContainerLoading={isWebContainerLoading}
-            webContainerRef={webContainerRef}
-          />
-        </div>
-      </div>
-
-      {/* Mobile Layout */}
-      <div className="block h-full md:hidden">
-        {/* Mobile CodeView */}
-        <div className="h-full">
-          <div className="grid h-full border rounded-md grid-rows-12 bg-slate-100">
-            {/* Tab View - Using updated TabView component */}
-            <div className="flex justify-between w-full row-span-1 border bg-slate-100">
-              <TabView />
-            </div>
-
-            {/* Code editor and preview section */}
-            <div className="w-full h-full row-span-11">
-              <div className="grid w-full h-full grid-cols-12">
-                {/* Code Editor or Preview  */}
-                <div className="w-full col-span-12">
-                  <div className="w-full h-full overflow-auto border-b border-gray-200 md:border-b-0 md:border-r">
-                    {activeTab === "code" ? (
-                      <CodeEditor files={files[0]} />
-                    ) : (
-                      <PreviewFrame
-                        files={files}
-                        webContainerRef={webContainerRef}
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* {showLoading && (
-                <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80">
-                  <div className="flex flex-col items-center">
-                    <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-                    <p className="mt-2 text-sm text-gray-600">
-                      {loadingMessage}
-                    </p>
-                  </div>
-                </div>
-              )} */}
-            </div>
-          </div>
-        </div>
-        Slide-in ChatView for Mobile
-        <div
-          className={`fixed top-0 left-0 h-full w-full bg-white z-20 transition-transform duration-300 ease-in-out ${
-            isChatOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-          style={{ maxWidth: "100vw", maxHeight: "100vh" }}
+    <form onSubmit={handleSubmit} className="w-full">
+      <div className="relative">
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Add a new task..."
+          className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+        <button
+          type="submit"
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition-colors"
         >
-          <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between p-2 bg-slate-100">
-              <h2 className="text-lg font-semibold">Chat</h2>
-              <button
-                onClick={toggleChat}
-                className="p-2 rounded-full hover:bg-slate-200"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </div>
-            <div className="flex-1 overflow-hidden">ChatView</div>
+          <PlusCircle size={24} />
+        </button>
+      </div>
+    </form>
+  );
+}`,
+              name: "TodoInput.tsx",
+              path: "/src/components/TodoInput.tsx",
+              type: "file",
+            },
+            {
+              content: `import { Check, Trash2, X } from 'lucide-react';
+import { Todo } from '../types/todo';
+
+interface TodoItemProps {
+  todo: Todo;
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+}
+
+export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
+  return (
+    <div className="flex items-center justify-between gap-4 p-4 bg-white rounded-lg shadow-sm border border-gray-100 transition-all hover:shadow-md">
+      <div className="flex items-center gap-3 flex-1">
+        <button
+          onClick={() => onToggle(todo.id)}
+          className={\`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors \${
+            todo.completed
+              ? 'bg-green-500 border-green-500'
+              : 'border-gray-300 hover:border-green-500'
+          }\`}
+        >
+          {todo.completed && <Check size={14} className="text-white" />}
+        </button>
+        <span
+          className={\`flex-1 \${
+            todo.completed ? 'text-gray-400 line-through' : 'text-gray-700'
+          }\`}
+        >
+          {todo.text}
+        </span>
+      </div>
+      <button
+        onClick={() => onDelete(todo.id)}
+        className="text-gray-400 hover:text-red-500 transition-colors"
+      >
+        <Trash2 size={18} />
+      </button>
+    </div>
+  );
+}`,
+              name: "TodoItem.tsx",
+              path: "/src/components/TodoItem.tsx",
+              type: "file",
+            },
+            {
+              content: `import { Todo } from '../types/todo';
+import { TodoItem } from './TodoItem';
+
+interface TodoListProps {
+  todos: Todo[];
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+}
+
+export function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
+  if (todos.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-500">
+        No tasks yet. Add one above!
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {todos.map((todo) => (
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          onToggle={onToggle}
+          onDelete={onDelete}
+        />
+      ))}
+    </div>
+  );
+}`,
+              name: "TodoList.tsx",
+              path: "/src/components/TodoList.tsx",
+              type: "file",
+            },
+          ],
+          name: "components",
+          path: "/src/components",
+          type: "folder",
+        },
+        {
+          children: [
+            {
+              content: `export interface Todo {
+  id: string;
+  text: string;
+  completed: boolean;
+  createdAt: Date;
+}`,
+              name: "todo.ts",
+              path: "/src/types/todo.ts",
+              type: "file",
+            },
+          ],
+          name: "types",
+          path: "/src/types",
+          type: "folder",
+        },
+        {
+          content: `import { useState } from 'react';
+import { CheckCircle } from 'lucide-react';
+import { TodoInput } from './components/TodoInput';
+import { TodoList } from './components/TodoList';
+import { Todo } from './types/todo';
+
+function App() {
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  const addTodo = (text: string) => {
+    const newTodo: Todo = {
+      id: crypto.randomUUID(),
+      text,
+      completed: false,
+      createdAt: new Date(),
+    };
+    setTodos((prev) => [...prev, newTodo]);
+  };
+
+  const toggleTodo = (id: string) => {
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
+  const deleteTodo = (id: string) => {
+    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  };
+
+  const completedCount = todos.filter((todo) => todo.completed).length;
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-2xl mx-auto py-12 px-4">
+        <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-8">
+            <CheckCircle className="w-8 h-8 text-blue-500" />
+            <h1 className="text-2xl font-semibold text-gray-800">Todo List</h1>
+          </div>
+
+          <TodoInput onAdd={addTodo} />
+
+          <div className="mt-2 text-sm text-gray-500">
+            {completedCount} of {todos.length} tasks completed
+          </div>
+
+          <div className="mt-8">
+            <TodoList
+              todos={todos}
+              onToggle={toggleTodo}
+              onDelete={deleteTodo}
+            />
           </div>
         </div>
-        {/* Chat Toggle Button (only shows when chat is closed) */}
-        {!isChatOpen && (
-          <button
-            onClick={toggleChat}
-            className="fixed z-10 flex items-center justify-center p-3 text-white bg-purple-600 rounded-full shadow-lg bottom-6 right-6"
-          >
-            <MessageSquare size={24} />
-          </button>
-        )}
       </div>
     </div>
   );
+}
+
+export default App;`,
+          name: "App.tsx",
+          path: "/src/App.tsx",
+          type: "file",
+        },
+        {
+          content: `@tailwind base;
+@tailwind components;
+@tailwind utilities;`,
+          name: "index.css",
+          path: "/src/index.css",
+          type: "file",
+        },
+        {
+          content: `import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);`,
+          name: "main.tsx",
+          path: "/src/main.tsx",
+          type: "file",
+        },
+        {
+          content: '/// <reference types="vite/client" />',
+          name: "vite-env.d.ts",
+          path: "/src/vite-env.d.ts",
+          type: "file",
+        },
+      ],
+      name: "src",
+      path: "/src",
+      type: "folder",
+    },
+    {
+      content: `import js from '@eslint/js';
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  { ignores: ['dist'] },
+  {
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+    plugins: {
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+    },
+  }
+);`,
+      name: "eslint.config.js",
+      path: "/eslint.config.js",
+      type: "file",
+    },
+    {
+      content: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>`,
+      name: "index.html",
+      path: "/index.html",
+      type: "file",
+    },
+    {
+      content: `{
+  "name": "vite-react-typescript-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^0.344.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^9.9.1",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.11",
+    "globals": "^15.9.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.3.0",
+    "vite": "^5.4.2"
+  }
+}`,
+      name: "package.json",
+      path: "/package.json",
+      type: "file",
+    },
+    {
+      content: `export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};`,
+      name: "postcss.config.js",
+      path: "/postcss.config.js",
+      type: "file",
+    },
+    {
+      content: `/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};`,
+      name: "tailwind.config.js",
+      path: "/tailwind.config.js",
+      type: "file",
+    },
+    {
+      content: `{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}`,
+      name: "tsconfig.app.json",
+      path: "/tsconfig.app.json",
+      type: "file",
+    },
+    {
+      content: `{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}`,
+      name: "tsconfig.json",
+      path: "/tsconfig.json",
+      type: "file",
+    },
+    {
+      content: `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["vite.config.ts"]
+}`,
+      name: "tsconfig.node.json",
+      path: "/tsconfig.node.json",
+      type: "file",
+    },
+    {
+      content: `import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  optimizeDeps: {
+    exclude: ['lucide-react'],
+  },
+});`,
+      name: "vite.config.ts",
+      path: "/vite.config.ts",
+      type: "file",
+    },
+  ],
+  llmMessages: [],
+  steps: [
+    {
+      description: "",
+      id: "87d37c63-4650-4887-a997-8ed2d4ae7275",
+      status: "completed",
+      title: "Project Files",
+      type: "CreateFolder",
+    },
+    {
+      code: `import js from '@eslint/js';
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  { ignores: ['dist'] },
+  {
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+    plugins: {
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+    },
+  }
+);`,
+      description: "",
+      id: "4ba158c0-226e-4656-a16b-7313de910337",
+      path: "eslint.config.js",
+      status: "completed",
+      title: "Create eslint.config.js",
+      type: "CreateFile",
+    },
+    {
+      code: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>`,
+      description: "",
+      id: "a7e9d683-91c6-4408-8b8d-9d427de7de72",
+      path: "index.html",
+      status: "completed",
+      title: "Create index.html",
+      type: "CreateFile",
+    },
+    {
+      code: `{
+  "name": "vite-react-typescript-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^0.344.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^9.9.1",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.11",
+    "globals": "^15.9.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.3.0",
+    "vite": "^5.4.2"
+  }
+}`,
+      description: "",
+      id: "601e3d72-d530-4ddf-8142-3364094587b2",
+      path: "package.json",
+      status: "completed",
+      title: "Create package.json",
+      type: "CreateFile",
+    },
+    {
+      code: `export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};`,
+      description: "",
+      id: "0b949370-b1a6-4bd6-a6a3-c9591fa83dc4",
+      path: "postcss.config.js",
+      status: "completed",
+      title: "Create postcss.config.js",
+      type: "CreateFile",
+    },
+    {
+      code: `/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};`,
+      description: "",
+      id: "2e270161-cd8f-4446-a5da-809a6ab9a73e",
+      path: "tailwind.config.js",
+      status: "completed",
+      title: "Create tailwind.config.js",
+      type: "CreateFile",
+    },
+    {
+      code: `{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}`,
+      description: "",
+      id: "261f0aa0-c6bf-4214-bd3d-be35d59335d5",
+      path: "tsconfig.app.json",
+      status: "completed",
+      title: "Create tsconfig.app.json",
+      type: "CreateFile",
+    },
+    {
+      code: `{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}`,
+      description: "",
+      id: "2a2d14e9-b36e-4373-a009-aa109107ba0e",
+      path: "tsconfig.json",
+      status: "completed",
+      title: "Create tsconfig.json",
+      type: "CreateFile",
+    },
+    {
+      code: `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["vite.config.ts"]
+}`,
+      description: "",
+      id: "ba083c1c-8a20-497c-bf79-c89951d90f5e",
+      path: "tsconfig.node.json",
+      status: "completed",
+      title: "Create tsconfig.node.json",
+      type: "CreateFile",
+    },
+    {
+      code: `import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  optimizeDeps: {
+    exclude: ['lucide-react'],
+  },
+});`,
+      description: "",
+      id: "81ebea99-9796-4d8a-94bf-64f96e9a2a8f",
+      path: "vite.config.ts",
+      status: "completed",
+      title: "Create vite.config.ts",
+      type: "CreateFile",
+    },
+    {
+      code: `import React from 'react';
+
+function App() {
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <p>Start prompting (or editing) to see magic happen :)</p>
+    </div>
+  );
+}
+
+export default App;`,
+      description: "",
+      id: "45c2671d-e962-44e4-8bc1-e93c61e056e3",
+      path: "src/App.tsx",
+      status: "completed",
+      title: "Create src/App.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: `@tailwind base;
+@tailwind components;
+@tailwind utilities;`,
+      description: "",
+      id: "b25e4eba-63ed-44f4-9401-02179b842497",
+      path: "src/index.css",
+      status: "completed",
+      title: "Create src/index.css",
+      type: "CreateFile",
+    },
+    {
+      code: `import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);`,
+      description: "",
+      id: "8b758b84-4a9f-4d94-b787-70bb54e6ceea",
+      path: "src/main.tsx",
+      status: "completed",
+      title: "Create src/main.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: '/// <reference types="vite/client" />',
+      description: "",
+      id: "b9456939-02ad-487c-a101-0a251adf3571",
+      path: "src/vite-env.d.ts",
+      status: "completed",
+      title: "Create src/vite-env.d.ts",
+      type: "CreateFile",
+    },
+    {
+      description: "",
+      id: "6205ef92-9840-4390-b13b-646ea94c99e9",
+      status: "completed",
+      title: "Modern Todo Application",
+      type: "CreateFolder",
+    },
+    {
+      code: `export interface Todo {
+  id: string;
+  text: string;
+  completed: boolean;
+  createdAt: Date;
+}`,
+      description: "",
+      id: "3c5ceca0-c8a4-4903-a7ea-2735e10ed212",
+      path: "src/types/todo.ts",
+      status: "completed",
+      title: "Create src/types/todo.ts",
+      type: "CreateFile",
+    },
+    {
+      code: `import React, { useState } from 'react';
+import { PlusCircle } from 'lucide-react';
+
+interface TodoInputProps {
+  onAdd: (text: string) => void;
+}
+
+export function TodoInput({ onAdd }: TodoInputProps) {
+  const [text, setText] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (text.trim()) {
+      onAdd(text);
+      setText('');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="w-full">
+      <div className="relative">
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Add a new task..."
+          className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+        <button
+          type="submit"
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition-colors"
+        >
+          <PlusCircle size={24} />
+        </button>
+      </div>
+    </form>
+  );
+}`,
+      description: "",
+      id: "0d0e08f2-c1a8-4035-ba0f-5a294e025936",
+      path: "src/components/TodoInput.tsx",
+      status: "completed",
+      title: "Create src/components/TodoInput.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: `import { Check, Trash2, X } from 'lucide-react';
+import { Todo } from '../types/todo';
+
+interface TodoItemProps {
+  todo: Todo;
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+}
+
+export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
+  return (
+    <div className="flex items-center justify-between gap-4 p-4 bg-white rounded-lg shadow-sm border border-gray-100 transition-all hover:shadow-md">
+      <div className="flex items-center gap-3 flex-1">
+        <button
+          onClick={() => onToggle(todo.id)}
+          className={\`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors \${
+            todo.completed
+              ? 'bg-green-500 border-green-500'
+              : 'border-gray-300 hover:border-green-500'
+          }\`}
+        >
+          {todo.completed && <Check size={14} className="text-white" />}
+        </button>
+        <span
+          className={\`flex-1 \${
+            todo.completed ? 'text-gray-400 line-through' : 'text-gray-700'
+          }\`}
+        >
+          {todo.text}
+        </span>
+      </div>
+      <button
+        onClick={() => onDelete(todo.id)}
+        className="text-gray-400 hover:text-red-500 transition-colors"
+      >
+        <Trash2 size={18} />
+      </button>
+    </div>
+  );
+}`,
+      description: "",
+      id: "0980441d-4695-4416-913e-02b89aa7f4ab",
+      path: "src/components/TodoItem.tsx",
+      status: "completed",
+      title: "Create src/components/TodoItem.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: `import { Todo } from '../types/todo';
+import { TodoItem } from './TodoItem';
+
+interface TodoListProps {
+  todos: Todo[];
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+}
+
+export function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
+  if (todos.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-500">
+        No tasks yet. Add one above!
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {todos.map((todo) => (
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          onToggle={onToggle}
+          onDelete={onDelete}
+        />
+      ))}
+    </div>
+  );
+}`,
+      description: "",
+      id: "3edbc926-4484-44ba-99d1-fd6ae65f039e",
+      path: "src/components/TodoList.tsx",
+      status: "completed",
+      title: "Create src/components/TodoList.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: `import { useState } from 'react';
+import { CheckCircle } from 'lucide-react';
+import { TodoInput } from './components/TodoInput';
+import { TodoList } from './components/TodoList';
+import { Todo } from './types/todo';
+
+function App() {
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  const addTodo = (text: string) => {
+    const newTodo: Todo = {
+      id: crypto.randomUUID(),
+      text,
+      completed: false,
+      createdAt: new Date(),
+    };
+    setTodos((prev) => [...prev, newTodo]);
+  };
+
+  const toggleTodo = (id: string) => {
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
+  const deleteTodo = (id: string) => {
+    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  };
+
+  const completedCount = todos.filter((todo) => todo.completed).length;
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-2xl mx-auto py-12 px-4">
+        <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-8">
+            <CheckCircle className="w-8 h-8 text-blue-500" />
+            <h1 className="text-2xl font-semibold text-gray-800">Todo List</h1>
+          </div>
+
+          <TodoInput onAdd={addTodo} />
+
+          <div className="mt-2 text-sm text-gray-500">
+            {completedCount} of {todos.length} tasks completed
+          </div>
+
+          <div className="mt-8">
+            <TodoList
+              todos={todos}
+              onToggle={toggleTodo}
+              onDelete={deleteTodo}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;`,
+      description: "",
+      id: "6555dce7-4e41-48ea-949c-a6fdc1cb625d",
+      path: "src/App.tsx",
+      status: "completed",
+      title: "Create src/App.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: "npm run dev",
+      description: "",
+      id: "05db5dd1-c6d8-4bb1-aa86-cd9559008fb0",
+      status: "completed",
+      title: "Run command",
+      type: "RunScript",
+    },
+  ],
 }

@@ -3,9 +3,11 @@ import { File, FileWarning, FolderOpen, FolderClosed } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import useCodeView from "../store/useCodeView";
 import useFiles from "../store/useFiles";
+import useSidebar from "../store/sidebar";
 
 function FileNode({ item, depth, onFileClick, activeFilePath }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { setSmFileBar } = useSidebar();
   const isActive = activeFilePath === item.path;
 
   const handleClick = () => {
@@ -13,6 +15,7 @@ function FileNode({ item, depth, onFileClick, activeFilePath }) {
       setIsExpanded(!isExpanded);
     } else {
       onFileClick(item);
+      setSmFileBar(false);
     }
   };
 
@@ -69,7 +72,7 @@ function FileNode({ item, depth, onFileClick, activeFilePath }) {
 
 export function FileExplorer({ files }) {
   const { selectedFile, setSelectedFile } = useCodeView();
-  const { fileFromDbLoading } = useFiles();
+  const { isLoading } = useFiles();
   const activeFilePath = selectedFile?.path;
 
   const handleFileClick = (file) => {
@@ -77,9 +80,9 @@ export function FileExplorer({ files }) {
   };
 
   return (
-    <div className="space-y-1">
-      {fileFromDbLoading ? (
-        <div className="flex items-center justify-center w-full h-full">
+    <div className="space-y-1 p-4">
+      {isLoading ? (
+        <div className="flex items-center justify-center w-full h-[80vh]">
           <span>Loading...</span>
         </div>
       ) : files.length > 0 ? (

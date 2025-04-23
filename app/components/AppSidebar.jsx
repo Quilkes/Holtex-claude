@@ -1,5 +1,5 @@
 "use client";
-import { MessageCircleCode, SidebarCloseIcon } from "lucide-react";
+import { SidebarCloseIcon } from "lucide-react";
 import Image from "next/image";
 import WorkspaceHistory from "./WorkspaceHistory";
 import Link from "next/link";
@@ -26,7 +26,6 @@ const AppSidebar = ({ children }) => {
     isOpen,
     setIsOpen,
   } = useSidebar();
-  const { files } = useFiles();
   const pathname = usePathname();
   const isWorkspaceRoute = pathname.startsWith("/workspace/");
   const { userDetail } = useContext(UserDetailContext);
@@ -69,12 +68,14 @@ const AppSidebar = ({ children }) => {
                       HOLTEX AI
                     </h1>
                   </Link>
-                  <button
-                    onClick={handleToggleSidebar}
-                    className="mr-2 text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded-full p-2"
-                  >
-                    <SidebarCloseIcon className="w-6 h-6" />
-                  </button>
+                  {!isWorkspaceRoute && (
+                    <button
+                      onClick={handleToggleSidebar}
+                      className="mr-2 text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded-full p-2"
+                    >
+                      <SidebarCloseIcon className="w-6 h-6" />
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -100,8 +101,11 @@ const AppSidebar = ({ children }) => {
               </Link>
 
               {/* Chats Navigation */}
-              <div className="p-4">
-                <button className="flex items-center pl-2 bg-gray-100 hover:bg-gray-200 rounded-lg p-2 w-full text-gray-600 hover:text-gray-800 mb-4">
+              <Link href={"/recents"} className="p-4">
+                <button
+                  onClick={() => setSideBar(false)}
+                  className="flex items-center pl-2 bg-gray-100 hover:bg-gray-200 rounded-lg p-2 w-full text-gray-600 hover:text-gray-800 mb-4"
+                >
                   <svg
                     width="18"
                     height="18"
@@ -117,7 +121,7 @@ const AppSidebar = ({ children }) => {
                   </svg>
                   <span>Chats</span>
                 </button>
-              </div>
+              </Link>
 
               {/* Recents Section */}
               <div className="flex-grow overflow-auto px-3">
@@ -186,32 +190,26 @@ const AppSidebar = ({ children }) => {
 
       {/* Mobile Sidebar - floating over content */}
       <div
-        className={`fixed  inset-y-0 left-0 z-50 md:${isWorkspaceRoute ? "block" : "hidden"} bg-gray-50  border-r border-gray-200  transition-transform duration-300 w-[270px] ${
+        className={`fixed  inset-y-0 left-0 z-[100] md:${isWorkspaceRoute ? "block" : "hidden"} bg-gray-50  border-r border-gray-200  transition-transform duration-300 w-[270px] ${
           smSideBar ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           <>
             {/* Sidebar Header */}
-            <div className="p-4 border-b border-gray-200">
+            <div className="p-4 border-b  border-gray-200">
               <div className="flex justify-between items-center">
                 <Link href="/home" className="flex items-center">
                   <h1 className="text-xl font-bold ml-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400">
                     HOLTEX AI
                   </h1>
                 </Link>
-                <button
-                  onClick={handleToggleSidebar}
-                  className="mr-2 text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded-full p-2"
-                >
-                  <SidebarCloseIcon className="w-6 h-6" />
-                </button>
               </div>
             </div>
 
             {/* New Chat Button */}
             <Link href={"/home"} className="px-4 pt-4">
-              <button className="flex items-center w-full p-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-800 transition-colors">
+              <button className="flex items-center w-full p-2 hover:bg-gray-200 rounded-lg text-gray-800 transition-colors">
                 <svg
                   width="16"
                   height="16"
@@ -231,8 +229,11 @@ const AppSidebar = ({ children }) => {
             </Link>
 
             {/* Chats Navigation */}
-            <div className="p-4">
-              <button className="flex items-center pl-2 bg-gray-100 hover:bg-gray-200 rounded-lg p-2 w-full text-gray-600 hover:text-gray-800 mb-4">
+            <Link href={"/recents"} className="px-4 py-0.5">
+              <button
+                onClick={() => setSmSidebar(false)}
+                className="flex items-center pl-2  hover:bg-gray-200 rounded-lg p-2 w-full text-gray-600 hover:text-gray-800 mb-4"
+              >
                 <svg
                   width="18"
                   height="18"
@@ -248,7 +249,7 @@ const AppSidebar = ({ children }) => {
                 </svg>
                 <span>Chats</span>
               </button>
-            </div>
+            </Link>
 
             {/* Recents Section */}
             <div className="flex-grow overflow-auto px-3">
@@ -317,25 +318,12 @@ const AppSidebar = ({ children }) => {
       {/* Mobile sidebar backdrop/overlay */}
       {smSideBar && (
         <div
-          className={`fixed inset-0 z-40 md:${isWorkspaceRoute ? "block" : "hidden"}`}
+          className={`fixed inset-0 bg-black/30 z-[90] md:${isWorkspaceRoute ? "block" : "hidden"}`}
           onClick={handleToggleSmSidebar}
         />
       )}
 
-      {/* Mobile File explorer */}
-      <div
-        className={`fixed inset-y-0 left-0 z-[100] md:hidden bg-white transition-transform duration-300 w-[270px] ${
-          smFileBar ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="w-full h-full border-r border-gray-200 overflow-y-auto">
-          <FileExplorer
-            // isWebContainerLoading={isWebContainerLoading}
-            files={files}
-          />
-        </div>
-      </div>
-
+      {/* File Explorer for mobile */}
       {smFileBar && (
         <div
           className={`fixed inset-0 bg-black/30 z-40 md:${isWorkspaceRoute ? "block" : "hidden"}`}

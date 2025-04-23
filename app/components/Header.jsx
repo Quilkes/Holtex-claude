@@ -70,14 +70,12 @@ const Header = () => {
             Sign In
           </button>
         ) : (
-          !isOpen && (
-            <div
-              className="flex gap-1 items-center justify-center text-gray-500 hover:text-gray-700 cursor-pointer h-6 w-6"
-              onClick={handleToggle}
-            >
-              <SidebarClose className="w-6 h-6" />
-            </div>
-          )
+          <div
+            className="flex gap-1 items-center justify-center text-gray-500 hover:text-gray-700 cursor-pointer h-6 w-6"
+            onClick={handleToggle}
+          >
+            <SidebarClose className="w-6 h-6" />
+          </div>
         )}
       </div>
     </div>

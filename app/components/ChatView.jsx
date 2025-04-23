@@ -11,11 +11,13 @@ import { StepsList } from "../utils/StepsList";
 import useFiles from "../store/useFiles";
 import { parseXml } from "../lib/parseXml";
 import { Loader } from "../utils/loader";
+import { BACKEND_URL } from "../utils/config";
+import axios from "axios";
 
 function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
   const { id } = useParams();
   const { userDetail } = useContext(UserDetailContext);
-  const { templateSet, newFileFromApiLoading } = useFiles();
+  const { isLoading, setIsLoading } = useFiles();
   const [loading, setLoading] = useState(false);
   const [userInput, setUserInput] = useState("");
   const chatContainerRef = useRef();
@@ -29,7 +31,7 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
 
   useEffect(() => {
     messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, newFileFromApiLoading, steps]);
+  }, [messages, isLoading, steps]);
 
   // Chat container height adjustment
   useEffect(() => {
@@ -67,8 +69,8 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
 
       <div className="flex gap-2 items-end sticky bottom-0 bg-slate-50 pb-1.5">
         <div className="w-full p-3 border shadow-sm border-slate-200 rounded-xl">
-          {(newFileFromApiLoading || !templateSet) && <Loader />}
-          {!(newFileFromApiLoading || !templateSet) && (
+          {isLoading && <Loader />}
+          {!isLoading && (
             <>
               <div className="flex items-end gap-2">
                 <textarea
@@ -77,41 +79,57 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
                   placeholder={Lookup.INPUT_PLACEHOLDER}
                   className="w-full bg-transparent outline-none resize-none max-h-32 min-h-20"
                   rows={Math.min(3, userInput.split("\n").length || 1)}
-                  disabled={newFileFromApiLoading}
                 />
                 <button
                   disabled={!userInput.trim()}
                   onClick={async () => {
-                    const newMessage = {
-                      role: "user",
-                      content: userInput,
-                    };
+                    try {
+                      setIsLoading(true);
+                      const newMessage = {
+                        role: "user",
+                        content: userInput,
+                      };
 
-                    setLoading(true);
-                    const stepsResponse = await axios.post(
-                      "/api/gen-ai-codesss",
-                      {
-                        messages: [...llmMessages, newMessage],
-                      }
-                    );
-                    setLoading(false);
+                      console.log("New message:", newMessage);
 
-                    setLlmMessages((x) => [...x, newMessage]);
-                    setLlmMessages((x) => [
-                      ...x,
-                      {
-                        role: "assistant",
-                        content: stepsResponse.data.response,
-                      },
-                    ]);
+                      const stepsResponse = await axios.post(
+                        `${BACKEND_URL}/chat`,
+                        {
+                          messages: [...llmMessages, newMessage],
+                        }
+                      );
 
-                    setSteps((s) => [
-                      ...s,
-                      ...parseXml(stepsResponse.data.response).map((x) => ({
+                      setLlmMessages((x) => [...x, newMessage]);
+                      setLlmMessages((x) => [
                         ...x,
-                        status: "pending",
-                      })),
-                    ]);
+                        {
+                          role: "assistant",
+                          content: stepsResponse.data.response,
+                        },
+                      ]);
+
+                      setSteps((s) => [
+                        ...s,
+                        ...parseXml(stepsResponse.data.response).map((x) => ({
+                          ...x,
+                          status: "pending",
+                        })),
+                      ]);
+                    } catch (error) {
+                      // Handle API request errors
+                      console.error("Error processing message:", error);
+                      setLlmMessages((x) => [
+                        ...x,
+                        {
+                          role: "assistant",
+                          content:
+                            "Sorry, there was an error processing your request. Please try again.",
+                        },
+                      ]);
+                    } finally {
+                      setUserInput("");
+                      setIsLoading(false);
+                    }
                   }}
                   className={`flex-shrink-0 ${
                     userInput.trim() && !loading

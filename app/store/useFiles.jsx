@@ -12,9 +12,11 @@ const useFiles = create((set) => ({
   currentStep: 1,
   setCurrentStep: (stepId) => set({ currentStep: stepId }),
 
-  newFileFromApiLoading: false,
-  setNewFileFromApiLoading: (bool) => set({ newFileFromApiLoading: bool }),
-  fileFromDbLoading: true,
+  isLoading: true,
+  setIsLoading: (bool) => set({ isLoading: bool }),
+  isDownloadingZipFile: false,
+  setIsDownloadingZipFile: (bool) => set({ isDownloadingZipFile: bool }),
+  fileFromDbLoading: false,
   setFileFromDbLoading: (bool) => set({ fileFromDbLoading: bool }),
 
   // Fixed parameter check and handling for arrays

@@ -3,16 +3,8 @@ import axios from "axios";
 import { BACKEND_URL } from "./config";
 import uuid4 from "uuid4";
 
-export async function fetchInitialSteps(
-  messages,
-  setSteps,
-  setLlmMessages,
-  setTemplateSet,
-  setNewFileFromApiLoading
-) {
+export async function fetchInitialSteps(messages, setSteps, setLlmMessages) {
   try {
-    setNewFileFromApiLoading(true);
-
     // Validate inputs
     if (!setSteps || typeof setSteps !== "function") {
       console.error("setSteps is not a function:", setSteps);
@@ -30,7 +22,6 @@ export async function fetchInitialSteps(
         throw new Error("Failed to fetch template type");
       });
 
-    setTemplateSet(true);
     const { prompts, uiPrompts } = response.data;
 
     // Parse and set initial steps
@@ -42,8 +33,6 @@ export async function fetchInitialSteps(
       }))
     );
 
-    setNewFileFromApiLoading(true);
-
     const stepsResponse = await axios.post(`${BACKEND_URL}/chat`, {
       messages: [...prompts, messages].map((content) => ({
         role: "user",
@@ -53,7 +42,6 @@ export async function fetchInitialSteps(
 
     console.log(messages);
 
-    setNewFileFromApiLoading(false);
     console.log("Steps response:", stepsResponse);
 
     setSteps((s) => [
@@ -79,6 +67,5 @@ export async function fetchInitialSteps(
   } catch (error) {
     console.error("Error in fetching initial steps:", error);
   } finally {
-    setNewFileFromApiLoading(false);
   }
 }

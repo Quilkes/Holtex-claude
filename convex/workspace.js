@@ -80,7 +80,6 @@ export const UpdateFiles = mutation({
     workspaceId: v.id("workspace"),
     files: v.optional(v.any()),
     steps: v.optional(v.any()),
-    llmMessages: v.optional(v.array(v.any())),
     createdAt: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -88,7 +87,6 @@ export const UpdateFiles = mutation({
       fileData: {
         files: args.files,
         steps: args.steps,
-        llmMessages: args.llmMessages || [],
         createdAt: args.createdAt || new Date().toISOString(),
       },
     });
