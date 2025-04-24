@@ -1,412 +1,357 @@
-"use client";
-import React, { useEffect, useRef, useState } from "react";
-import { TabView } from "@/app/components/TabView";
-import { ChevronRight, MessageSquare } from "lucide-react";
-import { CodeEditor } from "@/app/components/CodeEditor";
-import CodeView from "@/app/components/CodeView";
-import PreviewFrame from "@/app/components/PreviewFrame";
-import useCodeView from "@/app/store/useCodeView";
-import useFiles from "@/app/store/useFiles";
-import ChatView from "@/app/components/ChatView";
-import { useParams } from "next/navigation";
-import { useConvex, useMutation, useQuery } from "convex/react";
-import { useWebContainer } from "@/app/hooks/useWebContainer";
-import { updateStepsAndFiles } from "@/app/utils/updateStepsAndFiles";
-import { fetchInitialSteps } from "@/app/utils/fetchInitialSteps";
-import { toast } from "sonner";
-import { api } from "@/convex/_generated/api";
+{
+  createdAt: "2025-04-24T16:49:45.502Z",
+  files: `<boltArtifact id="project-import" title="Project Files"><boltAction type="file" filePath="eslint.config.js">import js from '@eslint/js';
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import tseslint from 'typescript-eslint';
 
-export default function page() {
-  const { id } = useParams();
-  const convex = useConvex();
-  const webContainerRef = useRef(null);
-  const UpdateFiles = useMutation(api.workspace.UpdateFiles);
-  const UpdateTokens = useMutation(api.users.UpdateToken);
-  const webContainer = useWebContainer();
-  const { activeTab } = useCodeView();
-  const { setTemplateSet, setNewFileFromApiLoading, setFileFromDbLoading } =
-    useFiles();
+export default tseslint.config(
+  { ignores: ['dist'] },
+  {
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+    plugins: {
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+    },
+  }
+);
+</boltAction><boltAction type="file" filePath="index.html"><!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+</boltAction><boltAction type="file" filePath="package.json">{
+  "name": "vite-react-typescript-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^0.344.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^9.9.1",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.11",
+    "globals": "^15.9.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.3.0",
+    "vite": "^5.4.2"
+  }
+}
+</boltAction><boltAction type="file" filePath="postcss.config.js">export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+</boltAction><boltAction type="file" filePath="tailwind.config.js">/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+</boltAction><boltAction type="file" filePath="tsconfig.app.json">{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
 
-  const [steps, setSteps] = useState([]);
-  const [files, setFiles] = useState([]);
-  const [llmMessages, setLlmMessages] = useState([]);
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
 
-  // Query with caching strategy
-  const workspaceData = useQuery(api.workspace.GetWorkspace, {
-    workspaceId: id,
-  });
-  const messages = workspaceData?.messages?.[0]?.content || "";
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}
+</boltAction><boltAction type="file" filePath="tsconfig.json">{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
+</boltAction><boltAction type="file" filePath="tsconfig.node.json">{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "skipLibCheck": true,
 
-  const [workspaceLoaded, setWorkspaceLoaded] = useState(false);
-  const [isWebContainerLoading, setIsWebContainerLoading] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
 
-  // Track initialization and debounce database updates
-  const hasInitialized = useRef(false);
-  const isMounted = useRef(true);
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["vite.config.ts"]
+}
+</boltAction><boltAction type="file" filePath="vite.config.ts">import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-  const toggleChat = () => {
-    setIsChatOpen(!isChatOpen);
-  };
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  optimizeDeps: {
+    exclude: ['lucide-react'],
+  },
+});
+</boltAction><boltAction type="file" filePath="src/App.tsx">import React from 'react';
 
-  // Update web container reference
-  useEffect(() => {
-    if (webContainer) {
-      webContainerRef.current = webContainer;
-    }
-  }, [webContainer]);
+function App() {
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <p>Start prompting (or editing) to see magic happen :)</p>
+    </div>
+  );
+}
 
-  // Main initialization flow with improved reliability
-  useEffect(() => {
-    const initializeWorkspace = async () => {
-      // Skip if already initializing or missing required data
-      if (hasInitialized.current || !id || !webContainer) return;
-      hasInitialized.current = true;
+export default App;
+</boltAction><boltAction type="file" filePath="src/index.css">@tailwind base;
+@tailwind components;
+@tailwind utilities;
+</boltAction><boltAction type="file" filePath="src/main.tsx">import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
 
-      try {
-        setIsWebContainerLoading(true);
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
+</boltAction><boltAction type="file" filePath="src/vite-env.d.ts">/// <reference types="vite/client" />
+</boltAction></boltArtifact>
 
-        // 1: First try to fetch from database
-        const hasData = await fetchWorkspaceData();
+I'll create a beautiful and modern login/signup screen with smooth transitions, proper validation, and a professional design.
 
-        // 2: If no data in database, generate new files
-        if (!hasData) {
-          console.log("No data in database, generating new files");
-          // await fetchInitialSteps(
-          //   messages,
-          //   setSteps,
-          //   setLlmMessages,
-          //   setTemplateSet,
-          //   setNewFileFromApiLoading
-          // );
-          updateStepsAndFiles(
-            steps,
-            files,
-            setSteps,
-            setFiles,
-            webContainerRef
-          );
-        }
+<boltArtifact id="login-signup-screen" title="Modern Login/Signup Screen">
+<boltAction type="file" filePath="src/components/AuthLayout.tsx">
+import { Laptop, Moon, Sun } from 'lucide-react';
+import { useState } from 'react';
 
-        if (isMounted.current) {
-          setWorkspaceLoaded(true);
-          setIsWebContainerLoading(false);
-        }
-      } catch (error) {
-        console.error("Workspace initialization error:", error);
-        toast.error("Error initializing workspace");
-      } finally {
-        hasInitialized.current = true;
-        setIsWebContainerLoading(false);
-      }
-    };
-    initializeWorkspace();
-
-    // Clean up function
-    return () => {
-      isMounted.current = false;
-    };
-  }, [id, webContainer, workspaceLoaded, messages, files.length]);
-
-  // Improved database fetch with error handling
-  const fetchWorkspaceData = async () => {
-    setFileFromDbLoading(true);
-    console.log("Processing existing workspace data");
-
-    try {
-      //  Fetch from database
-      const result = await convex.query(api.workspace.GetWorkspace, {
-        workspaceId: id,
-      });
-
-      console.log(result);
-
-      if (
-        result &&
-        result.fileData &&
-        result.fileData.files &&
-        result.fileData.files.length > 0
-      ) {
-        // Process and load the files into WebContainer if webContainer is ready
-        if (webContainerRef.current) {
-          await updateStepsAndFiles(
-            result.fileData.steps,
-            result.fileData.files,
-            setSteps,
-            setFiles,
-            webContainerRef
-          );
-
-          // Update state with fetched data
-          setFiles(result.fileData.files);
-          if (result.fileData.steps) setSteps(result.fileData.steps);
-          if (result.fileData.llmMessages)
-            setLlmMessages(result.fileData.llmMessages);
-          if (result.fileData.templateSet)
-            setTemplateSet(result.fileData.templateSet);
-          setIsWebContainerLoading(false);
-        } else {
-          console.warn("WebContainer not ready yet, will retry");
-          // Still update the state so it's ready when container is available
-          setFiles(result.fileData.files);
-          if (result.fileData.steps) setSteps(result.fileData.steps);
-          if (result.fileData.llmMessages)
-            setLlmMessages(result.fileData.llmMessages);
-          if (result.fileData.templateSet)
-            setTemplateSet(result.fileData.templateSet);
-        }
-        return true;
-      }
-
-      return false;
-    } catch (error) {
-      console.error("Error fetching workspace data:", error);
-      if (isMounted.current) {
-        toast.error("Failed to load project files");
-      }
-      return false;
-    } finally {
-      setFileFromDbLoading(false);
-    }
-  };
-
-  // Update WebContainer when files or steps change (only after initialization)
-  useEffect(() => {
-    if (!workspaceLoaded) {
-      saveToDatabase();
-    }
-  }, [steps, files]);
-
-  const saveToDatabase = async () => {
-    if (!id) return;
-
-    try {
-      await UpdateFiles({
-        workspaceId: id,
-        steps,
-        files,
-        llmMessages: workspaceData?.llmMessages || [],
-        createdAt: new Date().toISOString(),
-      });
-    } catch (error) {
-      console.error("Failed to save workspace:", error);
-      toast.error("Failed to save your changes");
-    }
-  };
-
-  // Clean up on unmount
-  useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    console.log("Steps and Files updated. Function init");
-    let originalFiles = Array.isArray(files) ? [...files] : [];
-    let updateHappened = false;
-
-    // Now filter steps safely
-    const pendingSteps = steps.filter(
-      (step) => step && step.status === "pending"
-    );
-
-    for (const step of pendingSteps) {
-      updateHappened = true;
-      if (step?.type === "CreateFile") {
-        let parsedPath = step.path?.split("/") ?? [];
-        let currentFileStructure = originalFiles;
-        let currentFolder = "";
-
-        while (parsedPath.length) {
-          currentFolder = `${currentFolder}/${parsedPath[0]}`.replace(
-            "//",
-            "/"
-          );
-          let currentFolderName = parsedPath[0];
-          parsedPath = parsedPath.slice(1);
-
-          if (!parsedPath.length) {
-            let file = currentFileStructure.find(
-              (x) => x.path === currentFolder
-            );
-            if (!file) {
-              currentFileStructure.push({
-                name: currentFolderName,
-                type: "file",
-                path: currentFolder,
-                content: step.code,
-              });
-            } else {
-              file.content = step.code;
-            }
-
-            // Ensure WebContainer is ready before writing files
-            if (webContainerRef?.current) {
-              try {
-                const parentDir = currentFolder.substring(
-                  0,
-                  currentFolder.lastIndexOf("/")
-                );
-                if (parentDir) {
-                  webContainerRef.current.fs.mkdir(parentDir, {
-                    recursive: true,
-                  });
-                }
-                webContainerRef.current.fs.writeFile(currentFolder, step.code);
-              } catch (error) {
-                console.error(`Error writing file ${currentFolder}:`, error);
-              }
-            }
-          } else {
-            let folder = currentFileStructure.find(
-              (x) => x.path === currentFolder
-            );
-            if (!folder) {
-              folder = {
-                name: currentFolderName,
-                type: "folder",
-                path: currentFolder,
-                children: [],
-              };
-              currentFileStructure.push(folder);
-
-              if (webContainerRef?.current) {
-                try {
-                  webContainerRef.current.fs.mkdir(currentFolder, {
-                    recursive: true,
-                  });
-                } catch (error) {
-                  console.error(
-                    `Error creating directory ${currentFolder}:`,
-                    error
-                  );
-                }
-              }
-            }
-            currentFileStructure = folder.children || [];
-          }
-        }
-      }
-    }
-
-    if (updateHappened) {
-      const sortFiles = (items) => {
-        items.sort((a, b) => {
-          if (a.type === "folder" && b.type === "file") return -1;
-          if (a.type === "file" && b.type === "folder") return 1;
-          return a.name.localeCompare(b.name);
-        });
-        items.forEach((item) => {
-          if (item.type === "folder" && item.children) {
-            sortFiles(item.children);
-          }
-        });
-      };
-
-      sortFiles(originalFiles);
-
-      setFiles([...originalFiles]);
-      setSteps((prevSteps) =>
-        prevSteps.map((step) =>
-          step.status === "pending" ? { ...step, status: "completed" } : step
-        )
-      );
-    }
-  }, [steps, files]);
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  const [isDark, setIsDark] = useState(false);
 
   return (
-    <div className="p-1 h-[100vh] relative overflow-hidden">
-      {/* Desktop Layout */}
-      <div className="hidden h-full gap-2 md:grid place-content-center md:grid-cols-12">
-        <div className="col-span-3 h-[98vh] p-0.5 flex flex-col justify-center">
-          <ChatView
-            steps={steps}
-            setSteps={setSteps}
-            llmMessages={llmMessages}
-            setLlmMessages={setLlmMessages}
-          />
+    <div className={\`min-h-screen w-full flex items-center justify-center p-4 transition-colors duration-200 \${isDark ? 'bg-gray-900' : 'bg-gray-50'}\`}>
+      <button
+        onClick={() => setIsDark(!isDark)}
+        className={\`fixed top-4 right-4 p-2 rounded-lg \${
+          isDark ? 'text-white hover:bg-gray-800' : 'text-gray-800 hover:bg-gray-200'
+        }\`}
+      >
+        {isDark ? <Sun size={20} /> : <Moon size={20} />}
+      </button>
+      
+      <div className="max-w-7xl w-full grid lg:grid-cols-2 gap-8 items-center">
+        <div className="hidden lg:flex flex-col items-center justify-center p-8">
+          <Laptop className={\`w-64 h-64 \${isDark ? 'text-white' : 'text-gray-800'}\`} />
+          <h1 className={\`text-4xl font-bold mt-8 text-center \${isDark ? 'text-white' : 'text-gray-800'}\`}>
+            Welcome to Our Platform
+          </h1>
+          <p className={\`text-lg mt-4 text-center \${isDark ? 'text-gray-300' : 'text-gray-600'}\`}>
+            Join thousands of users who trust our platform for their daily needs
+          </p>
         </div>
-        <div className="md:col-span-9 h-[98vh] flex flex-col justify-center">
-          <CodeView
-            files={files}
-            isWebContainerLoading={isWebContainerLoading}
-            webContainerRef={webContainerRef}
-          />
+        
+        <div className="w-full max-w-md mx-auto">
+          {children}
         </div>
-      </div>
-
-      {/* Mobile Layout */}
-      <div className="block h-full md:hidden">
-        {/* Mobile CodeView */}
-        <div className="h-full">
-          <div className="grid h-full border rounded-md grid-rows-12 bg-slate-100">
-            {/* Tab View - Using updated TabView component */}
-            <div className="flex justify-between w-full row-span-1 border bg-slate-100">
-              <TabView />
-            </div>
-
-            {/* Code editor and preview section */}
-            <div className="w-full h-full row-span-11">
-              <div className="grid w-full h-full grid-cols-12">
-                {/* Code Editor or Preview  */}
-                <div className="w-full col-span-12">
-                  <div className="w-full h-full overflow-auto border-b border-gray-200 md:border-b-0 md:border-r">
-                    {activeTab === "code" ? (
-                      <CodeEditor files={files[0]} />
-                    ) : (
-                      <PreviewFrame
-                        files={files}
-                        webContainerRef={webContainerRef}
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* {showLoading && (
-                <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80">
-                  <div className="flex flex-col items-center">
-                    <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-                    <p className="mt-2 text-sm text-gray-600">
-                      {loadingMessage}
-                    </p>
-                  </div>
-                </div>
-              )} */}
-            </div>
-          </div>
-        </div>
-        Slide-in ChatView for Mobile
-        <div
-          className={`fixed top-0 left-0 h-full w-full bg-white z-20 transition-transform duration-300 ease-in-out ${
-            isChatOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-          style={{ maxWidth: "100vw", maxHeight: "100vh" }}
-        >
-          <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between p-2 bg-slate-100">
-              <h2 className="text-lg font-semibold">Chat</h2>
-              <button
-                onClick={toggleChat}
-                className="p-2 rounded-full hover:bg-slate-200"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </div>
-            <div className="flex-1 overflow-hidden">ChatView</div>
-          </div>
-        </div>
-        {/* Chat Toggle Button (only shows when chat is closed) */}
-        {!isChatOpen && (
-          <button
-            onClick={toggleChat}
-            className="fixed z-10 flex items-center justify-center p-3 text-white bg-purple-600 rounded-full shadow-lg bottom-6 right-6"
-          >
-            <MessageSquare size={24} />
-          </button>
-        )}
       </div>
     </div>
   );
+}
+</boltAction>
+
+<boltAction type="file" filePath="src/components/AuthForm.tsx">
+import { useState } from 'react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
+
+interface AuthFormProps {
+  mode: 'login' | 'signup';
+  onSwitch: () => void;
+}
+
+export default function AuthForm({ mode, onSwitch }: AuthFormProps) {
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setLoading(false);
+  };
+
+  return (
+    <div className="w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+      <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">
+        {mode === 'login' ? 'Welcome back' : 'Create account'}
+      </h2>
+      
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {mode === 'signup' && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+              Full Name
+            </label>
+            <input
+              type="text"
+              required
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="John Doe"
+            />
+          </div>
+        )}
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+            Email
+          </label>
+          <input
+            type="email"
+            required
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="you@example.com"
+          />
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+            Password
+          </label>
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              required
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="••••••••"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+        </div>
+        
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center space-x-2 transition-colors"
+        >
+          {loading && <Loader2 size={20} className="animate-spin" />}
+          <span>{mode === 'login' ? 'Sign in' : 'Create account'}</span>
+        </button>
+      </form>
+      
+      <div className="mt-6 text-center">
+        <p className="text-sm text-gray-600 dark:text-gray-300">
+          {mode === 'login' ? "Don't have an account?" : "Already have an account?"}
+          {' '}
+          <button
+            onClick={onSwitch}
+            className="text-blue-600 hover:text-blue-700 font-semibold"
+          >
+            {mode === 'login' ? 'Sign up' : 'Sign in'}
+          </button>
+        </p>
+      </div>
+    </div>
+  );
+}
+</boltAction>
+
+<boltAction type="file" filePath="src/App.tsx">
+import { useState } from 'react';
+import AuthLayout from './components/AuthLayout';
+import AuthForm from './components/AuthForm';
+
+export default function App() {
+  const [mode, setMode] = useState<'login' | 'signup'>('login');
+  
+  return (
+    <AuthLayout>
+      <AuthForm 
+        mode={mode} 
+        onSwitch={() => setMode(mode === 'login' ? 'signup' : 'login')} 
+      />
+    </AuthLayout>
+  );
+}
+</boltAction>
+</boltArtifact>
+
+I've created a modern, responsive login/signup screen with:
+
+- Dark/light mode toggle
+- Password visibility toggle
+- Loading states
+- Smooth transitions
+- Form validation
+- Beautiful illustration on desktop view
+- Mobile-first design
+- Clean animations
+- Professional spacing and typography
+
+The components are split into reusable pieces and use TypeScript for type safety. Everything is styled using Tailwind CSS classes for consistency and maintainability.`,
 }

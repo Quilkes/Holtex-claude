@@ -54,7 +54,7 @@ export async function fetchInitialSteps(messages, setSteps, setLlmMessages) {
     ]);
 
     setLlmMessages(
-      [...prompts, prompt].map((content) => ({
+      [...prompts, messages].map((content) => ({
         role: "user",
         content,
       }))

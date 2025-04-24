@@ -13,6 +13,7 @@ import { parseXml } from "../lib/parseXml";
 import { Loader } from "../utils/loader";
 import { BACKEND_URL } from "../utils/config";
 import axios from "axios";
+import uuid4 from "uuid4";
 
 function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
   const { id } = useParams();
@@ -82,55 +83,56 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
                 />
                 <button
                   disabled={!userInput.trim()}
-                  onClick={async () => {
-                    try {
-                      setIsLoading(true);
-                      const newMessage = {
-                        role: "user",
-                        content: userInput,
-                      };
+                  // onClick={async () => {
+                  //   try {
+                  //     setIsLoading(true);
+                  //     const newMessage = {
+                  //       role: "user",
+                  //       content: userInput,
+                  //     };
 
-                      console.log("New message:", newMessage);
+                  //     console.log("New message:", newMessage);
 
-                      const stepsResponse = await axios.post(
-                        `${BACKEND_URL}/chat`,
-                        {
-                          messages: [...llmMessages, newMessage],
-                        }
-                      );
+                  //     const stepsResponse = await axios.post(
+                  //       `${BACKEND_URL}/chat`,
+                  //       {
+                  //         messages: [...llmMessages, newMessage],
+                  //       }
+                  //     );
 
-                      setLlmMessages((x) => [...x, newMessage]);
-                      setLlmMessages((x) => [
-                        ...x,
-                        {
-                          role: "assistant",
-                          content: stepsResponse.data.response,
-                        },
-                      ]);
+                  //     setLlmMessages((x) => [...x, newMessage]);
+                  //     setLlmMessages((x) => [
+                  //       ...x,
+                  //       {
+                  //         role: "assistant",
+                  //         content: stepsResponse.data.response,
+                  //       },
+                  //     ]);
 
-                      setSteps((s) => [
-                        ...s,
-                        ...parseXml(stepsResponse.data.response).map((x) => ({
-                          ...x,
-                          status: "pending",
-                        })),
-                      ]);
-                    } catch (error) {
-                      // Handle API request errors
-                      console.error("Error processing message:", error);
-                      setLlmMessages((x) => [
-                        ...x,
-                        {
-                          role: "assistant",
-                          content:
-                            "Sorry, there was an error processing your request. Please try again.",
-                        },
-                      ]);
-                    } finally {
-                      setUserInput("");
-                      setIsLoading(false);
-                    }
-                  }}
+                  //     setSteps((s) => [
+                  //       ...s,
+                  //       ...parseXml(stepsResponse.data.response).map((x) => ({
+                  //         ...x,
+                  //         id: uuid4(),
+                  //         status: "pending",
+                  //       })),
+                  //     ]);
+                  //   } catch (error) {
+                  //     // Handle API request errors
+                  //     console.error("Error processing message:", error);
+                  //     setLlmMessages((x) => [
+                  //       ...x,
+                  //       {
+                  //         role: "assistant",
+                  //         content:
+                  //           "Sorry, there was an error processing your request. Please try again.",
+                  //       },
+                  //     ]);
+                  //   } finally {
+                  //     setUserInput("");
+                  //     setIsLoading(false);
+                  //   }
+                  // }}
                   className={`flex-shrink-0 ${
                     userInput.trim() && !loading
                       ? "bg-purple-600 hover:bg-purple-700"

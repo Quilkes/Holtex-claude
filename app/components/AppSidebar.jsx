@@ -12,6 +12,7 @@ import { FileExplorer } from "./FileExplorer";
 import useFiles from "../store/useFiles";
 import { useContext } from "react";
 import { UserDetailContext } from "../context/UserDetailContext";
+import useMediaQuery from "../store/useMediaQuery";
 
 const AppSidebar = ({ children }) => {
   const {
@@ -26,6 +27,7 @@ const AppSidebar = ({ children }) => {
     isOpen,
     setIsOpen,
   } = useSidebar();
+  const { isMobile } = useMediaQuery();
   const pathname = usePathname();
   const isWorkspaceRoute = pathname.startsWith("/workspace/");
   const { userDetail } = useContext(UserDetailContext);
@@ -326,7 +328,7 @@ const AppSidebar = ({ children }) => {
       {/* File Explorer for mobile */}
       {smFileBar && (
         <div
-          className={`fixed inset-0 bg-black/30 z-40 md:${isWorkspaceRoute ? "block" : "hidden"}`}
+          className={`fixed inset-0 bg-black/30 z-40 md:${isWorkspaceRoute && isMobile ? "block" : "hidden"}`}
           onClick={handleFilesSmbar}
         />
       )}
