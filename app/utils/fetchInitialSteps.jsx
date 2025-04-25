@@ -3,12 +3,19 @@ import axios from "axios";
 import { BACKEND_URL } from "./config";
 import uuid4 from "uuid4";
 
-export async function fetchInitialSteps(messages, setSteps, setLlmMessages) {
+export async function fetchInitialSteps(
+  messages,
+  setSteps,
+  setLlmMessages,
+  userDetail,
+  setUserDetail,
+  countToken,
+  UpdateTokens
+) {
   try {
     // Validate inputs
     if (!setSteps || typeof setSteps !== "function") {
       console.error("setSteps is not a function:", setSteps);
-      setNewFileFromApiLoading(false);
       return;
     }
 
@@ -24,6 +31,19 @@ export async function fetchInitialSteps(messages, setSteps, setLlmMessages) {
 
     const { prompts, uiPrompts } = response.data;
 
+    // Calculate and update tokens after template API call
+    const templateTokens = Number(countToken(JSON.stringify(response.data)));
+    const remTokensAfterTemplate = Number(userDetail?.token) - templateTokens;
+
+    // Update user tokens in state
+    setUserDetail((prev) => ({ ...prev, token: remTokensAfterTemplate }));
+
+    // Update tokens in database after template call
+    await UpdateTokens({
+      userId: userDetail?._id,
+      token: remTokensAfterTemplate,
+    });
+
     // Parse and set initial steps
     setSteps(
       parseXml(uiPrompts[0]).map((x) => ({
@@ -33,6 +53,7 @@ export async function fetchInitialSteps(messages, setSteps, setLlmMessages) {
       }))
     );
 
+    // Post to chat API
     const stepsResponse = await axios.post(`${BACKEND_URL}/chat`, {
       messages: [...prompts, messages].map((content) => ({
         role: "user",
@@ -40,10 +61,20 @@ export async function fetchInitialSteps(messages, setSteps, setLlmMessages) {
       })),
     });
 
-    console.log(messages);
+    // Calculate and update tokens after chat API call
+    const chatTokens = Number(countToken(JSON.stringify(stepsResponse.data)));
+    const remTokensAfterChat = remTokensAfterTemplate - chatTokens;
 
-    console.log("Steps response:", stepsResponse);
+    // Update user tokens in state
+    setUserDetail((prev) => ({ ...prev, token: remTokensAfterChat }));
 
+    // Update tokens in database after chat call
+    await UpdateTokens({
+      userId: userDetail?._id,
+      token: remTokensAfterChat,
+    });
+
+    // Set steps from chat response
     setSteps((s) => [
       ...s,
       ...parseXml(stepsResponse.data.response).map((x) => ({
@@ -53,6 +84,7 @@ export async function fetchInitialSteps(messages, setSteps, setLlmMessages) {
       })),
     ]);
 
+    // Update message history
     setLlmMessages(
       [...prompts, messages].map((content) => ({
         role: "user",
@@ -66,6 +98,5 @@ export async function fetchInitialSteps(messages, setSteps, setLlmMessages) {
     ]);
   } catch (error) {
     console.error("Error in fetching initial steps:", error);
-  } finally {
   }
 }

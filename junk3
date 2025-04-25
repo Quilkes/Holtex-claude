@@ -1,6 +1,365 @@
 {
-  createdAt: "2025-04-24T16:49:45.502Z",
-  files: `<boltArtifact id="project-import" title="Project Files"><boltAction type="file" filePath="eslint.config.js">import js from '@eslint/js';
+  createdAt: "2025-04-25T15:45:12.095Z",
+  files: [
+    {
+      children: [
+        {
+          children: [
+            {
+              children: [
+                {
+                  content: `interface CardProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function Card({ children, className = '' }: CardProps) {
+  return (
+    <div className={\`bg-white rounded-xl shadow-sm border border-gray-200 \${className}\`}>
+      {children}
+    </div>
+  );
+}`,
+                  name: "Card.tsx",
+                  path: "/src/components/ui/Card.tsx",
+                  type: "file",
+                },
+                {
+                  content: `interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  href: string;
+}
+
+export function Link({ children, ...props }: LinkProps) {
+  return (
+    <a {...props}>
+      {children}
+    </a>
+  );
+}`,
+                  name: "Link.tsx",
+                  path: "/src/components/ui/Link.tsx",
+                  type: "file",
+                },
+              ],
+              name: "ui",
+              path: "/src/components/ui",
+              type: "folder",
+            },
+            {
+              content: `import { Card } from './ui/Card';
+
+const classes = [
+  {
+    name: 'CrossFit Elite',
+    instructor: 'John Smith',
+    time: '06:00 AM',
+    enrolled: 24,
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=200&auto=format&fit=crop',
+  },
+  {
+    name: 'Yoga Flow',
+    instructor: 'Emma Wilson',
+    time: '08:30 AM',
+    enrolled: 18,
+    image: 'https://images.unsplash.com/photo-1599447421416-3414500c2c98?q=80&w=200&auto=format&fit=crop',
+  },
+  {
+    name: 'HIIT Training',
+    instructor: 'David Miller',
+    time: '05:30 PM',
+    enrolled: 21,
+    image: 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?q=80&w=200&auto=format&fit=crop',
+  },
+];
+
+export function PopularClasses() {
+  return (
+    <Card className="p-6">
+      <h2 className="text-lg font-semibold mb-4">Popular Classes</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {classes.map((cls) => (
+          <div key={cls.name} className="rounded-lg overflow-hidden border border-gray-200">
+            <img
+              src={cls.image}
+              alt={cls.name}
+              className="w-full h-32 object-cover"
+            />
+            <div className="p-4">
+              <h3 className="font-medium">{cls.name}</h3>
+              <p className="text-sm text-gray-600">{cls.instructor}</p>
+              <div className="flex justify-between items-center mt-2 text-sm">
+                <span className="text-gray-600">{cls.time}</span>
+                <span className="text-blue-600">{cls.enrolled} enrolled</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}`,
+              name: "PopularClasses.tsx",
+              path: "/src/components/PopularClasses.tsx",
+              type: "file",
+            },
+            {
+              content: `import { Card } from './ui/Card';
+
+const members = [
+  {
+    name: 'Sarah Johnson',
+    plan: 'Premium Plan',
+    joinDate: 'Mar 15, 2024',
+    status: 'Active',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop',
+  },
+  {
+    name: 'Michael Chen',
+    plan: 'Basic Plan',
+    joinDate: 'Mar 14, 2024',
+    status: 'Active',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop',
+  },
+  {
+    name: 'Emily Davis',
+    plan: 'Premium Plan',
+    joinDate: 'Mar 13, 2024',
+    status: 'Active',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop',
+  },
+];
+
+export function RecentMembers() {
+  return (
+    <Card className="p-6">
+      <h2 className="text-lg font-semibold mb-4">Recent Members</h2>
+      <div className="space-y-4">
+        {members.map((member) => (
+          <div key={member.name} className="flex items-center gap-4">
+            <img
+              src={member.avatar}
+              alt={member.name}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+            <div className="flex-1">
+              <p className="font-medium">{member.name}</p>
+              <p className="text-sm text-gray-600">{member.plan}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-gray-600">{member.joinDate}</p>
+              <span className="inline-block px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+                {member.status}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}`,
+              name: "RecentMembers.tsx",
+              path: "/src/components/RecentMembers.tsx",
+              type: "file",
+            },
+            {
+              content: `import { DumbbellIcon, UsersIcon, CalendarIcon, BarChartIcon, SettingsIcon, CreditCardIcon, MessageSquareIcon } from 'lucide-react';
+import { Link } from './ui/Link';
+
+const menuItems = [
+  { icon: BarChartIcon, label: 'Dashboard', href: '#' },
+  { icon: UsersIcon, label: 'Members', href: '#' },
+  { icon: DumbbellIcon, label: 'Classes', href: '#' },
+  { icon: CalendarIcon, label: 'Schedule', href: '#' },
+  { icon: CreditCardIcon, label: 'Payments', href: '#' },
+  { icon: MessageSquareIcon, label: 'Messages', href: '#' },
+  { icon: SettingsIcon, label: 'Settings', href: '#' },
+];
+
+export function Sidebar() {
+  return (
+    <div className="h-screen w-64 bg-white border-r border-gray-200 p-4 fixed left-0 top-0">
+      <div className="flex items-center gap-2 mb-8">
+        <DumbbellIcon className="h-8 w-8 text-blue-600" />
+        <span className="text-xl font-bold">FitPro</span>
+      </div>
+      
+      <nav className="space-y-2">
+        {menuItems.map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-blue-50 rounded-lg transition-colors"
+          >
+            <item.icon className="h-5 w-5" />
+            <span>{item.label}</span>
+          </Link>
+        ))}
+      </nav>
+    </div>
+  );
+}`,
+              name: "Sidebar.tsx",
+              path: "/src/components/Sidebar.tsx",
+              type: "file",
+            },
+            {
+              content: `import { Users2Icon, ActivityIcon, DollarSignIcon, TrendingUpIcon } from 'lucide-react';
+import { Card } from './ui/Card';
+
+const stats = [
+  {
+    icon: Users2Icon,
+    label: 'Total Members',
+    value: '2,847',
+    trend: '+12.5%',
+    color: 'text-blue-600',
+    bg: 'bg-blue-100',
+  },
+  {
+    icon: ActivityIcon,
+    label: 'Active Classes',
+    value: '47',
+    trend: '+4.3%',
+    color: 'text-green-600',
+    bg: 'bg-green-100',
+  },
+  {
+    icon: DollarSignIcon,
+    label: 'Revenue',
+    value: '$56,748',
+    trend: '+8.9%',
+    color: 'text-purple-600',
+    bg: 'bg-purple-100',
+  },
+  {
+    icon: TrendingUpIcon,
+    label: 'Growth',
+    value: '24.5%',
+    trend: '+2.1%',
+    color: 'text-orange-600',
+    bg: 'bg-orange-100',
+  },
+];
+
+export function Stats() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {stats.map((stat) => (
+        <Card key={stat.label} className="p-6">
+          <div className="flex items-center gap-4">
+            <div className={\`p-3 rounded-lg \${stat.bg}\`}>
+              <stat.icon className={\`h-6 w-6 \${stat.color}\`} />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">{stat.label}</p>
+              <p className="text-2xl font-semibold mt-1">{stat.value}</p>
+              <p className="text-sm text-green-600 mt-1">{stat.trend} this month</p>
+            </div>
+          </div>
+        </Card>
+      ))}
+    </div>
+  );
+}`,
+              name: "Stats.tsx",
+              path: "/src/components/Stats.tsx",
+              type: "file",
+            },
+          ],
+          name: "components",
+          path: "/src/components",
+          type: "folder",
+        },
+        {
+          content: `import { Sidebar } from './components/Sidebar';
+import { Stats } from './components/Stats';
+import { RecentMembers } from './components/RecentMembers';
+import { PopularClasses } from './components/PopularClasses';
+
+function App() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar />
+      <main className="ml-64 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-2xl font-bold">Dashboard</h1>
+              <p className="text-gray-600">Welcome back, Admin</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <input
+                  type="search"
+                  placeholder="Search..."
+                  className="pl-4 pr-10 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <img
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100&auto=format&fit=crop"
+                alt="Profile"
+                className="w-10 h-10 rounded-full"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <Stats />
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <RecentMembers />
+              <div className="space-y-6">
+                <PopularClasses />
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default App;`,
+          name: "App.tsx",
+          path: "/src/App.tsx",
+          type: "file",
+        },
+        {
+          content: `@tailwind base;
+@tailwind components;
+@tailwind utilities;`,
+          name: "index.css",
+          path: "/src/index.css",
+          type: "file",
+        },
+        {
+          content: `import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);`,
+          name: "main.tsx",
+          path: "/src/main.tsx",
+          type: "file",
+        },
+        {
+          content: '/// <reference types="vite/client" />',
+          name: "vite-env.d.ts",
+          path: "/src/vite-env.d.ts",
+          type: "file",
+        },
+      ],
+      name: "src",
+      path: "/src",
+      type: "folder",
+    },
+    {
+      content: `import js from '@eslint/js';
 import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
@@ -27,8 +386,13 @@ export default tseslint.config(
       ],
     },
   }
-);
-</boltAction><boltAction type="file" filePath="index.html"><!doctype html>
+);`,
+      name: "eslint.config.js",
+      path: "/eslint.config.js",
+      type: "file",
+    },
+    {
+      content: `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -40,8 +404,13 @@ export default tseslint.config(
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
-</html>
-</boltAction><boltAction type="file" filePath="package.json">{
+</html>`,
+      name: "index.html",
+      path: "/index.html",
+      type: "file",
+    },
+    {
+      content: `{
   "name": "vite-react-typescript-starter",
   "private": true,
   "version": "0.0.0",
@@ -73,22 +442,37 @@ export default tseslint.config(
     "typescript-eslint": "^8.3.0",
     "vite": "^5.4.2"
   }
-}
-</boltAction><boltAction type="file" filePath="postcss.config.js">export default {
+}`,
+      name: "package.json",
+      path: "/package.json",
+      type: "file",
+    },
+    {
+      content: `export default {
   plugins: {
     tailwindcss: {},
     autoprefixer: {},
   },
-};
-</boltAction><boltAction type="file" filePath="tailwind.config.js">/** @type {import('tailwindcss').Config} */
+};`,
+      name: "postcss.config.js",
+      path: "/postcss.config.js",
+      type: "file",
+    },
+    {
+      content: `/** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {},
   },
   plugins: [],
-};
-</boltAction><boltAction type="file" filePath="tsconfig.app.json">{
+};`,
+      name: "tailwind.config.js",
+      path: "/tailwind.config.js",
+      type: "file",
+    },
+    {
+      content: `{
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -111,15 +495,25 @@ export default {
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"]
-}
-</boltAction><boltAction type="file" filePath="tsconfig.json">{
+}`,
+      name: "tsconfig.app.json",
+      path: "/tsconfig.app.json",
+      type: "file",
+    },
+    {
+      content: `{
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ]
-}
-</boltAction><boltAction type="file" filePath="tsconfig.node.json">{
+}`,
+      name: "tsconfig.json",
+      path: "/tsconfig.json",
+      type: "file",
+    },
+    {
+      content: `{
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2023"],
@@ -140,8 +534,13 @@ export default {
     "noFallthroughCasesInSwitch": true
   },
   "include": ["vite.config.ts"]
-}
-</boltAction><boltAction type="file" filePath="vite.config.ts">import { defineConfig } from 'vite';
+}`,
+      name: "tsconfig.node.json",
+      path: "/tsconfig.node.json",
+      type: "file",
+    },
+    {
+      content: `import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
@@ -150,8 +549,245 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
-});
-</boltAction><boltAction type="file" filePath="src/App.tsx">import React from 'react';
+});`,
+      name: "vite.config.ts",
+      path: "/vite.config.ts",
+      type: "file",
+    },
+  ],
+  steps: [
+    {
+      description: "",
+      id: "437de0fe-bf04-4e6b-853d-b6dfcf36f62f",
+      status: "completed",
+      title: "Project Files",
+      type: "CreateFolder",
+    },
+    {
+      code: `import js from '@eslint/js';
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  { ignores: ['dist'] },
+  {
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+    plugins: {
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+    },
+  }
+);`,
+      description: "",
+      id: "21963c1b-2db5-4c23-a0ec-3d8ea664cf40",
+      path: "eslint.config.js",
+      status: "completed",
+      title: "Create eslint.config.js",
+      type: "CreateFile",
+    },
+    {
+      code: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>`,
+      description: "",
+      id: "39f47d1b-67f0-4af2-b077-1d1bd6830473",
+      path: "index.html",
+      status: "completed",
+      title: "Create index.html",
+      type: "CreateFile",
+    },
+    {
+      code: `{
+  "name": "vite-react-typescript-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^0.344.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^9.9.1",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.11",
+    "globals": "^15.9.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.3.0",
+    "vite": "^5.4.2"
+  }
+}`,
+      description: "",
+      id: "2fc77e27-53db-4418-9cc7-9178a737c8ec",
+      path: "package.json",
+      status: "completed",
+      title: "Create package.json",
+      type: "CreateFile",
+    },
+    {
+      code: `export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};`,
+      description: "",
+      id: "6aafc1e7-1f86-4b1d-b99b-d92e31070be2",
+      path: "postcss.config.js",
+      status: "completed",
+      title: "Create postcss.config.js",
+      type: "CreateFile",
+    },
+    {
+      code: `/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};`,
+      description: "",
+      id: "d59c4f7b-bc8b-4107-bd57-e7064200fea2",
+      path: "tailwind.config.js",
+      status: "completed",
+      title: "Create tailwind.config.js",
+      type: "CreateFile",
+    },
+    {
+      code: `{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}`,
+      description: "",
+      id: "960a531e-0877-4a01-92da-0b08c267be25",
+      path: "tsconfig.app.json",
+      status: "completed",
+      title: "Create tsconfig.app.json",
+      type: "CreateFile",
+    },
+    {
+      code: `{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}`,
+      description: "",
+      id: "c0e83b3f-a644-4070-a9d4-b8ed725696b4",
+      path: "tsconfig.json",
+      status: "completed",
+      title: "Create tsconfig.json",
+      type: "CreateFile",
+    },
+    {
+      code: `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["vite.config.ts"]
+}`,
+      description: "",
+      id: "2c0a30d4-b936-4d95-ac65-3c270159e873",
+      path: "tsconfig.node.json",
+      status: "completed",
+      title: "Create tsconfig.node.json",
+      type: "CreateFile",
+    },
+    {
+      code: `import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  optimizeDeps: {
+    exclude: ['lucide-react'],
+  },
+});`,
+      description: "",
+      id: "d3c57075-fde9-44a0-949b-9e526e1104e4",
+      path: "vite.config.ts",
+      status: "completed",
+      title: "Create vite.config.ts",
+      type: "CreateFile",
+    },
+    {
+      code: `import React from 'react';
 
 function App() {
   return (
@@ -161,11 +797,27 @@ function App() {
   );
 }
 
-export default App;
-</boltAction><boltAction type="file" filePath="src/index.css">@tailwind base;
+export default App;`,
+      description: "",
+      id: "b6791f83-b62b-4f02-9346-62e5115f6675",
+      path: "src/App.tsx",
+      status: "completed",
+      title: "Create src/App.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: `@tailwind base;
 @tailwind components;
-@tailwind utilities;
-</boltAction><boltAction type="file" filePath="src/main.tsx">import { StrictMode } from 'react';
+@tailwind utilities;`,
+      description: "",
+      id: "067b792e-9947-42f8-aa08-03346323434e",
+      path: "src/index.css",
+      status: "completed",
+      title: "Create src/index.css",
+      type: "CreateFile",
+    },
+    {
+      code: `import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
@@ -174,184 +826,357 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
   </StrictMode>
-);
-</boltAction><boltAction type="file" filePath="src/vite-env.d.ts">/// <reference types="vite/client" />
-</boltAction></boltArtifact>
+);`,
+      description: "",
+      id: "0559d799-ac10-4707-b050-df16bd96f357",
+      path: "src/main.tsx",
+      status: "completed",
+      title: "Create src/main.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: '/// <reference types="vite/client" />',
+      description: "",
+      id: "d8cf8178-cb15-44c3-b044-18b065c2deda",
+      path: "src/vite-env.d.ts",
+      status: "completed",
+      title: "Create src/vite-env.d.ts",
+      type: "CreateFile",
+    },
+    {
+      description: "",
+      id: "6a96b375-1e11-4b55-b2ea-17b4137d68e4",
+      status: "completed",
+      title: "Gym Management Portal Dashboard",
+      type: "CreateFolder",
+    },
+    {
+      code: `import { DumbbellIcon, UsersIcon, CalendarIcon, BarChartIcon, SettingsIcon, CreditCardIcon, MessageSquareIcon } from 'lucide-react';
+import { Link } from './ui/Link';
 
-I'll create a beautiful and modern login/signup screen with smooth transitions, proper validation, and a professional design.
+const menuItems = [
+  { icon: BarChartIcon, label: 'Dashboard', href: '#' },
+  { icon: UsersIcon, label: 'Members', href: '#' },
+  { icon: DumbbellIcon, label: 'Classes', href: '#' },
+  { icon: CalendarIcon, label: 'Schedule', href: '#' },
+  { icon: CreditCardIcon, label: 'Payments', href: '#' },
+  { icon: MessageSquareIcon, label: 'Messages', href: '#' },
+  { icon: SettingsIcon, label: 'Settings', href: '#' },
+];
 
-<boltArtifact id="login-signup-screen" title="Modern Login/Signup Screen">
-<boltAction type="file" filePath="src/components/AuthLayout.tsx">
-import { Laptop, Moon, Sun } from 'lucide-react';
-import { useState } from 'react';
-
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  const [isDark, setIsDark] = useState(false);
-
+export function Sidebar() {
   return (
-    <div className={\`min-h-screen w-full flex items-center justify-center p-4 transition-colors duration-200 \${isDark ? 'bg-gray-900' : 'bg-gray-50'}\`}>
-      <button
-        onClick={() => setIsDark(!isDark)}
-        className={\`fixed top-4 right-4 p-2 rounded-lg \${
-          isDark ? 'text-white hover:bg-gray-800' : 'text-gray-800 hover:bg-gray-200'
-        }\`}
-      >
-        {isDark ? <Sun size={20} /> : <Moon size={20} />}
-      </button>
-      
-      <div className="max-w-7xl w-full grid lg:grid-cols-2 gap-8 items-center">
-        <div className="hidden lg:flex flex-col items-center justify-center p-8">
-          <Laptop className={\`w-64 h-64 \${isDark ? 'text-white' : 'text-gray-800'}\`} />
-          <h1 className={\`text-4xl font-bold mt-8 text-center \${isDark ? 'text-white' : 'text-gray-800'}\`}>
-            Welcome to Our Platform
-          </h1>
-          <p className={\`text-lg mt-4 text-center \${isDark ? 'text-gray-300' : 'text-gray-600'}\`}>
-            Join thousands of users who trust our platform for their daily needs
-          </p>
-        </div>
-        
-        <div className="w-full max-w-md mx-auto">
-          {children}
-        </div>
+    <div className="h-screen w-64 bg-white border-r border-gray-200 p-4 fixed left-0 top-0">
+      <div className="flex items-center gap-2 mb-8">
+        <DumbbellIcon className="h-8 w-8 text-blue-600" />
+        <span className="text-xl font-bold">FitPro</span>
       </div>
-    </div>
-  );
-}
-</boltAction>
-
-<boltAction type="file" filePath="src/components/AuthForm.tsx">
-import { useState } from 'react';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
-
-interface AuthFormProps {
-  mode: 'login' | 'signup';
-  onSwitch: () => void;
-}
-
-export default function AuthForm({ mode, onSwitch }: AuthFormProps) {
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setLoading(false);
-  };
-
-  return (
-    <div className="w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-      <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">
-        {mode === 'login' ? 'Welcome back' : 'Create account'}
-      </h2>
       
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {mode === 'signup' && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-              Full Name
-            </label>
-            <input
-              type="text"
-              required
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="John Doe"
-            />
-          </div>
-        )}
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-            Email
-          </label>
-          <input
-            type="email"
-            required
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="you@example.com"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-            Password
-          </label>
-          <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              required
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="••••••••"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
-        </div>
-        
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center space-x-2 transition-colors"
-        >
-          {loading && <Loader2 size={20} className="animate-spin" />}
-          <span>{mode === 'login' ? 'Sign in' : 'Create account'}</span>
-        </button>
-      </form>
-      
-      <div className="mt-6 text-center">
-        <p className="text-sm text-gray-600 dark:text-gray-300">
-          {mode === 'login' ? "Don't have an account?" : "Already have an account?"}
-          {' '}
-          <button
-            onClick={onSwitch}
-            className="text-blue-600 hover:text-blue-700 font-semibold"
+      <nav className="space-y-2">
+        {menuItems.map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-blue-50 rounded-lg transition-colors"
           >
-            {mode === 'login' ? 'Sign up' : 'Sign in'}
-          </button>
-        </p>
+            <item.icon className="h-5 w-5" />
+            <span>{item.label}</span>
+          </Link>
+        ))}
+      </nav>
+    </div>
+  );
+}`,
+      description: "",
+      id: "ece6398f-9934-48a0-a80f-7cbdf4bea344",
+      path: "src/components/Sidebar.tsx",
+      status: "completed",
+      title: "Create src/components/Sidebar.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: `interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  href: string;
+}
+
+export function Link({ children, ...props }: LinkProps) {
+  return (
+    <a {...props}>
+      {children}
+    </a>
+  );
+}`,
+      description: "",
+      id: "fdc9e67e-27e3-431f-9ed0-bee7f9b2ee40",
+      path: "src/components/ui/Link.tsx",
+      status: "completed",
+      title: "Create src/components/ui/Link.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: `interface CardProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function Card({ children, className = '' }: CardProps) {
+  return (
+    <div className={\`bg-white rounded-xl shadow-sm border border-gray-200 \${className}\`}>
+      {children}
+    </div>
+  );
+}`,
+      description: "",
+      id: "9e1db226-fa61-4595-a750-1e8678f657b6",
+      path: "src/components/ui/Card.tsx",
+      status: "completed",
+      title: "Create src/components/ui/Card.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: `import { Users2Icon, ActivityIcon, DollarSignIcon, TrendingUpIcon } from 'lucide-react';
+import { Card } from './ui/Card';
+
+const stats = [
+  {
+    icon: Users2Icon,
+    label: 'Total Members',
+    value: '2,847',
+    trend: '+12.5%',
+    color: 'text-blue-600',
+    bg: 'bg-blue-100',
+  },
+  {
+    icon: ActivityIcon,
+    label: 'Active Classes',
+    value: '47',
+    trend: '+4.3%',
+    color: 'text-green-600',
+    bg: 'bg-green-100',
+  },
+  {
+    icon: DollarSignIcon,
+    label: 'Revenue',
+    value: '$56,748',
+    trend: '+8.9%',
+    color: 'text-purple-600',
+    bg: 'bg-purple-100',
+  },
+  {
+    icon: TrendingUpIcon,
+    label: 'Growth',
+    value: '24.5%',
+    trend: '+2.1%',
+    color: 'text-orange-600',
+    bg: 'bg-orange-100',
+  },
+];
+
+export function Stats() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {stats.map((stat) => (
+        <Card key={stat.label} className="p-6">
+          <div className="flex items-center gap-4">
+            <div className={\`p-3 rounded-lg \${stat.bg}\`}>
+              <stat.icon className={\`h-6 w-6 \${stat.color}\`} />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">{stat.label}</p>
+              <p className="text-2xl font-semibold mt-1">{stat.value}</p>
+              <p className="text-sm text-green-600 mt-1">{stat.trend} this month</p>
+            </div>
+          </div>
+        </Card>
+      ))}
+    </div>
+  );
+}`,
+      description: "",
+      id: "c32c88fc-616d-4f86-8851-e68576ad3be5",
+      path: "src/components/Stats.tsx",
+      status: "completed",
+      title: "Create src/components/Stats.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: `import { Card } from './ui/Card';
+
+const members = [
+  {
+    name: 'Sarah Johnson',
+    plan: 'Premium Plan',
+    joinDate: 'Mar 15, 2024',
+    status: 'Active',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop',
+  },
+  {
+    name: 'Michael Chen',
+    plan: 'Basic Plan',
+    joinDate: 'Mar 14, 2024',
+    status: 'Active',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop',
+  },
+  {
+    name: 'Emily Davis',
+    plan: 'Premium Plan',
+    joinDate: 'Mar 13, 2024',
+    status: 'Active',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop',
+  },
+];
+
+export function RecentMembers() {
+  return (
+    <Card className="p-6">
+      <h2 className="text-lg font-semibold mb-4">Recent Members</h2>
+      <div className="space-y-4">
+        {members.map((member) => (
+          <div key={member.name} className="flex items-center gap-4">
+            <img
+              src={member.avatar}
+              alt={member.name}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+            <div className="flex-1">
+              <p className="font-medium">{member.name}</p>
+              <p className="text-sm text-gray-600">{member.plan}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-gray-600">{member.joinDate}</p>
+              <span className="inline-block px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+                {member.status}
+              </span>
+            </div>
+          </div>
+        ))}
       </div>
+    </Card>
+  );
+}`,
+      description: "",
+      id: "4546913e-76ef-4ef9-93cd-50c0f1540de4",
+      path: "src/components/RecentMembers.tsx",
+      status: "completed",
+      title: "Create src/components/RecentMembers.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: `import { Card } from './ui/Card';
+
+const classes = [
+  {
+    name: 'CrossFit Elite',
+    instructor: 'John Smith',
+    time: '06:00 AM',
+    enrolled: 24,
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=200&auto=format&fit=crop',
+  },
+  {
+    name: 'Yoga Flow',
+    instructor: 'Emma Wilson',
+    time: '08:30 AM',
+    enrolled: 18,
+    image: 'https://images.unsplash.com/photo-1599447421416-3414500c2c98?q=80&w=200&auto=format&fit=crop',
+  },
+  {
+    name: 'HIIT Training',
+    instructor: 'David Miller',
+    time: '05:30 PM',
+    enrolled: 21,
+    image: 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?q=80&w=200&auto=format&fit=crop',
+  },
+];
+
+export function PopularClasses() {
+  return (
+    <Card className="p-6">
+      <h2 className="text-lg font-semibold mb-4">Popular Classes</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {classes.map((cls) => (
+          <div key={cls.name} className="rounded-lg overflow-hidden border border-gray-200">
+            <img
+              src={cls.image}
+              alt={cls.name}
+              className="w-full h-32 object-cover"
+            />
+            <div className="p-4">
+              <h3 className="font-medium">{cls.name}</h3>
+              <p className="text-sm text-gray-600">{cls.instructor}</p>
+              <div className="flex justify-between items-center mt-2 text-sm">
+                <span className="text-gray-600">{cls.time}</span>
+                <span className="text-blue-600">{cls.enrolled} enrolled</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}`,
+      description: "",
+      id: "33463d92-83e0-4cb4-af79-2f15da4a0f22",
+      path: "src/components/PopularClasses.tsx",
+      status: "completed",
+      title: "Create src/components/PopularClasses.tsx",
+      type: "CreateFile",
+    },
+    {
+      code: `import { Sidebar } from './components/Sidebar';
+import { Stats } from './components/Stats';
+import { RecentMembers } from './components/RecentMembers';
+import { PopularClasses } from './components/PopularClasses';
+
+function App() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar />
+      <main className="ml-64 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-2xl font-bold">Dashboard</h1>
+              <p className="text-gray-600">Welcome back, Admin</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <input
+                  type="search"
+                  placeholder="Search..."
+                  className="pl-4 pr-10 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <img
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100&auto=format&fit=crop"
+                alt="Profile"
+                className="w-10 h-10 rounded-full"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <Stats />
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <RecentMembers />
+              <div className="space-y-6">
+                <PopularClasses />
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
-</boltAction>
 
-<boltAction type="file" filePath="src/App.tsx">
-import { useState } from 'react';
-import AuthLayout from './components/AuthLayout';
-import AuthForm from './components/AuthForm';
-
-export default function App() {
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
-  
-  return (
-    <AuthLayout>
-      <AuthForm 
-        mode={mode} 
-        onSwitch={() => setMode(mode === 'login' ? 'signup' : 'login')} 
-      />
-    </AuthLayout>
-  );
-}
-</boltAction>
-</boltArtifact>
-
-I've created a modern, responsive login/signup screen with:
-
-- Dark/light mode toggle
-- Password visibility toggle
-- Loading states
-- Smooth transitions
-- Form validation
-- Beautiful illustration on desktop view
-- Mobile-first design
-- Clean animations
-- Professional spacing and typography
-
-The components are split into reusable pieces and use TypeScript for type safety. Everything is styled using Tailwind CSS classes for consistency and maintainability.`,
+export default App;`,
+      description: "",
+      id: "ea77c950-a6ad-4c43-aa9d-79596779f743",
+      path: "src/App.tsx",
+      status: "completed",
+      title: "Create src/App.tsx",
+      type: "CreateFile",
+    },
+  ],
 }

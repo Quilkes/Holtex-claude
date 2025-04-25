@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { TabView } from "@/app/components/TabView";
 import { ChevronRight, MessageSquare } from "lucide-react";
 import { CodeEditor } from "@/app/components/CodeEditor";
@@ -17,9 +17,12 @@ import { toast } from "sonner";
 import { api } from "@/convex/_generated/api";
 import useSidebar from "@/app/store/sidebar";
 import { FileExplorer } from "@/app/components/FileExplorer";
+import { countToken } from "@/app/utils/tokenCount";
+import { UserDetailContext } from "@/app/context/UserDetailContext";
 
 export default function page() {
   const { id } = useParams();
+  const { setUserDetail, userDetail } = useContext(UserDetailContext);
   const convex = useConvex();
   const webContainerRef = useRef(null);
   const UpdateFiles = useMutation(api.workspace.UpdateFiles);
@@ -75,7 +78,15 @@ export default function page() {
         // 2: If no data in database, generate new files
         if (!hasData) {
           console.log("No data in database, generating new files");
-          await fetchInitialSteps(messages, setSteps, setLlmMessages);
+          await fetchInitialSteps(
+            messages,
+            setSteps,
+            setLlmMessages,
+            userDetail,
+            setUserDetail,
+            countToken,
+            UpdateTokens
+          );
         }
         updateStepsAndFiles(steps, files, setSteps, setFiles, webContainerRef);
 
