@@ -13,6 +13,8 @@ export const handleDownloadZipFile = async ({
     }
 
     const zip = new JSZip();
+    // Directories to exclude from the zip file
+    const excludeDirs = ["node_modules", ".git", "dist", "build"];
 
     async function addFilesToZip(dir, zipFolder) {
       try {
@@ -23,6 +25,11 @@ export const handleDownloadZipFile = async ({
         for (const entry of entries) {
           try {
             const fullPath = `${dir}/${entry.name}`;
+
+            // Skip excluded directories
+            if (entry.isDirectory() && excludeDirs.includes(entry.name)) {
+              continue;
+            }
 
             if (entry.isDirectory()) {
               const folder = zipFolder.folder(entry.name);
