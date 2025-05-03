@@ -6,10 +6,12 @@ export function StepsList({ steps }) {
 
   return (
     <div className="rounded-lg h-fit">
-      <div className="sticky top-0 left-0 z-10 flex items-center justify-center h-16 shadow-sm bg-white/95 backdrop-blur-sm">
-        <h2 className="text-lg font-semibold text-gray-800 ">Build Steps</h2>
+      <div className="sticky top-0 left-0 z-10 flex items-center justify-center h-16 shadow-sm bg-white/95 dark:bg-gray-800 dark:border-b dark:border-gray-700 backdrop-blur-sm">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-300 ">
+          Build Steps
+        </h2>
       </div>
-      <div className="h-full p-4 overflow-auto scrollbar-hide">
+      <div className="h-full p-4 overflow-auto dark:bg-gray-800 ">
         <div className="space-y-4">
           {Array.isArray(steps) &&
             steps.length > 0 &&
@@ -19,7 +21,7 @@ export function StepsList({ steps }) {
                 className={`p-1 rounded-lg cursor-pointer transition-colors ${
                   currentStep === step.id
                     ? "bg-gray-50 border border-gray-300"
-                    : "hover:bg-gray-100"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
                 onClick={() => setCurrentStep(step.id)}
               >
@@ -32,7 +34,7 @@ export function StepsList({ steps }) {
                     <Loader2 className="w-5 h-5 text-gray-600 animate-spin" />
                   )}
                   {/* Truncate Step Title */}
-                  <h3 className="w-full overflow-hidden font-medium text-gray-800 truncate text-ellipsis whitespace-nowrap">
+                  <h3 className="w-full overflow-hidden font-medium text-gray-800 truncate dark:text-gray-400 text-ellipsis whitespace-nowrap">
                     {step.title}
                   </h3>
                 </div>

@@ -53,7 +53,7 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
   return (
     <div
       ref={chatContainerRef}
-      className="relative flex flex-col w-full h-full bg-white border rounded-md border-slate-200"
+      className="relative flex flex-col w-full h-full bg-white border rounded-md dark:bg-gray-900 dark:border-gray-700 border-slate-200"
     >
       <div className="flex-1 overflow-y-auto rounded-lg scrollbar-hide">
         {steps.length === 0 ? (
@@ -68,8 +68,8 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
         )}
       </div>
 
-      <div className="flex gap-2 items-end sticky bottom-0 bg-slate-50 pb-1.5">
-        <div className="w-full p-3 border shadow-sm border-slate-200 rounded-xl">
+      <div className="flex gap-2 items-end sticky bottom-0 bg-slate-50 dark:bg-gray-800 pb-1.5">
+        <div className="w-full p-3 border shadow-sm border-slate-200 dark:border-slate-700 dark:bg-gray-900 rounded-xl">
           {isLoading && <Loader />}
           {!isLoading && (
             <>
@@ -136,7 +136,7 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
                   className={`flex-shrink-0 ${
                     userInput.trim() && !loading
                       ? "bg-purple-600 hover:bg-purple-700"
-                      : "bg-gray-100 cursor-not-allowed"
+                      : "bg-gray-100 dark:bg-gray-800 cursor-not-allowed"
                   } text-white p-2 h-10 w-10 rounded-full flex items-center justify-center cursor-pointer`}
                 >
                   {loading ? (

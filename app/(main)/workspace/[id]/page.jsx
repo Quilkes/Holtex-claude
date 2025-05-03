@@ -316,7 +316,7 @@ export default function page() {
 
   return (
     <>
-      <div className="p-1 h-[100vh] relative overflow-hidden">
+      <div className="p-1 h-[100vh] bg-white dark:bg-gray-900 relative overflow-hidden">
         {/* Desktop Layout */}
         <div className="hidden h-full gap-2 md:grid place-content-center md:grid-cols-12">
           <div className="col-span-3 h-[98vh] p-0.5 flex flex-col justify-center">
@@ -402,7 +402,7 @@ export default function page() {
           {!isChatOpen && (
             <button
               onClick={toggleChat}
-              className="fixed z-10 flex items-center justify-center p-2 text-white bg-purple-600 rounded-full shadow-md bottom-4 right-4 hover:bg-purple-700 transition-colors"
+              className="fixed z-10 flex items-center justify-center p-2 text-white transition-colors bg-purple-600 rounded-full shadow-md bottom-4 right-4 hover:bg-purple-700"
             >
               <MessageSquare size={20} />
             </button>
@@ -416,7 +416,7 @@ export default function page() {
           smFileBar ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="w-full h-full border-r border-gray-200 overflow-y-auto">
+        <div className="w-full h-full overflow-y-auto border-r border-gray-200">
           <FileExplorer files={files} />
         </div>
       </div>
