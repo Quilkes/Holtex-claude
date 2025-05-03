@@ -143,7 +143,7 @@ export default function page() {
           // Update state with fetched data
           setFiles(files);
           setSteps(steps);
-          setLlmMessages(llmMessages || []);
+          setLlmMessages(llmMessages);
           setIsWebContainerLoading(false);
         }
         return true;
@@ -168,6 +168,7 @@ export default function page() {
       await UpdateFiles({
         workspaceId: id,
         steps,
+        llmMessages,
         files,
         createdAt: new Date().toISOString(),
       });
@@ -293,6 +294,7 @@ export default function page() {
 
   // Modified to prevent early saving and only save when data is initialized and not loading
   useEffect(() => {
+    console.log(llmMessages);
     if (files.length > 0) {
       saveToDatabase();
     }

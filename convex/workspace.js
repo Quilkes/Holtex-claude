@@ -79,6 +79,7 @@ export const UpdateFiles = mutation({
   args: {
     workspaceId: v.id("workspace"),
     files: v.optional(v.any()),
+    llmMessages: v.optional(v.any()),
     steps: v.optional(v.any()),
     createdAt: v.optional(v.string()),
   },
@@ -87,6 +88,7 @@ export const UpdateFiles = mutation({
       fileData: {
         files: args.files,
         steps: args.steps,
+        llmMessages: args.llmMessages,
         createdAt: args.createdAt || new Date().toISOString(),
       },
     });
