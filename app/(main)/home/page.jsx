@@ -150,11 +150,11 @@ export default function page() {
   };
 
   return (
-    <div className="flex flex-col justify-center px-4 md:px-0 items-center mt-24 md:mt-36 gap-2 relative">
-      <h2 className="font-bold text-4xl md:text-5xl text-center relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+    <div className="relative flex flex-col items-center justify-center gap-2 px-4 mt-24 bg-white dark:bg-gray-900 md:px-0 md:mt-36">
+      <h2 className="relative z-10 text-4xl font-bold text-center text-transparent md:text-5xl bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
         {Lookup.HERO_HEADING}
       </h2>
-      <p className="text-gray-400 font-medium text-center relative z-10">
+      <p className="relative z-10 font-medium text-center text-gray-400">
         {Lookup.HERO_DESC}
       </p>
 
@@ -179,7 +179,7 @@ export default function page() {
                 onGenerate(userInput);
               }
             }}
-            className="outline-none bg-transparent text-sm font-medium w-full h-32 max-h-56 resize-none"
+            className="w-full h-32 text-sm font-medium bg-transparent outline-none resize-none max-h-56"
           />
           <AnimatePresence>
             {userInput && (
@@ -200,7 +200,7 @@ export default function page() {
                 disabled={isGenerating || isEnhancing}
               >
                 {isGenerating ? (
-                  <div className="h-5 w-5 border-2 border-gray-200 border-t-white rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-gray-200 rounded-full border-t-white animate-spin" />
                 ) : (
                   <Send className="w-5 h-5" />
                 )}
@@ -213,7 +213,7 @@ export default function page() {
           <button
             onClick={handleEnhance}
             disabled={isEnhancing || isGenerating}
-            className="cursor-pointer w-fit relative flex items-center justify-center "
+            className="relative flex items-center justify-center cursor-pointer w-fit "
           >
             {isEnhancing ? (
               <div
@@ -225,31 +225,31 @@ export default function page() {
                 whileTap={{ scale: 0.9 }}
                 className={` ${isGenerating ? "cursor-not-allowed text-slate-300" : "text-green-500 drop-shadow-[0_0_3px_rgba(34,197,94,0.5)]"}`}
               >
-                <Stars className="h-5 w-5" />
+                <Stars className="w-5 h-5" />
               </motion.div>
             )}
           </button>
         )}
       </div>
-      <div className="flex items-center justify-center gap-2 text-sm text-gray-600 relative z-10">
+      <div className="relative z-10 flex items-center justify-center gap-2 text-sm text-gray-600">
         <Bot className="w-4 h-4 text-blue-500" />
         <span>AI Assistant is ready to help you build your project</span>
       </div>
-      <div className="flex mt-8 flex-wrap max-w-2xl items-center justify-center gap-3 relative z-10">
+      <div className="relative z-10 flex flex-wrap items-center justify-center max-w-2xl gap-3 mt-8">
         {Lookup.SUGGSTIONS.map((suggestion, index) => (
           <h2
             key={index}
             onClick={() => setUserInput(suggestion)}
-            className="p-1 px-2 border border-gray-200 rounded-full text-sm text-gray-400 hover:text-purple-600 hover:border-purple-300 hover:bg-purple-50 hover:shadow-[0_0_8px_rgba(124,58,237,0.2)] transition-all cursor-pointer"
+            className="p-1 px-2 border border-gray-200 dark:border-gray-700 rounded-full text-sm text-gray-400 hover:text-purple-600 hover:border-purple-300 hover:bg-purple-50 dark:hover:bg-gray-700 hover:shadow-[0_0_8px_rgba(124,58,237,0.2)] transition-all cursor-pointer"
           >
             {suggestion}
           </h2>
         ))}
       </div>
       {/* Footer */}
-      <footer className="pt-12 mt-16 border-t border-gray-200 w-full relative z-10">
+      <footer className="relative z-10 w-full pt-12 mt-16 border-t border-gray-200 dark:border-gray-700">
         <div className="text-center">
-          <div className="inline-block mb-6 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg shadow-purple-500/10">
+          <div className="inline-block px-4 py-2 mb-6 text-sm font-medium text-white rounded-full shadow-lg bg-gradient-to-r from-blue-500 to-purple-500 shadow-purple-500/10">
             Holtex AI is in its experimental stage
           </div>
 
@@ -262,7 +262,7 @@ export default function page() {
               href="https://discord.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 rounded-full bg-gray-100 hover:bg-blue-100 hover:text-blue-600 hover:shadow-[0_0_10px_rgba(59,130,246,0.3)] transition-all"
+              className="p-3 rounded-full bg-gray-100 dark:bg-gray-900 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-600 hover:shadow-[0_0_10px_rgba(59,130,246,0.3)] transition-all"
             >
               <DiscIcon className="w-5 h-5 text-gray-600" />
             </a>
@@ -270,7 +270,7 @@ export default function page() {
               href="https://twitter.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 rounded-full bg-gray-100 hover:bg-purple-100 hover:text-purple-600 hover:shadow-[0_0_10px_rgba(124,58,237,0.3)] transition-all"
+              className="p-3 rounded-full bg-gray-100 dark:bg-gray-900 dark:hover:bg-gray-700 hover:bg-purple-100 hover:text-purple-600 hover:shadow-[0_0_10px_rgba(124,58,237,0.3)] transition-all"
             >
               <MessageCircle className="w-5 h-5 text-gray-600" />
             </a>

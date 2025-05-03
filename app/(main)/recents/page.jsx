@@ -123,7 +123,7 @@ export default function ChatHistory() {
             <div
               onClick={isMobile ? handleToggleSmSidebar : handleToggleSidebar}
               key={index}
-              className="relative flex items-center justify-between px-3 py-3 rounded-md hover:bg-gray-200 group"
+              className="relative flex items-center justify-between px-3 py-3 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 group"
             >
               <Link
                 onClick={handleToggleSmSidebar}
@@ -131,11 +131,11 @@ export default function ChatHistory() {
                 className="w-full"
               >
                 <div className="flex items-center justify-between w-full">
-                  <h2 className="text-sm text-gray-800 cursor-pointer truncate max-w-[90%]">
+                  <h2 className="text-sm text-gray-800 dark:text-gray-400 cursor-pointer truncate max-w-[90%]">
                     {workspace?.messages[0]?.content}
                   </h2>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="mt-1 text-xs text-gray-500">
                   Last message{" "}
                   {formatTime(
                     workspace._creationTime || workspace.messages[0]?.timestamp
@@ -181,13 +181,13 @@ export default function ChatHistory() {
   );
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-lg md:text-xl lg:text-3xl font-medium text-gray-800">
+    <div className="max-w-3xl px-4 py-8 mx-auto dark:bg-gray-900">
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-lg font-medium text-gray-800 dark:text-gray-400 md:text-xl lg:text-3xl">
           Your chat history
         </h1>
         <Link href="/home">
-          <button className="flex items-center gap-2 border text-sm md:text-md lg:text-lg  hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg  font-medium transition-colors">
+          <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors border rounded-lg dark:text-gray-400 dark:border-gray-400 dark:hover:bg-gray-700 md:text-md lg:text-lg hover:bg-gray-50">
             <Plus size={16} className="text-[#800080]" />
             New chat
           </button>
@@ -195,7 +195,7 @@ export default function ChatHistory() {
       </div>
 
       <div className="relative mb-6">
-        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400">
+        <div className="absolute inset-y-0 flex items-center text-gray-400 pointer-events-none left-3">
           <Search size={16} />
         </div>
         <input
@@ -203,19 +203,19 @@ export default function ChatHistory() {
           placeholder="Search your chats..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm"
+          className="w-full py-2 pl-10 pr-4 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200"
         />
       </div>
 
       {userDetail && !noChats ? (
         <div className="space-y-2">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             You have {countTotalChats(groupedWorkspaces)} previous chats with
             Holtex AI.{" "}
             {/* <button className="text-blue-600 hover:underline">Select</button> */}
           </p>
 
-          <div className="mt-6 border-t border-gray-100 pt-4">
+          <div className="pt-4 mt-6 border-t border-gray-100">
             {renderWorkspaceGroup(filteredGroups.today, "Today")}
             {renderWorkspaceGroup(filteredGroups.yesterday, "Yesterday")}
             {renderWorkspaceGroup(filteredGroups.lastWeek, "Last 7 Days")}
@@ -223,8 +223,10 @@ export default function ChatHistory() {
           </div>
         </div>
       ) : (
-        <div className="text-center py-12">
-          <p className="text-gray-600 ">No chat history found</p>
+        <div className="py-12 text-center">
+          <p className="text-gray-600 dark:text-gray-400">
+            No chat history found
+          </p>
         </div>
       )}
     </div>

@@ -4,7 +4,7 @@ export default function BackButton() {
   return (
     <button
       onClick={() => window.history.back()}
-      className="flex items-center text-gray-700 hover:text-gray-900 hover:bg-gray-200 p-2 rounded-md"
+      className="flex items-center p-2 text-gray-700 rounded-md dark:text-gray-400 dark:hover:text-gray-300 dark:hover:bg-gray-700 hover:text-gray-900 hover:bg-gray-200"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

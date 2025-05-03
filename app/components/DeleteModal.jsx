@@ -50,15 +50,15 @@ export default function DeleteModal() {
     <>
       {isModalOpen && (
         <div className="fixed top-0 left-0 h-full w-full z-[100] bg-black/40 flex items-center justify-center">
-          <div className="p-5 bg-white rounded-lg shadow-lg w-80">
+          <div className="p-5 bg-white rounded-lg shadow-lg dark:bg-gray-700 dark:border dark:border-gray-400 w-80">
             <h3 className="text-lg font-semibold">Confirm Deletion</h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               Are you sure you want to delete this workspace?
             </p>
             <div className="flex justify-end mt-4 space-x-3">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 bg-gray-300 rounded cursor-pointer hover:bg-gray-200"
+                className="px-4 py-2 rounded cursor-pointer dark:border dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-300 hover:bg-gray-200"
               >
                 Cancel
               </button>

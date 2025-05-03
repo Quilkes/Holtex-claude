@@ -134,7 +134,7 @@ export default function page() {
   );
 
   return (
-    <div className="min-h-screen w-full bg-white">
+    <div className="min-h-screen w-full bg-white dark:bg-gray-900">
       {/* Header */}
       <header className="fixed top-0 w-full bg-white/80 backdrop-blur-sm border-b border-gray-100 z-50">
         <div className="container mx-auto px-4 lg:px-8 py-4 flex justify-between items-center">

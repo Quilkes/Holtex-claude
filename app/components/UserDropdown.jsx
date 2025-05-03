@@ -48,14 +48,14 @@ function UserDropdown() {
     <AnimatePresence>
       {openUserDropDown && (
         <motion.div
-          className="p-2 w-full px-3 absolute bottom-16 z-10"
+          className="absolute z-10 w-full p-2 px-3 bottom-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.2 }}
         >
           <motion.div
-            className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden"
+            className="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-lg dark:border-gray-500 dark:bg-gray-800"
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.95 }}
@@ -65,9 +65,8 @@ function UserDropdown() {
               <motion.button
                 key={index}
                 onClick={() => OnOptionClick(option)}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 transition-colors text-gray-700
-                ${index !== options.length - 1 ? "border-b border-gray-100" : ""}`}
-                whileHover={{ backgroundColor: "#f8fafc" }}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-400
+                ${index !== options.length - 1 ? "border-b border-gray-100 dark:border-gray-500" : ""}`}
                 whileTap={{ scale: 0.98 }}
               >
                 <option.icon size={18} className="text-[#800080]" />

@@ -102,7 +102,7 @@ function WorkspaceHistory() {
           <div
             onClick={isMobile ? handleToggleSmSidebar : handleToggleSidebar}
             key={index}
-            className="relative flex items-center justify-between px-1 py-1 rounded-md hover:bg-gray-200 group"
+            className="relative flex items-center justify-between px-1 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-800 group"
           >
             <Link
               href={"/workspace/" + workspace?._id}
@@ -110,7 +110,7 @@ function WorkspaceHistory() {
               className="w-full"
             >
               <div className="flex items-center justify-between w-full">
-                <h2 className="text-sm text-gray-700 mt-2 cursor-pointer truncate max-w-[90%]">
+                <h2 className="text-sm text-gray-700 dark:text-gray-400 mt-2 cursor-pointer truncate max-w-[90%]">
                   {workspace?.messages[0]?.content}
                 </h2>
               </div>

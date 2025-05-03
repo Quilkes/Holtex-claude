@@ -9,7 +9,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <div>
-      <div className=" p-4 bg-white left-0 z-50 ">
+      <div className="left-0 z-50 p-4 bg-white dark:bg-gray-900">
         <BackButton />
       </div>
       {children}

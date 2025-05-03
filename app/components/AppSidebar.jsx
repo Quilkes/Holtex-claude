@@ -51,7 +51,7 @@ const AppSidebar = ({ children }) => {
     <>
       {/* Desktop Sidebar - pushes content when opened */}
       <div
-        className={`h-full bg-gray-50 border-r border-gray-200 z-50 hidden md:block  transition-all duration-300 ${
+        className={`h-full bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 z-50 hidden md:block  transition-all duration-300 ${
           sideBar ? "w-[270px]" : "w-0"
         }`}
       >
@@ -63,17 +63,17 @@ const AppSidebar = ({ children }) => {
           {sideBar && (
             <>
               {/* Sidebar Header */}
-              <div className="p-4 border-b border-gray-200">
-                <div className="flex justify-between items-center">
+              <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                <div className="flex items-center justify-between">
                   <Link href="/home" className="flex items-center">
-                    <h1 className="text-xl font-bold ml-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400">
+                    <h1 className="ml-2 text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-400">
                       HOLTEX AI
                     </h1>
                   </Link>
                   {!isWorkspaceRoute && (
                     <button
                       onClick={handleToggleSidebar}
-                      className="mr-2 text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded-full p-2"
+                      className="p-2 mr-2 text-gray-500 rounded-full dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
                     >
                       <SidebarCloseIcon className="w-6 h-6" />
                     </button>
@@ -83,7 +83,7 @@ const AppSidebar = ({ children }) => {
 
               {/* New Chat Button */}
               <Link href={"/home"} className="px-4 pt-4">
-                <button className="flex items-center w-full p-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-800 transition-colors">
+                <button className="flex items-center w-full p-2 text-gray-800 transition-colors bg-gray-100 rounded-lg dark:text-gray-400 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700">
                   <svg
                     width="16"
                     height="16"
@@ -106,7 +106,7 @@ const AppSidebar = ({ children }) => {
               <Link href={"/recents"} className="p-4">
                 <button
                   onClick={() => setSideBar(false)}
-                  className="flex items-center pl-2 bg-gray-100 hover:bg-gray-200 rounded-lg p-2 w-full text-gray-600 hover:text-gray-800 mb-4"
+                  className="flex items-center w-full p-2 text-gray-800 transition-colors bg-gray-100 rounded-lg dark:text-gray-400 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
                 >
                   <svg
                     width="18"
@@ -126,16 +126,16 @@ const AppSidebar = ({ children }) => {
               </Link>
 
               {/* Recents Section */}
-              <div className="flex-grow overflow-auto px-3">
-                <div className="space-y-1 pl-2">
+              <div className="flex-grow px-3 overflow-auto">
+                <div className="pl-2 space-y-1">
                   <WorkspaceHistory />
                 </div>
               </div>
 
               {/* User Profile Section */}
-              <div className="mt-auto border-t border-gray-200 p-3">
+              <div className="p-3 mt-auto border-t border-gray-200 dark:border-gray-700">
                 <div
-                  className="flex items-center cursor-pointer justify-between"
+                  className="flex items-center justify-between cursor-pointer"
                   onClick={() => setOpenUserDropDown(true)}
                 >
                   <div className="flex items-center">
@@ -148,7 +148,7 @@ const AppSidebar = ({ children }) => {
                         className="rounded-md mr-3 w-[30px] h-[30px]"
                       />
                     ) : (
-                      <div className="h-8 w-8 bg-blue-500 text-white rounded-md flex items-center justify-center mr-3">
+                      <div className="flex items-center justify-center w-8 h-8 mr-3 text-white bg-blue-500 rounded-md">
                         <span className="font-medium">O</span>
                       </div>
                     )}
@@ -192,17 +192,17 @@ const AppSidebar = ({ children }) => {
 
       {/* Mobile Sidebar - floating over content */}
       <div
-        className={`fixed  inset-y-0 left-0 z-[100] md:${isWorkspaceRoute ? "block" : "hidden"} bg-gray-50  border-r border-gray-200  transition-transform duration-300 w-[270px] ${
+        className={`fixed  inset-y-0 left-0 z-[100] md:${isWorkspaceRoute ? "block" : "hidden"} bg-gray-50 dark:bg-gray-900  border-r border-gray-200  transition-transform duration-300 w-[270px] ${
           smSideBar ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           <>
             {/* Sidebar Header */}
-            <div className="p-4 border-b  border-gray-200">
-              <div className="flex justify-between items-center">
+            <div className="p-4 border-b border-gray-200">
+              <div className="flex items-center justify-between">
                 <Link href="/home" className="flex items-center">
-                  <h1 className="text-xl font-bold ml-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400">
+                  <h1 className="ml-2 text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-400">
                     HOLTEX AI
                   </h1>
                 </Link>
@@ -211,7 +211,7 @@ const AppSidebar = ({ children }) => {
 
             {/* New Chat Button */}
             <Link href={"/home"} className="px-4 pt-4">
-              <button className="flex items-center w-full p-2 hover:bg-gray-200 rounded-lg text-gray-800 transition-colors">
+              <button className="flex items-center w-full p-2 text-gray-800 transition-colors rounded-lg hover:bg-gray-200">
                 <svg
                   width="16"
                   height="16"
@@ -234,7 +234,7 @@ const AppSidebar = ({ children }) => {
             <Link href={"/recents"} className="px-4 py-0.5">
               <button
                 onClick={() => setSmSidebar(false)}
-                className="flex items-center pl-2  hover:bg-gray-200 rounded-lg p-2 w-full text-gray-600 hover:text-gray-800 mb-4"
+                className="flex items-center w-full p-2 pl-2 mb-4 text-gray-600 rounded-lg hover:bg-gray-200 hover:text-gray-800"
               >
                 <svg
                   width="18"
@@ -254,16 +254,16 @@ const AppSidebar = ({ children }) => {
             </Link>
 
             {/* Recents Section */}
-            <div className="flex-grow overflow-auto px-3">
-              <div className="space-y-1 pl-2">
+            <div className="flex-grow px-3 overflow-auto">
+              <div className="pl-2 space-y-1">
                 <WorkspaceHistory />
               </div>
             </div>
 
             {/* User Profile Section */}
-            <div className="mt-auto border-t border-gray-200 p-3">
+            <div className="p-3 mt-auto border-t border-gray-200">
               <div
-                className="flex items-center cursor-pointer justify-between"
+                className="flex items-center justify-between cursor-pointer"
                 onClick={() => setOpenUserDropDown(true)}
               >
                 <div className="flex items-center">
@@ -276,7 +276,7 @@ const AppSidebar = ({ children }) => {
                       className="rounded-md mr-3 w-[30px] h-[30px]"
                     />
                   ) : (
-                    <div className="h-8 w-8 bg-blue-500 text-white rounded-md flex items-center justify-center mr-3">
+                    <div className="flex items-center justify-center w-8 h-8 mr-3 text-white bg-blue-500 rounded-md">
                       <span className="font-medium">O</span>
                     </div>
                   )}
