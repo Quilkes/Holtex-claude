@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Editor, { useMonaco, loader } from "@monaco-editor/react";
 import useCodeView from "../store/useCodeView";
 import { toast } from "sonner";
@@ -6,11 +6,55 @@ import { toast } from "sonner";
 export function CodeEditor() {
   const monaco = useMonaco();
   const { selectedFile } = useCodeView();
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Check for dark mode on mount and when it changes
+  useEffect(() => {
+    // Check if dark mode is active (either via class or system preference)
+    const checkDarkMode = () => {
+      const isDark =
+        document.documentElement.classList.contains("dark") ||
+        (window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches);
+      setIsDarkMode(isDark);
+    };
+
+    // Initial check
+    checkDarkMode();
+
+    // Watch for system preference changes
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = () => checkDarkMode();
+
+    // Add listener with compatibility for older browsers
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", handleChange);
+    } else {
+      mediaQuery.addListener(handleChange); // Older implementation
+    }
+
+    // Watch for class changes on html element (for manual toggles)
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => {
+      // Clean up listeners
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener("change", handleChange);
+      } else {
+        mediaQuery.removeListener(handleChange);
+      }
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     loader.init().catch((error) => {
       console.error("Monaco failed to load:", error);
-      toast("Failed to load the Monaco Editor. Please refresh.");
+      toast.error("Failed to load the Monaco Editor. Please refresh.");
     });
   }, []);
 
@@ -47,14 +91,44 @@ export function CodeEditor() {
         },
       });
 
-      // Set as default theme
-      monaco.editor.setTheme("custom-light");
+      // Define the dark theme
+      monaco.editor.defineTheme("custom-dark", {
+        base: "vs-dark",
+        inherit: true,
+        rules: [
+          { token: "comment", foreground: "#6B7280", fontStyle: "italic" },
+          { token: "keyword", foreground: "#93C5FD" }, // Light blue for keywords
+          { token: "string", foreground: "#6EE7B7" }, // Light green for strings
+          { token: "number", foreground: "#FDBA74" }, // Light orange for numbers
+          { token: "regexp", foreground: "#FDBA74" },
+        ],
+        colors: {
+          "editor.background": "#1F2937", // Dark gray background
+          "editor.foreground": "#E5E7EB",
+          "editor.lineHighlightBackground": "#374151",
+          "editor.lineHighlightBorder": "#374151",
+          "editorCursor.foreground": "#F9FAFB",
+          "editor.selectionBackground": "#4B5563",
+          "editor.inactiveSelectionBackground": "#374151",
+          "editorLineNumber.foreground": "#6B7280",
+          "editorLineNumber.activeForeground": "#D1D5DB",
+          "editorIndentGuide.background": "#374151",
+          "editorIndentGuide.activeBackground": "#4B5563",
+          "editor.selectionHighlightBackground": "#4B556380",
+          "editor.wordHighlightBackground": "#4B556380",
+          "editor.findMatchBackground": "#F59E0B80",
+          "editor.findMatchHighlightBackground": "#F59E0B40",
+        },
+      });
+
+      // Set theme based on dark mode state
+      monaco.editor.setTheme(isDarkMode ? "custom-dark" : "custom-light");
     }
-  }, [monaco]);
+  }, [monaco, isDarkMode]);
 
   if (!selectedFile) {
     return (
-      <div className="flex items-center justify-center w-full h-full text-gray-400 bg-white">
+      <div className="flex items-center justify-center w-full h-full text-gray-400 bg-white dark:bg-gray-900 dark:text-gray-400">
         Select a file to view its contents
       </div>
     );
@@ -77,11 +151,11 @@ export function CodeEditor() {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full bg-white dark:bg-gray-900">
       <Editor
         height="100%"
         defaultLanguage={getLanguage(selectedFile.name)}
-        theme="custom-light"
+        theme={isDarkMode ? "custom-dark" : "custom-light"}
         value={selectedFile.content || ""}
         options={{
           readOnly: true,
@@ -101,7 +175,7 @@ export function CodeEditor() {
           contextmenu: true,
         }}
         loading={
-          <div className="flex items-center justify-center h-full w-full text-gray-400 bg-white">
+          <div className="flex items-center justify-center w-full h-full text-gray-400 bg-white dark:bg-gray-900 dark:text-gray-400">
             Loading editor...
           </div>
         }

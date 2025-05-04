@@ -17,7 +17,7 @@ import uuid4 from "uuid4";
 
 function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
   const { id } = useParams();
-  const { userDetail } = useContext(UserDetailContext);
+  const { userDetail, setUserDetail } = useContext(UserDetailContext);
   const { isLoading, setIsLoading } = useFiles();
   const [loading, setLoading] = useState(false);
   const [userInput, setUserInput] = useState("");
@@ -29,6 +29,7 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
     workspaceId: id,
   });
   const messages = workspaceData?.messages || [];
+  const UpdateTokens = useMutation(api.users.UpdateToken);
 
   useEffect(() => {
     messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -55,7 +56,13 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
       ref={chatContainerRef}
       className="relative flex flex-col w-full h-full bg-white border rounded-md dark:bg-gray-900 dark:border-gray-700 border-slate-200"
     >
-      <div className="flex-1 overflow-y-auto rounded-lg scrollbar-hide">
+      <div
+        className="flex-1 overflow-y-auto rounded-lg custom-scrollbar"
+        style={{
+          "--scrollbar-thumb": "#d1d5db",
+          "--scrollbar-track": "transparent",
+        }}
+      >
         {steps.length === 0 ? (
           <div className="flex items-center justify-center w-full h-full">
             <p>No steps available</p>
@@ -91,14 +98,31 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
                         content: userInput,
                       };
 
-                      console.log("New message:", [...llmMessages, newMessage]);
-
                       const stepsResponse = await axios.post(
                         `${BACKEND_URL}/chat`,
                         {
                           messages: [...llmMessages, newMessage],
                         }
                       );
+
+                      // Calculate and update tokens after template API call
+                      const templateTokens = Number(
+                        countToken(JSON.stringify(stepsResponse.data))
+                      );
+                      const remTokensAfterTemplate =
+                        Number(userDetail?.token) - templateTokens;
+
+                      // Update user tokens in state
+                      setUserDetail((prev) => ({
+                        ...prev,
+                        token: remTokensAfterTemplate,
+                      }));
+
+                      // Update tokens in database after template call
+                      await UpdateTokens({
+                        userId: userDetail?._id,
+                        token: remTokensAfterTemplate,
+                      });
 
                       setLlmMessages((x) => [...x, newMessage]);
                       setLlmMessages((x) => [

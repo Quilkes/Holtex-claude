@@ -22,8 +22,8 @@ function FileNode({ item, depth, onFileClick, activeFilePath }) {
   return (
     <div className="select-none">
       <div
-        className={`flex items-center gap-2 p-2 cursor-pointer hover:bg-slate-100 ${
-          isActive && item.type === "file" ? "bg-slate-100" : ""
+        className={`flex items-center gap-2 p-2 cursor-pointer rounded-b-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
+          isActive && item.type === "file" ? "bg-gray-100 dark:bg-gray-700" : ""
         }`}
         style={{ paddingLeft: `${depth * 1.5}rem` }}
         onClick={handleClick}
@@ -40,7 +40,7 @@ function FileNode({ item, depth, onFileClick, activeFilePath }) {
           <File className="w-4 h-4 ml-2 text-blue-400" />
         )}
         {/* Truncate File/Folder Name */}
-        <span className="w-full overflow-hidden text-gray-500 truncate text-ellipsis whitespace-nowrap">
+        <span className="w-full overflow-hidden text-gray-500 truncate dark:text-gray-400 text-ellipsis whitespace-nowrap">
           {item.name}
         </span>
       </div>
@@ -80,7 +80,7 @@ export function FileExplorer({ files }) {
   };
 
   return (
-    <div className="space-y-1 p-4">
+    <div className="p-4 space-y-1">
       {isLoading ? (
         <div className="flex items-center justify-center w-full h-[80vh]">
           <span>Loading...</span>

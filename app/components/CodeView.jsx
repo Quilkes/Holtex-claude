@@ -10,9 +10,9 @@ function CodeView({ isWebContainerLoading, webContainerRef, files }) {
   const { activeTab } = useCodeView();
 
   return (
-    <div className="grid h-full bg-white border rounded-md grid-rows-12 border-slate-200">
+    <div className="grid h-full bg-white border rounded-md dark:bg-gray-900 grid-rows-12 dark:border-gray-700 border-slate-200">
       {/* Tab View */}
-      <div className="flex justify-between w-full row-span-1 border-b border-slate-200">
+      <div className="flex justify-between w-full row-span-1 border-b border-slate-200 dark:border-gray-700">
         <TabView
           webContainerRef={webContainerRef}
           isWebContainerLoading={isWebContainerLoading}
@@ -22,7 +22,13 @@ function CodeView({ isWebContainerLoading, webContainerRef, files }) {
       <div className="w-full h-full row-span-11">
         <div className="grid w-full h-full grid-cols-9">
           {/* Left panel - File explorer */}
-          <div className="w-full col-span-2 overflow-y-auto border-r border-gray-200">
+          <div
+            className="w-full col-span-2 overflow-y-auto border-r border-gray-200 custom-scrollbar dark:border-gray-700"
+            style={{
+              "--scrollbar-thumb": "#d1d5db",
+              "--scrollbar-track": "transparent",
+            }}
+          >
             <FileExplorer files={files} />
           </div>
           <div className="w-full col-span-7">

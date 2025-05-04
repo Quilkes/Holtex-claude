@@ -340,9 +340,9 @@ export default function page() {
         <div className="block h-full md:hidden">
           {/* Mobile CodeView */}
           <div className="h-full">
-            <div className="grid h-full border rounded-md grid-rows-12 bg-slate-100">
+            <div className="grid h-full border rounded-md dark:border-gray-700 grid-rows-12 bg-slate-100 dark:bg-gray-900">
               {/* Tab View - Using updated TabView component */}
-              <div className="flex justify-between w-full row-span-1 border bg-slate-100">
+              <div className="flex justify-between w-full row-span-1 border dark:border-gray-700 bg-slate-100 dark:bg-gray-900">
                 <TabView
                   webContainerRef={webContainerRef}
                   isWebContainerLoading={isWebContainerLoading}
@@ -354,7 +354,7 @@ export default function page() {
                 <div className="grid w-full h-full grid-cols-12">
                   {/* Code Editor or Preview  */}
                   <div className="w-full col-span-12">
-                    <div className="w-full h-full overflow-auto border-b border-gray-200 md:border-b-0 md:border-r">
+                    <div className="w-full h-full overflow-auto border-b border-gray-200 md:border-b-0 md:border-r dark:border-gray-700">
                       {activeTab === "code" ? (
                         <CodeEditor files={files[0]} />
                       ) : (
@@ -378,11 +378,11 @@ export default function page() {
             style={{ maxWidth: "100vw", maxHeight: "100vh" }}
           >
             <div className="flex flex-col h-full">
-              <div className="flex items-center justify-between p-2 bg-slate-100">
+              <div className="flex items-center justify-between p-2 bg-slate-100 dark:bg-gray-900">
                 <h2 className="text-lg font-semibold">Chat</h2>
                 <button
                   onClick={toggleChat}
-                  className="p-2 rounded-full hover:bg-slate-200"
+                  className="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-gray-800"
                 >
                   <ChevronRight size={24} />
                 </button>
@@ -412,11 +412,17 @@ export default function page() {
 
       {/* Mobile File explorer */}
       <div
-        className={`fixed inset-y-0 left-0 z-[100] md:hidden bg-white transition-transform duration-300 w-[270px] ${
+        className={`fixed inset-y-0 left-0 z-[100] md:hidden bg-white dark:bg-gray-900 transition-transform duration-300 w-[270px] ${
           smFileBar ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="w-full h-full overflow-y-auto border-r border-gray-200">
+        <div
+          className="w-full h-full overflow-y-auto border-r border-gray-200 custom-scrollbar dark:border-gray-700"
+          style={{
+            "--scrollbar-thumb": "#d1d5db",
+            "--scrollbar-track": "transparent",
+          }}
+        >
           <FileExplorer files={files} />
         </div>
       </div>
