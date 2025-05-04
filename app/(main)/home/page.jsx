@@ -29,6 +29,9 @@ export default function page() {
     if (isProcessing) return; // Prevent duplicate calls
     setIsProcessing(true);
 
+    // Validate input properly
+    const messageContent = input?.trim();
+
     if (!input || input.trim() === "") {
       toast.error("Please enter a prompt first");
       setIsProcessing(false);
@@ -58,7 +61,7 @@ export default function page() {
       const messageObj = {
         _id: `temp-${Date.now()}`,
         role: "user",
-        content: input.trim(),
+        content: messageContent,
         createdAt: Date.now(),
       };
 
@@ -76,7 +79,7 @@ export default function page() {
       }
 
       // Navigate to the workspace page
-      router.push(`/workspace/${workspaceId}`);
+      window.location.href = `/workspace/${workspaceId}`;
     } catch (error) {
       console.error("Error generating workspace:", error.message);
       toast.error("Failed to create workspace. Please try again.");

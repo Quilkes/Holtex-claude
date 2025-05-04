@@ -36,19 +36,33 @@ export default function page() {
   const [files, setFiles] = useState([]);
   const [llmMessages, setLlmMessages] = useState([]);
 
+  // Reset initialization flag when component mounts or ID changes
+  const hasInitialized = useRef(false);
+  const isMounted = useRef(true);
+
+  // Force reinitialization when navigating back to the page
+  useEffect(() => {
+    hasInitialized.current = false;
+    return () => {
+      isMounted.current = false;
+    };
+  }, [id]);
+
   // Query with caching strategy
-  const workspaceData = useQuery(api.workspace.GetWorkspace, {
-    workspaceId: id,
-  });
+  // Query with explicit refresh policy to prevent stale data
+  const workspaceData = useQuery(
+    api.workspace.GetWorkspace,
+    { workspaceId: id },
+    {
+      refetchOnMount: true,
+      refetchOnWindowFocus: true,
+    }
+  );
   const messages = workspaceData?.messages?.[0]?.content || "";
 
   const [workspaceLoaded, setWorkspaceLoaded] = useState(false);
   const [isWebContainerLoading, setIsWebContainerLoading] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-
-  // Track initialization and debounce database updates
-  const hasInitialized = useRef(false);
-  const isMounted = useRef(true);
 
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
