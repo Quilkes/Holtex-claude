@@ -197,7 +197,7 @@ export default function page() {
                 onClick={() => {
                   onGenerate(userInput);
                 }}
-                className={`p-2 text-white h-8 rounded-lg w-8 grid place-content-center shadow-blue-500/20 ${isGenerating || (isEnhancing ? "cursor-not-allowed bg-gray-300" : "bg-gradient-to-r from-blue-500 to-blue-600  hover:from-blue-600 hover:to-blue-700 shadow-md")}`}
+                className={`p-2 text-white h-8 rounded-lg w-8 grid place-content-center shadow-blue-500/20 ${isGenerating || (isEnhancing ? "cursor-not-allowed bg-gray-300 dark:bg-gray-700" : "bg-gradient-to-r from-blue-500 to-blue-600  hover:from-blue-600 hover:to-blue-700 shadow-md")}`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={isGenerating || isEnhancing}
