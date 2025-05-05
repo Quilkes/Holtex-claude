@@ -134,9 +134,9 @@ export default function page() {
   );
 
   return (
-    <div className="min-h-screen w-full bg-white dark:bg-gray-900">
+    <div className="min-h-screen w-full bg-white ">
       {/* Header */}
-      <header className="fixed top-0 w-full bg-white/80 backdrop-blur-sm border-b border-gray-100 z-50">
+      <header className="sticky top-0 w-full bg-white/80  backdrop-blur-sm border-b  border-gray-100 z-50">
         <div className="container mx-auto px-4 lg:px-8 py-4 flex justify-between items-center">
           <Link href="/">
             <motion.div
@@ -154,25 +154,25 @@ export default function page() {
           <nav className="hidden md:flex items-center gap-6">
             <Link
               href="#features"
-              className="text-gray-700 hover:text-purple-600 transition-colors"
+              className="text-gray-700  hover:text-purple-600 transition-colors"
             >
               Features
             </Link>
             <Link
               href="#how-it-works"
-              className="text-gray-700 hover:text-purple-600 transition-colors"
+              className="text-gray-700  hover:text-purple-600 transition-colors"
             >
               How It Works
             </Link>
             <Link
               href="#testimonials"
-              className="text-gray-700 hover:text-purple-600 transition-colors"
+              className="text-gray-700  hover:text-purple-600 transition-colors"
             >
               Testimonials
             </Link>
             <Link
               href="#pricing"
-              className="text-gray-700 hover:text-purple-600 transition-colors"
+              className="text-gray-700  hover:text-purple-600 transition-colors"
             >
               Pricing
             </Link>
@@ -208,7 +208,7 @@ export default function page() {
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-        className="container mx-auto mt-20 px-4 py-16 text-center"
+        className="container mx-auto  px-4 py-16 text-center"
       >
         <motion.h1
           variants={itemVariants}
