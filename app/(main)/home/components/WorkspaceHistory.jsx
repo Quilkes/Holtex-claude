@@ -1,17 +1,18 @@
 "use client";
-import { UserDetailContext } from "@/app/context/UserDetailContext";
+
 import { api } from "@/convex/_generated/api";
-import useSidebar from "../store/sidebar";
+import useSidebar from "@/app/store/sidebar";
 import { useConvex, useMutation } from "convex/react";
 import Link from "next/link";
 import { Trash } from "lucide-react";
-import React, { useContext, useEffect, useState } from "react";
-import useMediaQuery from "../store/useMediaQuery";
-import useWorkspace from "../store/useWorkspace";
+import React, { useEffect } from "react";
+import useMediaQuery from "@/app/store/useMediaQuery";
+import useWorkspace from "@/app/store/useWorkspace";
+import useCredentials from "@/app/store/useCredentials";
 
 function WorkspaceHistory() {
   const { setSideBar, setSmSidebar } = useSidebar();
-  const { userDetail } = useContext(UserDetailContext);
+  const { userDetail } = useCredentials();
   const convex = useConvex();
   const {
     setIsModalOpen,

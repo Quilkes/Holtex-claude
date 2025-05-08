@@ -1,5 +1,6 @@
 "use client";
-import React, { useContext, useEffect, useRef, useState } from "react";
+
+import React, { useEffect, useRef, useState } from "react";
 import { TabView } from "@/app/components/TabView";
 import { ChevronRight, MessageSquare } from "lucide-react";
 import { CodeEditor } from "@/app/components/CodeEditor";
@@ -7,7 +8,7 @@ import CodeView from "@/app/components/CodeView";
 import PreviewFrame from "@/app/components/PreviewFrame";
 import useCodeView from "@/app/store/useCodeView";
 import useFiles from "@/app/store/useFiles";
-import ChatView from "@/app/components/ChatView";
+import ChatView from "./components/ChatView";
 import { useParams } from "next/navigation";
 import { useConvex, useMutation, useQuery } from "convex/react";
 import { useWebContainer } from "@/app/hooks/useWebContainer";
@@ -18,11 +19,11 @@ import { api } from "@/convex/_generated/api";
 import useSidebar from "@/app/store/sidebar";
 import { FileExplorer } from "@/app/components/FileExplorer";
 import { countToken } from "@/app/utils/tokenCount";
-import { UserDetailContext } from "@/app/context/UserDetailContext";
+import useCredentials from "@/app/store/useCredentials";
 
 export default function page() {
   const { id } = useParams();
-  const { setUserDetail, userDetail } = useContext(UserDetailContext);
+  const { updateUserDetail, userDetail } = useCredentials();
   const convex = useConvex();
   const webContainerRef = useRef(null);
   const UpdateFiles = useMutation(api.workspace.UpdateFiles);
@@ -97,7 +98,7 @@ export default function page() {
             setSteps,
             setLlmMessages,
             userDetail,
-            setUserDetail,
+            updateUserDetail,
             countToken,
             UpdateTokens
           );

@@ -1,23 +1,24 @@
 "use client";
-import { UserDetailContext } from "@/app/context/UserDetailContext";
+
 import { api } from "@/convex/_generated/api";
-import Lookup from "../constants/Lookup";
+import Lookup from "@/app/constants/Lookup";
 import { useMutation, useQuery } from "convex/react";
 import { Send, Loader2Icon } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import React, { useContext, useEffect, useState, useRef } from "react";
-import { countToken } from "../constants/functions";
-import { StepsList } from "../utils/StepsList";
-import useFiles from "../store/useFiles";
-import { parseXml } from "../lib/parseXml";
-import { Loader } from "../utils/loader";
-import { BACKEND_URL } from "../utils/config";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState, useRef } from "react";
+import { countToken } from "@/app/constants/functions";
+import { StepsList } from "./StepsList";
+import useFiles from "@/app/store/useFiles";
+import { parseXml } from "@/app/lib/parseXml";
+import { Loader } from "@/app/utils/loader";
+import { BACKEND_URL } from "@/app/utils/config";
 import axios from "axios";
 import uuid4 from "uuid4";
+import useCredentials from "@/app/store/useCredentials";
 
 function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
   const { id } = useParams();
-  const { userDetail, setUserDetail } = useContext(UserDetailContext);
+  const { updateUserDetail, userDetail } = useCredentials();
   const { isLoading, setIsLoading } = useFiles();
   const [loading, setLoading] = useState(false);
   const [userInput, setUserInput] = useState("");
@@ -113,10 +114,7 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
                         Number(userDetail?.token) - templateTokens;
 
                       // Update user tokens in state
-                      setUserDetail((prev) => ({
-                        ...prev,
-                        token: remTokensAfterTemplate,
-                      }));
+                      updateUserDetail({ token: remTokensAfterTemplate });
 
                       // Update tokens in database after template call
                       await UpdateTokens({

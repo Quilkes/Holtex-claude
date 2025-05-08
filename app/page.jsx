@@ -2,39 +2,23 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  Code,
-  Command,
-  Home,
-  Sparkles,
-  TerminalSquare,
-  Infinity,
-  Zap,
-  ChevronRight,
-  ArrowRight,
-  Layers,
-  Eye,
-  Play,
   Rocket,
   Store,
   University,
-  ChevronDown,
-  Menu,
-  X,
-  Lock,
-  Mail,
-  MessageSquarePlus,
-  Github,
-  Twitter,
-  Linkedin,
   MessageCircle,
   DiscIcon,
 } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { UserDetailContext } from "./context/UserDetailContext";
+import {
+  suggestionChips,
+  storeTemplates,
+  aiChannels,
+  supportChats,
+} from "./constants/Json";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 
 export default function page() {
-  const { userDetail } = useContext(UserDetailContext);
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
 
@@ -47,54 +31,6 @@ export default function page() {
   const handleHomepage = () => {
     router.push("/home");
   };
-
-  const suggestionChips = [
-    "GPT",
-    "Grok",
-    "Deep Seek",
-    "Meta",
-    "Gemini",
-    "Claude",
-  ];
-
-  const storeTemplates = [
-    "Website",
-    "Floating Co-pilot",
-    "eCommerce Storefront",
-    "Vendor Marketplaces",
-    "SaaS",
-    "AiaaS",
-    "BaaS",
-    "SPA",
-    "Chatbot",
-    "Landing Page",
-    "Android Mobile App",
-    "IOS Mobile App",
-  ];
-
-  const aiChannels = [
-    "AI Everywhere",
-    "AI on Website",
-    "AI on Social Media",
-    "AI on Instagram",
-    "AI on TikTok",
-    "AI on Facebook",
-    "AI on Google",
-    "AI on Marketplaces",
-    "AI on WhatsApp",
-    "AI on Pinterest",
-    "AI on Snapchat",
-    "AI on YouTube",
-    "AI on Mobile",
-  ];
-
-  const supportChats = [
-    { name: "Facebook", icon: "facebook" },
-    { name: "WhatsApp", icon: "whatsapp" },
-    { name: "Telegram", icon: "telegram" },
-    { name: "TikTok", icon: "tiktok" },
-    { name: "X", icon: "x" },
-  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -178,29 +114,23 @@ export default function page() {
             </Link>
           </nav>
 
-          {!userDetail ? (
-            <div className="flex items-center gap-3">
-              <Link
-                href="/auth/sign-in"
-                className="hidden md:inline-block px-4 py-2 text-purple-600 hover:text-purple-700 font-medium"
+          <div>
+            <SignedOut>
+              <SignInButton>
+                <button className="hidden md:inline-block px-5 py-1 text-purple-600 hover:text-white font-medium rounded-md border hover:bg-purple-700">
+                  Sign in
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <button
+                className="px-4 py-2 border border-purple-500 text-purple-700 rounded-md hover:bg-purple-50 transition-colors"
+                onClick={handleHomepage}
               >
-                Login
-              </Link>
-              <Link
-                href="/auth/sign-in"
-                className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
-              >
-                Get Started
-              </Link>
-            </div>
-          ) : (
-            <button
-              className="px-4 py-2 border border-purple-500 text-purple-700 rounded-md hover:bg-purple-50 transition-colors"
-              onClick={handleHomepage}
-            >
-              Home
-            </button>
-          )}
+                Home
+              </button>
+            </SignedIn>
+          </div>
         </div>
       </header>
 

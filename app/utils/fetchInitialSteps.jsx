@@ -8,7 +8,7 @@ export async function fetchInitialSteps(
   setSteps,
   setLlmMessages,
   userDetail,
-  setUserDetail,
+  updateUserDetail,
   countToken,
   UpdateTokens
 ) {
@@ -36,7 +36,7 @@ export async function fetchInitialSteps(
     const remTokensAfterTemplate = Number(userDetail?.token) - templateTokens;
 
     // Update user tokens in state
-    setUserDetail((prev) => ({ ...prev, token: remTokensAfterTemplate }));
+    updateUserDetail({ token: remTokensAfterTemplate });
 
     // Update tokens in database after template call
     await UpdateTokens({
@@ -66,7 +66,7 @@ export async function fetchInitialSteps(
     const remTokensAfterChat = remTokensAfterTemplate - chatTokens;
 
     // Update user tokens in state
-    setUserDetail((prev) => ({ ...prev, token: remTokensAfterChat }));
+    updateUserDetail({ token: remTokensAfterChat });
 
     // Update tokens in database after chat call
     await UpdateTokens({

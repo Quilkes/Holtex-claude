@@ -1,14 +1,14 @@
-import { UserDetailContext } from "@/app/context/UserDetailContext";
 import useSidebar from "../store/sidebar";
 import useMediaQuery from "../store/useMediaQuery";
 import useMessage from "../store/useMessage";
-import { useRouter } from "next/navigation";
-import React, { useContext } from "react";
+import React from "react";
 import { toast } from "sonner";
+import useCredentials from "../store/useCredentials";
+import { useClerk } from "@clerk/nextjs";
 
 export default function Logout() {
-  const router = useRouter();
-  const { setUserDetail } = useContext(UserDetailContext);
+  const { signOut } = useClerk();
+  const { setUserDetail } = useCredentials();
   const { setMessages } = useMessage();
   const { isMobile } = useMediaQuery();
   const {
@@ -24,13 +24,12 @@ export default function Logout() {
   };
 
   const handleLogout = () => {
+    signOut({ redirectUrl: "/" });
     toast.success("Signed Out Successfully");
     handleToggleSidebar();
     setShowLogoutModal(false);
-    localStorage.clear();
     setUserDetail(null);
     setMessages(null);
-    router.push("/home");
   };
 
   return (

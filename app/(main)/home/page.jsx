@@ -1,7 +1,7 @@
 "use client";
-import { UserDetailContext } from "@/app/context/UserDetailContext";
+
 import { MessageCircle, Send, Bot, DiscIcon, Stars } from "lucide-react";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
@@ -11,19 +11,24 @@ import useSidebar from "@/app/store/sidebar";
 import useMessage from "@/app/store/useMessage";
 import Lookup from "@/app/constants/Lookup";
 import { BACKEND_URL } from "@/app/utils/config";
+import { useUser } from "@clerk/nextjs";
+import uuid4 from "uuid4";
+import useCredentials from "@/app/store/useCredentials";
 
 export default function page() {
+  const { user } = useUser();
+  const { userDetail } = useCredentials();
+
   const [userInput, setUserInput] = useState("");
   const { setMessages } = useMessage();
-  const { userDetail } = useContext(UserDetailContext);
   const [isGenerating, setIsGenerating] = useState(false);
   const [enhancedInput, setEnhancedInput] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const createWorkspace = useMutation(api.workspace.CreateWorkspace);
+
   const router = useRouter();
   const { setSideBar } = useSidebar();
-
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const onGenerate = async (input) => {
     if (isProcessing) return; // Prevent duplicate calls
@@ -41,8 +46,8 @@ export default function page() {
     setIsGenerating(true);
     setSideBar(false);
 
-    if (!userDetail || !userDetail._id) {
-      router.push("/auth/sign-in");
+    if (!user || !user.id) {
+      router.push("/sign-in");
       setIsGenerating(false);
       setIsProcessing(false);
       return;
@@ -59,7 +64,7 @@ export default function page() {
     try {
       // Create a new user message with required fields
       const messageObj = {
-        _id: `temp-${Date.now()}`,
+        _id: uuid4(),
         role: "user",
         content: messageContent,
         createdAt: Date.now(),

@@ -1,5 +1,5 @@
-import { CheckCircle, Circle, Loader2 } from "lucide-react";
-import useFiles from "../store/useFiles";
+import { CheckCircle, Loader2 } from "lucide-react";
+import useFiles from "@/app/store/useFiles";
 
 export function StepsList({ steps }) {
   const { currentStep, setCurrentStep } = useFiles();

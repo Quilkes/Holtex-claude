@@ -4,15 +4,12 @@ import Image from "next/image";
 import WorkspaceHistory from "./WorkspaceHistory";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import UserDropdown from "./UserDropdown";
-import useSidebar from "../store/sidebar";
-import DeleteModal from "./DeleteModal";
-import Logout from "./Logout";
-import { FileExplorer } from "./FileExplorer";
-import useFiles from "../store/useFiles";
-import { useContext } from "react";
-import { UserDetailContext } from "../context/UserDetailContext";
-import useMediaQuery from "../store/useMediaQuery";
+import UserDropdown from "@/app/components/UserDropdown";
+import useSidebar from "@/app/store/sidebar";
+import DeleteModal from "@/app/components/DeleteModal";
+import Logout from "@/app/components/Logout";
+import useMediaQuery from "@/app/store/useMediaQuery";
+import { useUser } from "@clerk/nextjs";
 
 const AppSidebar = ({ children }) => {
   const {
@@ -30,7 +27,8 @@ const AppSidebar = ({ children }) => {
   const { isMobile } = useMediaQuery();
   const pathname = usePathname();
   const isWorkspaceRoute = pathname.startsWith("/workspace/");
-  const { userDetail } = useContext(UserDetailContext);
+  // const { user } = useContext(userContext);
+  const { user } = useUser();
 
   const handleToggleSidebar = () => {
     setSideBar(!sideBar);
@@ -139,9 +137,9 @@ const AppSidebar = ({ children }) => {
                   onClick={() => setOpenUserDropDown(true)}
                 >
                   <div className="flex items-center">
-                    {userDetail ? (
+                    {user ? (
                       <Image
-                        src={userDetail?.picture}
+                        src={user?.imageUrl}
                         alt="user"
                         width={30}
                         height={30}
@@ -155,9 +153,9 @@ const AppSidebar = ({ children }) => {
                     <div>
                       <div
                         className="font-medium truncate max-w-[150px]"
-                        title={userDetail?.name}
+                        title={user?.fullName}
                       >
-                        {userDetail?.name}
+                        {user?.fullName}
                       </div>
                       <div className="text-xs text-gray-500">Free plan</div>
                     </div>
@@ -270,9 +268,9 @@ const AppSidebar = ({ children }) => {
                 onClick={() => setOpenUserDropDown(true)}
               >
                 <div className="flex items-center">
-                  {userDetail ? (
+                  {user ? (
                     <Image
-                      src={userDetail?.picture}
+                      src={user?.imageUrl}
                       alt="user"
                       width={30}
                       height={30}
@@ -286,9 +284,9 @@ const AppSidebar = ({ children }) => {
                   <div>
                     <div
                       className="font-medium truncate max-w-[150px]"
-                      title={userDetail?.name}
+                      title={user?.fullName}
                     >
-                      {userDetail?.name}
+                      {user?.fullName}
                     </div>
                     <div className="text-xs text-gray-500">Free plan</div>
                   </div>

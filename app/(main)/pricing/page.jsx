@@ -1,12 +1,13 @@
 "use client";
-import { UserDetailContext } from "@/app/context/UserDetailContext";
-import PricingModel from "@/app/components/PricingModel";
+
+import PricingModel from "./components/PricingModel";
 import Lookup from "@/app/constants/Lookup";
 import { CheckCircle } from "lucide-react";
-import React, { useContext } from "react";
+import React from "react";
+import useCredentials from "@/app/store/useCredentials";
 
 function page() {
-  const { userDetail } = useContext(UserDetailContext);
+  const { userDetail } = useCredentials();
 
   return (
     <div className="min-h-screen dark:bg-gray-900">

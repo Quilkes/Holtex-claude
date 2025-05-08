@@ -1,12 +1,12 @@
-import Lookup from "../constants/Lookup";
-import React, { useContext, useState } from "react";
-import { UserDetailContext } from "@/app/context/UserDetailContext";
+import Lookup from "@/app/constants/Lookup";
+import React from "react";
 import { useRouter } from "next/navigation";
 import StripeCheckoutButton from "./StripeCheckoutButton";
 import { CheckCircle } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 function PricingModel() {
-  const { userDetail } = useContext(UserDetailContext);
+  const { user } = useUser();
   const router = useRouter();
 
   return (
@@ -104,7 +104,7 @@ function PricingModel() {
 
               {/* CTA Button */}
               <div className="mt-6">
-                {userDetail ? (
+                {user ? (
                   <StripeCheckoutButton
                     priceId={pricing.priceId}
                     className={`w-full py-3 px-4 rounded-lg font-medium text-center ${
@@ -164,7 +164,7 @@ function PricingModel() {
       </div>
 
       {/* Footer note */}
-      {!userDetail && (
+      {user && (
         <div className="mt-8 text-sm text-center text-gray-500">
           Prices shown do not include applicable tax. Usage limits may apply.
         </div>

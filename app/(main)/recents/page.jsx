@@ -1,6 +1,5 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
-import { UserDetailContext } from "@/app/context/UserDetailContext";
+import { useState, useEffect } from "react";
 import { api } from "@/convex/_generated/api";
 import { useConvex } from "convex/react";
 import Link from "next/link";
@@ -8,10 +7,11 @@ import { Trash, Search, Plus } from "lucide-react";
 import useSidebar from "@/app/store/sidebar";
 import useMediaQuery from "@/app/store/useMediaQuery";
 import useWorkspace from "@/app/store/useWorkspace";
+import { useUser } from "@clerk/nextjs";
 
 export default function ChatHistory() {
   const { setSideBar, setSmSidebar } = useSidebar();
-  const { userDetail } = useContext(UserDetailContext);
+  const { user } = useUser();
   const convex = useConvex();
   const {
     setIsModalOpen,
@@ -31,7 +31,7 @@ export default function ChatHistory() {
   };
 
   useEffect(() => {
-    userDetail && getAllWorkspaces();
+    user && getAllWorkspaces();
 
     const handleWorkspaceDeleted = () => {
       getAllWorkspaces();
@@ -42,13 +42,13 @@ export default function ChatHistory() {
     return () => {
       window.removeEventListener("workspace-deleted", handleWorkspaceDeleted);
     };
-  }, [userDetail]);
+  }, [user]);
 
   const getAllWorkspaces = async () => {
-    if (!userDetail?._id) return;
+    if (!user?._id) return;
 
     const result = await convex.query(api.workspace.GetAllWorkspace, {
-      userId: userDetail._id,
+      userId: user._id,
     });
 
     groupWorkspacesByDate(result);
@@ -207,7 +207,7 @@ export default function ChatHistory() {
         />
       </div>
 
-      {userDetail && !noChats ? (
+      {user && !noChats ? (
         <div className="space-y-2">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             You have {countTotalChats(groupedWorkspaces)} previous chats with
