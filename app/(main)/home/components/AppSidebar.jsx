@@ -214,7 +214,7 @@ const AppSidebar = ({ children }) => {
             <Link href={"/home"} className="px-4 pt-4">
               <button
                 onClick={() => setSmSidebar(false)}
-                className="flex items-center w-full p-2 text-gray-800 transition-colors bg-gray-100 rounded-lg dark:text-gray-400 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                className="flex items-center w-full p-2 text-gray-800 transition-colors bg-gray-100 rounded-lg dark:text-gray-300 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
               >
                 <svg
                   width="16"
@@ -238,7 +238,7 @@ const AppSidebar = ({ children }) => {
             <Link href={"/recents"} className="p-4">
               <button
                 onClick={() => setSmSidebar(false)}
-                className="flex items-center w-full p-2 text-gray-800 transition-colors bg-gray-100 rounded-lg dark:text-gray-400 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                className="flex items-center w-full p-2 text-gray-800 transition-colors bg-gray-100 rounded-lg dark:text-gray-300 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
               >
                 <svg
                   width="18"

@@ -309,7 +309,6 @@ export default function page() {
 
   // Modified to prevent early saving and only save when data is initialized and not loading
   useEffect(() => {
-    console.log(llmMessages);
     if (files.length > 0) {
       saveToDatabase();
     }
