@@ -7,11 +7,13 @@ import {
   Files,
   Cloud,
   ArrowDownCircle,
+  Home,
 } from "lucide-react";
 import useCodeView from "../store/useCodeView";
 import useSidebar from "../store/sidebar";
 import { handleDownloadZipFile } from "../utils/downloadZIPFile";
 import useFiles from "../store/useFiles";
+import Link from "next/link";
 
 export function TabView({ webContainerRef, isWebContainerLoading }) {
   const { activeTab, setActiveTab } = useCodeView();
@@ -21,16 +23,8 @@ export function TabView({ webContainerRef, isWebContainerLoading }) {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
-  const handleToggleSmSidebar = () => {
-    setSmSidebar(!smSideBar);
-  };
-
   const handleFilesSmbar = () => {
     setSmFileBar(!smFileBar);
-  };
-
-  const handleToggle = () => {
-    handleToggleSmSidebar();
   };
 
   const showTooltip = (text, e) => {
@@ -112,14 +106,15 @@ export function TabView({ webContainerRef, isWebContainerLoading }) {
           )}
         </button>
 
-        <button
-          onClick={handleToggle}
-          onMouseEnter={(e) => showTooltip("Menu", e)}
-          onMouseLeave={hideTooltip}
-          className="flex items-center justify-center p-2 text-gray-600 transition-colors rounded hover:bg-gray-100 hover:text-purple-600 dark:hover:bg-gray-800 dark:hover:text-purple-600 dark:text-gray-400"
-        >
-          <MenuIcon size={18} />
-        </button>
+        <Link href="/home">
+          <button
+            onMouseEnter={(e) => showTooltip("Home", e)}
+            onMouseLeave={hideTooltip}
+            className="flex items-center justify-center p-2 text-gray-600 transition-colors rounded hover:bg-gray-100 hover:text-purple-600 dark:hover:bg-gray-800 dark:hover:text-purple-600 dark:text-gray-400"
+          >
+            <Home size={18} />
+          </button>
+        </Link>
       </div>
 
       {/* Custom Tooltip */}

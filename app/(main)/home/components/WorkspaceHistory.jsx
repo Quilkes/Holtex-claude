@@ -111,7 +111,7 @@ function WorkspaceHistory() {
               className="w-full"
             >
               <div className="flex items-center justify-between w-full">
-                <h2 className="text-sm text-gray-700 dark:text-gray-400 mt-2 cursor-pointer truncate max-w-[90%]">
+                <h2 className="text-sm text-gray-700 dark:text-gray-300 mt-2 cursor-pointer truncate max-w-[90%]">
                   {workspace?.messages[0]?.content}
                 </h2>
               </div>

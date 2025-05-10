@@ -11,6 +11,8 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "@clerk/nextjs": "^6.19.1",
+    "@headlessui/react": "^2.2.1",
+    "@heroicons/react": "^2.2.0",
     "@monaco-editor/react": "^4.7.0",
     "@stripe/stripe-js": "^7.0.0",
     "@webcontainer/api": "^1.5.3",

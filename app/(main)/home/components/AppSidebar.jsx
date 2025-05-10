@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import UserDropdown from "@/app/components/UserDropdown";
 import useSidebar from "@/app/store/sidebar";
 import DeleteModal from "@/app/components/DeleteModal";
-import Logout from "@/app/components/Logout";
+import Logout from "@/app/component/Logout";
 import useMediaQuery from "@/app/store/useMediaQuery";
 import { useUser } from "@clerk/nextjs";
 
@@ -81,7 +81,10 @@ const AppSidebar = ({ children }) => {
 
               {/* New Chat Button */}
               <Link href={"/home"} className="px-4 pt-4">
-                <button className="flex items-center w-full p-2 text-gray-800 transition-colors bg-gray-100 rounded-lg dark:text-gray-400 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700">
+                <button
+                  onClick={() => setSideBar(false)}
+                  className="flex items-center w-full p-2 text-gray-800 transition-colors bg-gray-100 rounded-lg dark:text-gray-300 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                >
                   <svg
                     width="16"
                     height="16"
@@ -104,7 +107,7 @@ const AppSidebar = ({ children }) => {
               <Link href={"/recents"} className="p-4">
                 <button
                   onClick={() => setSideBar(false)}
-                  className="flex items-center w-full p-2 text-gray-800 transition-colors bg-gray-100 rounded-lg dark:text-gray-400 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  className="flex items-center w-full p-2 text-gray-800 transition-colors bg-gray-100 rounded-lg dark:text-gray-300 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
                 >
                   <svg
                     width="18"
@@ -329,7 +332,7 @@ const AppSidebar = ({ children }) => {
       {/* File Explorer for mobile */}
       {smFileBar && (
         <div
-          className={`fixed inset-0 bg-black/30 z-40 md:${isWorkspaceRoute && isMobile ? "block" : "hidden"}`}
+          className={`fixed inset-0 bg-black/30 z-40 md:hidden`}
           onClick={handleFilesSmbar}
         />
       )}
