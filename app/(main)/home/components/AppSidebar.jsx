@@ -330,7 +330,7 @@ const AppSidebar = ({ children }) => {
       )}
 
       {/* File Explorer for mobile */}
-      {smFileBar && (
+      {smFileBar && isWorkspaceRoute && (
         <div
           className={`fixed inset-0 bg-black/30 z-40 md:hidden`}
           onClick={handleFilesSmbar}

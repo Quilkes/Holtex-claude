@@ -4,7 +4,7 @@ const useSidebar = create((set) => ({
   isOpen: false,
   setIsOpen: (bool) => set({ isOpen: bool }),
   sideBar: false,
-  smFileBar: false,
+  smFileBar: true,
   setSmFileBar: (bool) => set({ smFileBar: bool }),
   sideBar: false,
   setSideBar: (bool) => set({ sideBar: bool }),
