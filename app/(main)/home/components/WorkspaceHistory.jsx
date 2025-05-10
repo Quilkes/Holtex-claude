@@ -4,8 +4,8 @@ import { api } from "@/convex/_generated/api";
 import useSidebar from "@/app/store/sidebar";
 import { useConvex, useMutation } from "convex/react";
 import Link from "next/link";
-import { Trash } from "lucide-react";
-import React, { useEffect } from "react";
+import { Trash, Loader2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import useMediaQuery from "@/app/store/useMediaQuery";
 import useWorkspace from "@/app/store/useWorkspace";
 import useCredentials from "@/app/store/useCredentials";
@@ -21,6 +21,7 @@ function WorkspaceHistory() {
     setGroupedWorkspaces,
   } = useWorkspace();
   const { isMobile } = useMediaQuery();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleToggleSidebar = () => {
     setSideBar(false);
@@ -31,7 +32,9 @@ function WorkspaceHistory() {
   };
 
   useEffect(() => {
-    userDetail && GetAllWorkspace();
+    if (userDetail) {
+      GetAllWorkspace();
+    }
 
     // Add event listener for workspace deletion
     const handleWorkspaceDeleted = () => {
@@ -47,12 +50,19 @@ function WorkspaceHistory() {
   }, [userDetail]);
 
   const GetAllWorkspace = async () => {
-    const result = await convex.query(api.workspace.GetAllWorkspace, {
-      userId: userDetail._id,
-    });
+    try {
+      setIsLoading(true);
+      const result = await convex.query(api.workspace.GetAllWorkspace, {
+        userId: userDetail._id,
+      });
 
-    // Group workspaces by date
-    groupWorkspacesByDate(result);
+      // Group workspaces by date
+      groupWorkspacesByDate(result);
+    } catch (error) {
+      console.error("Error fetching workspaces:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const groupWorkspacesByDate = (workspaces) => {
@@ -136,14 +146,23 @@ function WorkspaceHistory() {
 
   return (
     <div className="">
-      {renderWorkspaceGroup(groupedWorkspaces.today, "Today")}
-      {renderWorkspaceGroup(groupedWorkspaces.yesterday, "Yesterday")}
-      {renderWorkspaceGroup(groupedWorkspaces.lastWeek, "Last 7 Days")}
-      {renderWorkspaceGroup(groupedWorkspaces.older, "Older")}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-10">
+          <Loader2 className="w-6 h-6 text-gray-500 animate-spin" />
+          <span className="ml-2 text-sm text-gray-500">Loading chats...</span>
+        </div>
+      ) : (
+        <>
+          {renderWorkspaceGroup(groupedWorkspaces.today, "Today")}
+          {renderWorkspaceGroup(groupedWorkspaces.yesterday, "Yesterday")}
+          {renderWorkspaceGroup(groupedWorkspaces.lastWeek, "Last 7 Days")}
+          {renderWorkspaceGroup(groupedWorkspaces.older, "Older")}
 
-      {Object.values(groupedWorkspaces).every(
-        (group) => group.length === 0
-      ) && <p className="text-sm text-gray-700">No chat history found</p>}
+          {Object.values(groupedWorkspaces).every(
+            (group) => group.length === 0
+          ) && <p className="text-sm text-gray-700">No chat history found</p>}
+        </>
+      )}
     </div>
   );
 }

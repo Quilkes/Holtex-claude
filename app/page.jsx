@@ -1,13 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Rocket,
-  Store,
-  University,
-  MessageCircle,
-  DiscIcon,
-} from "lucide-react";
+import { Rocket, Store, University } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -21,7 +15,6 @@ import Header from "./component/Header";
 import Footer from "./component/Footer";
 
 export default function page() {
-  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
