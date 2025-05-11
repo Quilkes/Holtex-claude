@@ -3,16 +3,15 @@
 import { motion } from "framer-motion";
 import { Rocket, Store, University } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   suggestionChips,
   storeTemplates,
   aiChannels,
   supportChats,
 } from "./constants/Json";
-import Hero from "./component/Hero";
-import Header from "./component/Header";
-import Footer from "./component/Footer";
+import Hero from "./components/Hero";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 export default function page() {
   const [isClient, setIsClient] = useState(false);

@@ -6,8 +6,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import UserDropdown from "@/app/components/UserDropdown";
 import useSidebar from "@/app/store/sidebar";
-import DeleteModal from "@/app/components/DeleteModal";
-import Logout from "@/app/component/Logout";
+import DeleteModal from "../../workspace/[id]/components/DeleteModal";
+import Logout from "@/app/components/Logout";
 import useMediaQuery from "@/app/store/useMediaQuery";
 import { useUser } from "@clerk/nextjs";
 
@@ -127,7 +127,13 @@ const AppSidebar = ({ children }) => {
               </Link>
 
               {/* Recents Section */}
-              <div className="flex-grow px-3 overflow-auto">
+              <div
+                className="flex-grow px-3  overflow-auto custom-scrollbar"
+                style={{
+                  "--scrollbar-thumb": "#d1d5db",
+                  "--scrollbar-track": "transparent",
+                }}
+              >
                 <div className="pl-2 space-y-1">
                   <WorkspaceHistory />
                 </div>

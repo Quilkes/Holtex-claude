@@ -1,4 +1,4 @@
-import Header from "@/app/components/Header";
+import Header from "./components/Header";
 
 export const metadata = {
   title: "Holtex AI | Create Your App in Minutes",

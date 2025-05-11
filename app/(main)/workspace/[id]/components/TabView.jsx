@@ -9,10 +9,10 @@ import {
   ArrowDownCircle,
   Home,
 } from "lucide-react";
-import useCodeView from "../store/useCodeView";
-import useSidebar from "../store/sidebar";
-import { handleDownloadZipFile } from "../utils/downloadZIPFile";
-import useFiles from "../store/useFiles";
+import useCodeView from "@/app/store/useCodeView";
+import useSidebar from "@/app/store/sidebar";
+import { handleDownloadZipFile } from "@/app/utils/downloadZIPFile";
+import useFiles from "@/app/store/useFiles";
 import Link from "next/link";
 
 export function TabView({ webContainerRef, isWebContainerLoading }) {

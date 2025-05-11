@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Editor, { useMonaco, loader } from "@monaco-editor/react";
-import useCodeView from "../store/useCodeView";
+import useCodeView from "@/app/store/useCodeView";
 import { toast } from "sonner";
 
 export function CodeEditor() {

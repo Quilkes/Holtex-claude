@@ -4,7 +4,7 @@ import { CodeEditor } from "./CodeEditor";
 import { PreviewFrame } from "./PreviewFrame";
 import { FileExplorer } from "./FileExplorer";
 import { TabView } from "./TabView";
-import useCodeView from "../store/useCodeView";
+import useCodeView from "@/app/store/useCodeView";
 
 function CodeView({ isWebContainerLoading, webContainerRef, files }) {
   const { activeTab } = useCodeView();

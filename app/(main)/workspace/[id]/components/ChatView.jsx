@@ -10,11 +10,12 @@ import { countToken } from "@/app/constants/functions";
 import { StepsList } from "./StepsList";
 import useFiles from "@/app/store/useFiles";
 import { parseXml } from "@/app/lib/parseXml";
-import { Loader } from "@/app/utils/loader";
+import { Loader } from "@/app/utils/loaders/loader";
 import { BACKEND_URL } from "@/app/utils/config";
 import axios from "axios";
 import uuid4 from "uuid4";
 import useCredentials from "@/app/store/useCredentials";
+import BuildStepsLoader from "@/app/utils/loaders/BuildStepsLoader";
 
 function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
   const { id } = useParams();
@@ -65,9 +66,7 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
         }}
       >
         {steps.length === 0 ? (
-          <div className="flex items-center justify-center w-full h-full">
-            <p>No steps available</p>
-          </div>
+          <BuildStepsLoader />
         ) : (
           <>
             <StepsList steps={steps} />

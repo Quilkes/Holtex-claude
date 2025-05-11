@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { TabView } from "@/app/components/TabView";
+import { TabView } from "./components/TabView";
 import { ChevronRight, MessageSquare } from "lucide-react";
-import { CodeEditor } from "@/app/components/CodeEditor";
-import CodeView from "@/app/components/CodeView";
-import PreviewFrame from "@/app/components/PreviewFrame";
+import { CodeEditor } from "./components/CodeEditor";
+import CodeView from "./components/CodeView";
+import PreviewFrame from "./components/PreviewFrame";
 import useCodeView from "@/app/store/useCodeView";
 import useFiles from "@/app/store/useFiles";
 import ChatView from "./components/ChatView";
@@ -17,7 +17,7 @@ import { fetchInitialSteps } from "@/app/utils/fetchInitialSteps";
 import { toast } from "sonner";
 import { api } from "@/convex/_generated/api";
 import useSidebar from "@/app/store/sidebar";
-import { FileExplorer } from "@/app/components/FileExplorer";
+import { FileExplorer } from "./components/FileExplorer";
 import { countToken } from "@/app/utils/tokenCount";
 import useCredentials from "@/app/store/useCredentials";
 

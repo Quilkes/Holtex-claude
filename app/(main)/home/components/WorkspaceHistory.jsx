@@ -9,6 +9,7 @@ import React, { useEffect, useState } from "react";
 import useMediaQuery from "@/app/store/useMediaQuery";
 import useWorkspace from "@/app/store/useWorkspace";
 import useCredentials from "@/app/store/useCredentials";
+import ChatHistoryLoader from "@/app/utils/loaders/ChatHistoryLoader";
 
 function WorkspaceHistory() {
   const { setSideBar, setSmSidebar } = useSidebar();
@@ -147,10 +148,7 @@ function WorkspaceHistory() {
   return (
     <div className="">
       {isLoading ? (
-        <div className="flex items-center justify-center py-10">
-          <Loader2 className="w-6 h-6 text-gray-500 animate-spin" />
-          <span className="ml-2 text-sm text-gray-500">Loading chats...</span>
-        </div>
+        <ChatHistoryLoader />
       ) : (
         <>
           {renderWorkspaceGroup(groupedWorkspaces.today, "Today")}

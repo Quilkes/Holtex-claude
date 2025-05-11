@@ -1,5 +1,5 @@
 import { UserDetailContext } from "@/app/context/UserDetailContext";
-import useWorkspace from "../store/useWorkspace";
+import useWorkspace from "@/app/store/useWorkspace";
 import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
 import React, { useContext } from "react";

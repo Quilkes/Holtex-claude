@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import useCredentials from "../store/useCredentials";
 import { useClerk } from "@clerk/nextjs";
-import { Loader } from "../utils/loader";
+import { Loader } from "../utils/loaders/loader";
 
 export default function Logout() {
   const { signOut } = useClerk();

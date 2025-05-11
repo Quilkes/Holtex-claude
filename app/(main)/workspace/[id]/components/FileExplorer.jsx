@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { File, FileWarning, FolderOpen, FolderClosed } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import useCodeView from "../store/useCodeView";
-import useFiles from "../store/useFiles";
-import useSidebar from "../store/sidebar";
+import useCodeView from "@/app/store/useCodeView";
+import useFiles from "@/app/store/useFiles";
+import useSidebar from "@/app/store/sidebar";
+import FileTreeLoader from "@/app/utils/loaders/FileTreeLoader";
 
 function FileNode({ item, depth, onFileClick, activeFilePath }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -82,8 +83,8 @@ export function FileExplorer({ files }) {
   return (
     <div className="p-4 space-y-1">
       {isLoading ? (
-        <div className="flex items-center justify-center w-full h-[80vh]">
-          <span>Loading...</span>
+        <div className=" h-[80vh]">
+          <FileTreeLoader />
         </div>
       ) : files.length > 0 ? (
         files.map((file, index) => (
