@@ -20,8 +20,6 @@ export default function DeleteModal() {
   const handleDelete = async (workspaceId) => {
     try {
       setIsLoading(true);
-      console.log("Deleting workspace with ID:", workspaceId);
-      console.log("User ID:", userDetail._id);
 
       await deleteWorkspace({
         workspaceId,
