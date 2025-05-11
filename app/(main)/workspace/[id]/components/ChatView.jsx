@@ -16,9 +16,12 @@ import axios from "axios";
 import uuid4 from "uuid4";
 import useCredentials from "@/app/store/useCredentials";
 import BuildStepsLoader from "@/app/utils/loaders/BuildStepsLoader";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
   const { id } = useParams();
+  const router = useRouter();
   const { updateUserDetail, userDetail } = useCredentials();
   const { isLoading, setIsLoading } = useFiles();
   const [loading, setLoading] = useState(false);
@@ -91,6 +94,11 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
                 <button
                   disabled={!userInput.trim()}
                   onClick={async () => {
+                    if (!userDetail?.token || userDetail.token < 10) {
+                      toast("You don't have enough tokens!");
+                      router.push("/pricing");
+                      return;
+                    }
                     try {
                       setIsLoading(true);
                       const newMessage = {
