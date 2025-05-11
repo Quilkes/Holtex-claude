@@ -1,8 +1,8 @@
-import { UserDetailContext } from "@/app/context/UserDetailContext";
+import useCredentials from "@/app/store/useCredentials";
 import useWorkspace from "@/app/store/useWorkspace";
 import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
-import React, { useContext } from "react";
+import React from "react";
 import { toast } from "sonner";
 
 export default function DeleteModal() {
@@ -15,12 +15,19 @@ export default function DeleteModal() {
     setGroupedWorkspaces,
   } = useWorkspace();
   const deleteWorkspace = useMutation(api.workspace.DeleteWorkspace);
-  const { userDetail } = useContext(UserDetailContext);
+  const { userDetail } = useCredentials();
 
   const handleDelete = async (workspaceId) => {
     try {
       setIsLoading(true);
-      await deleteWorkspace({ workspaceId, uuid: userDetail._id });
+      console.log("Deleting workspace with ID:", workspaceId);
+      console.log("User ID:", userDetail._id);
+
+      await deleteWorkspace({
+        workspaceId,
+        uuid: userDetail._id,
+      });
+
       toast.success("Workspace deleted successfully!");
 
       // Update local state
@@ -34,13 +41,15 @@ export default function DeleteModal() {
         return updated;
       });
 
-      // Add this to trigger a refresh from the backend
+      // Trigger a refresh from the backend
       if (typeof window !== "undefined") {
-        // Force a re-fetch by dispatching a custom event
         window.dispatchEvent(new Event("workspace-deleted"));
       }
     } catch (error) {
-      toast.error("Fail to delete project, please try again.");
+      console.error("Delete workspace error:", error);
+      toast.error(
+        "Failed to delete workspace: " + (error.message || "Please try again.")
+      );
     } finally {
       setIsLoading(false);
     }
@@ -67,6 +76,8 @@ export default function DeleteModal() {
                   if (selectedWorkspaceId) {
                     handleDelete(selectedWorkspaceId);
                     setIsModalOpen(false);
+                  } else {
+                    toast.error("No workspace selected");
                   }
                 }}
                 className="px-4 py-2 text-white bg-red-600 rounded cursor-pointer hover:bg-red-500"

@@ -4,7 +4,7 @@ import { api } from "@/convex/_generated/api";
 import useSidebar from "@/app/store/sidebar";
 import { useConvex, useMutation } from "convex/react";
 import Link from "next/link";
-import { Trash, Loader2 } from "lucide-react";
+import { Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import useMediaQuery from "@/app/store/useMediaQuery";
 import useWorkspace from "@/app/store/useWorkspace";

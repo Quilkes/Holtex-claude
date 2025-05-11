@@ -1,14 +1,14 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
-import { UserDetailContext } from "@/app/context/UserDetailContext";
+import { useEffect, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
 import Lookup from "@/app/constants/Lookup";
+import useCredentials from "@/app/store/useCredentials";
 
 export default function SuccessPage() {
-  const { userDetail } = useContext(UserDetailContext);
+  const { userDetail } = useCredentials();
   const router = useRouter();
   const UpdateTokens = useMutation(api.users.UpdateToken);
   const [message, setMessage] = useState("Processing your payment...");

@@ -61,10 +61,10 @@ export default function Header() {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <SignedOut>
             <SignInButton>
-              <button className="-mx-3 flex justify-start items-center gap-1 w-fit  text-gray-900 rounded-lg px-3 py-1 text-base/7   hover:bg-gray-50">
-                <p>Log in</p>
+              <div className="flex cursor-pointer items-center gap-1">
+                <span>Log in</span>
                 <ArrowRightIcon aria-hidden="true" className="size-4" />
-              </button>
+              </div>
             </SignInButton>
           </SignedOut>
           <SignedIn>
@@ -115,10 +115,10 @@ export default function Header() {
               <div className="py-6">
                 <SignedOut>
                   <SignInButton>
-                    <button className="-mx-3 flex justify-start items-center gap-1 w-24  text-gray-900 rounded-lg px-3 py-1 text-base/7   hover:bg-gray-50">
-                      <p>Log in</p>
+                    <div className="-mx-3 flex justify-start items-center gap-1 w-24 text-gray-900 rounded-lg px-3 py-1 text-base/7 hover:bg-gray-50">
+                      <span>Log in</span>
                       <ArrowRightIcon aria-hidden="true" className="size-4" />
-                    </button>
+                    </div>
                   </SignInButton>
                 </SignedOut>
                 <SignedIn>
