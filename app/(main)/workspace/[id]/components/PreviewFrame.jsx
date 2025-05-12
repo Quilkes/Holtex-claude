@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Loader2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
+import usePreview from "@/app/store/preview/usePreview";
 
 export function PreviewFrame({ files, webContainerRef }) {
-  const [url, setUrl] = useState("");
+  const { url, setUrl } = usePreview();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 

@@ -2,21 +2,23 @@ import React, { useState } from "react";
 import {
   Code2,
   Eye,
-  MenuIcon,
-  Loader,
   Files,
   Cloud,
   ArrowDownCircle,
   Home,
+  Loader,
+  ExternalLink,
 } from "lucide-react";
 import useCodeView from "@/app/store/useCodeView";
 import useSidebar from "@/app/store/sidebar";
 import { handleDownloadZipFile } from "@/app/utils/downloadZIPFile";
 import useFiles from "@/app/store/useFiles";
 import Link from "next/link";
+import usePreview from "@/app/store/preview/usePreview";
 
 export function TabView({ webContainerRef, isWebContainerLoading }) {
   const { activeTab, setActiveTab } = useCodeView();
+  const { url } = usePreview();
   const { isDownloadingZipFile, setIsDownloadingZipFile } = useFiles();
   const { setSmSidebar, smSideBar, setSmFileBar, smFileBar } = useSidebar();
   const [tooltipText, setTooltipText] = useState("");
@@ -42,50 +44,65 @@ export function TabView({ webContainerRef, isWebContainerLoading }) {
   };
 
   return (
-    <>
-      <div className="inline-flex items-center p-1 m-2 bg-gray-100 rounded-full dark:bg-gray-700">
-        {/* Button group with simplified design */}
-        <div className="relative flex">
-          <button
-            onClick={() => setActiveTab("preview")}
-            className={`relative flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
-              activeTab === "preview"
-                ? "bg-white dark:bg-gray-800 dark:text-gray-400 text-gray-800 shadow-sm"
-                : "text-gray-500 dark:text-gray-200 dark:hover:text-gray-200 hover:text-gray-700"
-            }`}
-            aria-label="Preview"
-          >
-            <Eye className="w-5 h-5" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("code")}
-            className={`relative flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
-              activeTab === "code"
-                ? "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-400 shadow-sm"
-                : "text-gray-500 dark:text-gray-200 dark:hover:text-gray-200 hover:text-gray-700"
-            }`}
-            aria-label="Code"
-          >
-            <Code2 className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3 pl-2 border-l dark:border-gray-700 border-slate-200">
+    <div className="flex items-center justify-between h-12 w-full px-3 border-b border-gray-200 dark:border-gray-800">
+      {/* Left side - Claude-style toggle */}
+      <div className="flex items-center space-x-2">
         <button
           onMouseEnter={(e) => showTooltip("File Explorer", e)}
           onMouseLeave={hideTooltip}
           onClick={handleFilesSmbar}
-          className="flex items-center justify-center p-2 text-gray-600 transition-colors rounded md:hidden hover:bg-gray-100 hover:text-purple-600 dark:hover:bg-gray-800 dark:hover:text-purple-600 dark:text-gray-400"
+          className="flex items-center justify-center p-2 text-gray-500 transition-colors rounded-md md:hidden hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-100 dark:text-gray-400"
+          aria-label="Toggle File Explorer"
         >
           <Files size={18} />
         </button>
 
+        {/* Claude-style toggle button for code/preview */}
+        <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-md p-0.5">
+          <button
+            onClick={() => setActiveTab("preview")}
+            className={`flex items-center justify-center h-7 px-2 rounded-md transition-all duration-200 ${
+              activeTab === "preview"
+                ? "bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow-sm"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
+            aria-label="Preview"
+          >
+            <Eye size={16} />
+          </button>
+
+          <button
+            onClick={() => setActiveTab("code")}
+            className={`flex items-center justify-center h-7 px-2 rounded-md transition-all duration-200 ${
+              activeTab === "code"
+                ? "bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow-sm"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
+            aria-label="Code"
+          >
+            <Code2 size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* Right side - Action buttons */}
+      <div className="flex items-center space-x-1">
+        {url && (
+          <button
+            onMouseEnter={(e) => showTooltip("New tab", e)}
+            onMouseLeave={hideTooltip}
+            onClick={() => window.open(url, "_blank")}
+            className="flex items-center space-x-1 px-2 py-1 text-sm text-blue-600 dark:text-blue-400 hover:underline"
+            aria-label="New tab"
+          >
+            <ExternalLink size={14} />
+          </button>
+        )}
         <button
           onMouseEnter={(e) => showTooltip("Deploy", e)}
           onMouseLeave={hideTooltip}
-          className="flex items-center justify-center p-2 text-gray-600 transition-colors rounded hover:bg-gray-100 hover:text-purple-600 dark:hover:bg-gray-800 dark:hover:text-purple-600 dark:text-gray-400"
+          className="flex items-center justify-center p-2 text-gray-500 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-100 dark:text-gray-400"
+          aria-label="Deploy"
         >
           <Cloud size={18} />
         </button>
@@ -97,7 +114,8 @@ export function TabView({ webContainerRef, isWebContainerLoading }) {
           onMouseEnter={(e) => showTooltip("Download", e)}
           onMouseLeave={hideTooltip}
           disabled={isDownloadingZipFile || isWebContainerLoading}
-          className="flex items-center justify-center p-2 text-gray-600 transition-colors rounded hover:bg-gray-100 hover:text-purple-600 dark:hover:bg-gray-800 dark:hover:text-purple-600 dark:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center justify-center p-2 text-gray-500 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-100 dark:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Download"
         >
           {isDownloadingZipFile ? (
             <Loader size={18} className="animate-spin" />
@@ -110,7 +128,8 @@ export function TabView({ webContainerRef, isWebContainerLoading }) {
           <button
             onMouseEnter={(e) => showTooltip("Home", e)}
             onMouseLeave={hideTooltip}
-            className="flex items-center justify-center p-2 text-gray-600 transition-colors rounded hover:bg-gray-100 hover:text-purple-600 dark:hover:bg-gray-800 dark:hover:text-purple-600 dark:text-gray-400"
+            className="flex items-center justify-center p-2 text-gray-500 transition-colors rounded-md hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-100 dark:text-gray-400"
+            aria-label="Home"
           >
             <Home size={18} />
           </button>
@@ -120,7 +139,7 @@ export function TabView({ webContainerRef, isWebContainerLoading }) {
       {/* Custom Tooltip */}
       {tooltipVisible && (
         <div
-          className="absolute z-50 px-2 py-1 text-xs text-white transition-opacity duration-300 bg-gray-800 rounded pointer-events-none"
+          className="absolute z-50 px-2 py-1 text-xs text-white transition-opacity duration-300 bg-gray-800 rounded shadow-md pointer-events-none"
           style={{
             top: `${tooltipPosition.top}px`,
             left: `${tooltipPosition.left}px`,
@@ -130,6 +149,6 @@ export function TabView({ webContainerRef, isWebContainerLoading }) {
           {tooltipText}
         </div>
       )}
-    </>
+    </div>
   );
 }
