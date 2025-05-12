@@ -89,7 +89,9 @@ export function PreviewFrame({ files, webContainerRef }) {
         ) : isLoading ? (
           <div className="flex flex-col items-center justify-center p-6 text-center text-white">
             <Loader2 className="w-8 h-8 mb-4 text-blue-500 animate-spin" />
-            <p className="text-lg text-gray-400 font-medium">Loading Preview</p>
+            <p className="text-lg text-gray-400 font-medium">
+              Initializing Container
+            </p>
             <p className="mt-2 text-sm text-gray-400">
               Setting up your environment and installing dependencies...
             </p>

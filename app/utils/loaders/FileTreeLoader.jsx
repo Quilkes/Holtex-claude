@@ -2,7 +2,7 @@ import React from "react";
 
 export default function FileTreeLoader() {
   // Create a recursive skeleton structure to mimic folder hierarchy
-  const renderSkeletonNode = (depth = 0, isFolder = true, childCount = 0) => {
+  const renderSkeletonNode = (depth = 3, isFolder = true, childCount = 0) => {
     return (
       <div className="select-none" key={`skeleton-${depth}-${childCount}`}>
         <div
