@@ -10,6 +10,7 @@ import DeleteModal from "../../workspace/[id]/components/DeleteModal";
 import Logout from "@/app/components/Logout";
 import useMediaQuery from "@/app/store/useMediaQuery";
 import { useUser } from "@clerk/nextjs";
+import UserAvatar from "./useAvatar";
 
 const AppSidebar = ({ children }) => {
   const {
@@ -146,25 +147,15 @@ const AppSidebar = ({ children }) => {
                   onClick={() => setOpenUserDropDown(true)}
                 >
                   <div className="flex items-center">
-                    {user ? (
-                      <Image
-                        src={user?.imageUrl}
-                        alt="user"
-                        width={30}
-                        height={30}
-                        className="rounded-md mr-3 w-[30px] h-[30px]"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center w-8 h-8 mr-3 text-white bg-blue-500 rounded-md">
-                        <span className="font-medium">O</span>
-                      </div>
-                    )}
+                    <UserAvatar user={user} />
                     <div>
                       <div
                         className="font-medium truncate max-w-[150px]"
-                        title={user?.fullName}
+                        title={
+                          user?.primaryEmailAddress.emailAddress.split("@")[0]
+                        }
                       >
-                        {user?.fullName}
+                        {user?.primaryEmailAddress.emailAddress.split("@")[0]}
                       </div>
                       <div className="text-xs text-gray-500">Free plan</div>
                     </div>

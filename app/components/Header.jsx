@@ -7,7 +7,7 @@ import {
   XMarkIcon,
   ArrowRightIcon,
 } from "@heroicons/react/24/outline";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -27,7 +27,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky bg-white/30 backdrop-blur-lg inset-x-0 top-0 z-50">
+    <header className="absolute inset-x-0 top-0 z-50">
       <nav
         aria-label="Global"
         className="flex items-center justify-between p-6 lg:px-8 lg:py-4"
@@ -47,26 +47,24 @@ export default function Header() {
             <Bars3Icon aria-hidden="true" className="size-6" />
           </button>
         </div>
-        <div className="hidden lg:flex lg:gap-x-12">
-          {navigation.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className="text-sm/6 hover:text-gray-500 text-gray-900"
-            >
-              {item.name}
-            </a>
-          ))}
-        </div>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+
+        <div className="hidden space-x-2 lg:flex lg:flex-1 lg:justify-end">
+          <SignedOut>
+            <SignUpButton>
+              <button className="flex cursor-pointer px-5 py-2 border border-purple-500 hover:border-purple-300 text-purple-500 items-center gap-1">
+                <span>Sign up</span>
+              </button>
+            </SignUpButton>
+          </SignedOut>
           <SignedOut>
             <SignInButton>
-              <div className="flex cursor-pointer items-center gap-1">
+              <button className="flex cursor-pointer text-purple-500 hover:text-purple-300 items-center gap-1">
                 <span>Log in</span>
                 <ArrowRightIcon aria-hidden="true" className="size-4" />
-              </div>
+              </button>
             </SignInButton>
           </SignedOut>
+
           <SignedIn>
             <button
               className="px-4 py-1 border border-purple-500 text-purple-700 rounded-md hover:bg-purple-50 transition-colors"
@@ -101,24 +99,13 @@ export default function Header() {
           </div>
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                  >
-                    {item.name}
-                  </a>
-                ))}
-              </div>
               <div className="py-6">
                 <SignedOut>
                   <SignInButton>
-                    <div className="-mx-3 flex justify-start items-center gap-1 w-24 text-gray-900 rounded-lg px-3 py-1 text-base/7 hover:bg-gray-50">
+                    <button className="-mx-3 flex justify-start items-center gap-1 w-24 text-purple-500 rounded-lg px-3 py-1 text-base/7 hover:bg-gray-50">
                       <span>Log in</span>
                       <ArrowRightIcon aria-hidden="true" className="size-4" />
-                    </div>
+                    </button>
                   </SignInButton>
                 </SignedOut>
                 <SignedIn>

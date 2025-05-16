@@ -2,7 +2,7 @@ import React from "react";
 
 export default function BuildStepsLoader() {
   // Create an array to determine how many skeleton items to render
-  const skeletonSteps = Array(7).fill(0);
+  const skeletonSteps = Array(10).fill(0);
 
   return (
     <div className="rounded-lg h-fit">

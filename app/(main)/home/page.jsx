@@ -158,7 +158,7 @@ export default function page() {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center gap-2 px-4 mt-24 bg-white dark:bg-gray-900 md:px-0 md:mt-36">
+    <div className="relative h-screen flex flex-col items-center justify-center gap-2 px-4  bg-white dark:bg-gray-900 md:px-0 ">
       <h2 className="relative z-10 text-4xl font-bold text-center text-transparent md:text-5xl bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
         {Lookup.HERO_HEADING}
       </h2>
@@ -187,7 +187,7 @@ export default function page() {
                 onGenerate(userInput);
               }
             }}
-            className="w-full h-32 text-sm font-medium bg-transparent outline-none resize-none max-h-56"
+            className="w-full h-32 text-sm custom-scrollbar font-medium bg-transparent outline-none resize-none max-h-56"
           />
           <AnimatePresence>
             {userInput && (
@@ -254,41 +254,6 @@ export default function page() {
           </h2>
         ))}
       </div>
-      {/* Footer */}
-      <footer className="relative z-10 w-full pt-12 mt-16 border-t border-gray-200 dark:border-gray-700">
-        <div className="text-center">
-          <div className="inline-block px-4 py-2 mb-6 text-sm font-medium text-white rounded-full shadow-lg bg-gradient-to-r from-blue-500 to-purple-500 shadow-purple-500/10">
-            Holtex AI is in its experimental stage
-          </div>
-
-          <p className="mb-6 text-gray-600">
-            Built with ❤️ by Holtex AI. Empowering developers to build smarter.
-          </p>
-
-          <div className="flex justify-center gap-4 mb-8">
-            <a
-              href="https://discord.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-full bg-gray-100 dark:bg-gray-900 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-600 hover:shadow-[0_0_10px_rgba(59,130,246,0.3)] transition-all"
-            >
-              <DiscIcon className="w-5 h-5 text-gray-600" />
-            </a>
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-full bg-gray-100 dark:bg-gray-900 dark:hover:bg-gray-700 hover:bg-purple-100 hover:text-purple-600 hover:shadow-[0_0_10px_rgba(124,58,237,0.3)] transition-all"
-            >
-              <MessageCircle className="w-5 h-5 text-gray-600" />
-            </a>
-          </div>
-
-          <p className="text-sm text-gray-500">
-            © {new Date().getFullYear()} Holtex AI. All rights reserved.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

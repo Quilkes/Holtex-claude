@@ -2,7 +2,7 @@ import "./globals.css";
 import { ConvexClientProvider } from "./providers/ConvexClientProvider";
 import { Toaster } from "sonner";
 import Provider from "./providers/provider";
-import { Roboto } from "next/font/google";
+import { Roboto, Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import AuthWrapper from "./providers/AuthWrapper";
 
@@ -11,16 +11,16 @@ export const metadata = {
   description: "Future of app development",
 };
 
-const roboto = Roboto({
-  weight: "400",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
       <html lang="en">
-        <body inmaintabuse="1" className={roboto.className}>
+        <body inmaintabuse="1" className={inter.className}>
           <ConvexClientProvider>
             <AuthWrapper>
               <Provider>{children}</Provider>

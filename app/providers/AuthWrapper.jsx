@@ -16,9 +16,14 @@ export default function AuthWrapper({ children }) {
       if (isSignedIn && user) {
         try {
           const dbUser = await createUser({
-            name: user?.fullName || "User",
+            name:
+              user?.fullName ||
+              user?.username ||
+              user?.primaryEmailAddress.emailAddress.split("@")[0] ||
+              "User",
             email: user?.primaryEmailAddress.emailAddress,
-            picture: user?.imageUrl || "",
+            picture:
+              user?.imageUrl || "https://www.flaticon.com/free-icons/user",
             clerkId: user?.id,
           });
 

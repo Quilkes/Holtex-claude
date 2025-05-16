@@ -9,9 +9,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <div className="bg-white dark:bg-gray-900">
-      <div className="sticky top-0 left-0 z-50 w-full bg-white">
-        <Header />
-      </div>
+      <Header />
       {children}
     </div>
   );

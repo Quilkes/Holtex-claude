@@ -39,7 +39,7 @@ const Header = () => {
   };
 
   return (
-    <div className="px-4 py-2 flex relative justify-between items-center z-30 bg-white dark:bg-gray-900 transition-colors duration-200">
+    <div className="px-4 py-2 flex  justify-between items-center bg-white dark:bg-gray-900 transition-colors duration-200 absolute inset-x-0 top-0 z-10">
       <div className="flex items-center">
         {!sideBar && (
           <Link href="/">

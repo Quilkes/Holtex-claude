@@ -88,7 +88,7 @@ function ChatView({ steps, setSteps, llmMessages, setLlmMessages }) {
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
                   placeholder={Lookup.INPUT_PLACEHOLDER}
-                  className="w-full bg-transparent outline-none resize-none max-h-32 min-h-20"
+                  className="w-full bg-transparent outline-none resize-none custom-scrollbar max-h-32 min-h-20"
                   rows={Math.min(3, userInput.split("\n").length || 1)}
                 />
                 <button
