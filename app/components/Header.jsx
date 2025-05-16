@@ -99,15 +99,23 @@ export default function Header() {
           </div>
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="py-6">
+              <div className="py-6 flex gap-3">
+                <SignedOut>
+                  <SignUpButton>
+                    <button className="flex cursor-pointer px-5 py-2 border border-purple-500 hover:border-purple-300 text-purple-500 items-center gap-1">
+                      <span>Sign up</span>
+                    </button>
+                  </SignUpButton>
+                </SignedOut>
                 <SignedOut>
                   <SignInButton>
-                    <button className="-mx-3 flex justify-start items-center gap-1 w-24 text-purple-500 rounded-lg px-3 py-1 text-base/7 hover:bg-gray-50">
+                    <button className="flex cursor-pointer text-purple-500 hover:text-purple-300 items-center gap-1">
                       <span>Log in</span>
                       <ArrowRightIcon aria-hidden="true" className="size-4" />
                     </button>
                   </SignInButton>
                 </SignedOut>
+
                 <SignedIn>
                   <button
                     className="px-4 py-1 border border-purple-500 text-purple-700 rounded-md hover:bg-purple-50 transition-colors"

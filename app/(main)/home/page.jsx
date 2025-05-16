@@ -158,7 +158,7 @@ export default function page() {
   };
 
   return (
-    <div className="relative h-screen flex flex-col items-center justify-center gap-2 px-4  bg-white dark:bg-gray-900 md:px-0 ">
+    <div className="relative h-fit flex flex-col items-center justify-center gap-2 px-4  bg-white dark:bg-gray-900 md:px-0 pt-48 md:pt-32 ">
       <h2 className="relative z-10 text-4xl font-bold text-center text-transparent md:text-5xl bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
         {Lookup.HERO_HEADING}
       </h2>

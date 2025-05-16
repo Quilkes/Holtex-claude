@@ -44,14 +44,14 @@ export async function fetchInitialSteps(
       token: remTokensAfterTemplate,
     });
 
-    // Parse and set initial steps
-    setSteps(
-      parseXml(uiPrompts[0]).map((x) => ({
-        ...x,
-        id: uuid4(),
-        status: "pending",
-      }))
-    );
+    // // Parse and set initial steps
+    // setSteps(
+    //   parseXml(uiPrompts[0]).map((x) => ({
+    //     ...x,
+    //     id: uuid4(),
+    //     status: "pending",
+    //   }))
+    // );
 
     // Post to chat API
     const stepsResponse = await axios.post(`${BACKEND_URL}/chat`, {

@@ -14,7 +14,7 @@ export default function page() {
   if (!isClient) return null;
 
   return (
-    <div className="h-screen w-full bg-white ">
+    <div className="h-screen w-full bg-white">
       <Header />
       <Hero />
     </div>
